@@ -1,11 +1,7 @@
 var express = require('express');
 
 
-var config = {
+var config = module.exports = {
   env: express().get('env'),
   debug: true
 };
-
-// 環境別コンフィグの読み込み
-
-module.exports = config;
