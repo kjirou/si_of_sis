@@ -1,0 +1,26 @@
+{
+  "name": "si_of_sis",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kjirou/si_of_sis"
+  },
+  "description": "",
+  "version": "0.0.1",
+  "author": "kjirou",
+  "private": true,
+  "engines": {
+    "node": ">=0.10.32 <0.11"
+  },
+  "dependencies": {
+    "express": "3.17.2",
+    "express-nested-router": "*",
+    "mongoose": "3.8.15",
+    "underscore": "1.7.0"
+  },
+  "devDependencies": {
+    "coffeelint": "1.6.0",
+    "mocha": "1.21.4"
+  },
+  "scripts": {
+  }
+}
