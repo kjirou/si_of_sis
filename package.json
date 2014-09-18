@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "express": "3.17.2",
-    "express-nested-router": "*",
+    "express-nested-router": "0.0.3",
     "mongoose": "3.8.15",
     "underscore": "1.7.0"
   },
