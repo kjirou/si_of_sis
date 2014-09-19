@@ -24,6 +24,7 @@
     "mocha": "1.21.4"
   },
   "scripts": {
-    "dev": "node-dev boot/development.js"
+    "dev": "node-dev boot/development.js",
+    "test": "mocha -r env/test.coffee"
   }
 }
