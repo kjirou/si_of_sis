@@ -20,8 +20,10 @@
   },
   "devDependencies": {
     "coffeelint": "1.6.0",
+    "node-dev": "2.1.6",
     "mocha": "1.21.4"
   },
   "scripts": {
+    "dev": "node-dev boot/development.js"
   }
 }
