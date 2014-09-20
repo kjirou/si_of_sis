@@ -24,6 +24,7 @@
     "gulp-coffeelint": "0.4.0",
     "mocha": "1.21.4",
     "node-dev": "2.1.6",
+    "sinon": "1.10.3",
     "supertest": "0.13.0"
   },
   "scripts": {
