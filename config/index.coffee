@@ -2,6 +2,8 @@ express = require 'express'
 mongoose = require 'mongoose'
 path = require 'path'
 
+coreUtil = require 'lib/util/core'
+
 
 mongodbConfig =
   host: 'localhost'
@@ -25,11 +27,7 @@ config =
   mongodb: mongodbConfig
 
 
-try
-  require('config/_' + config.env)(config)
-catch e
-  unless e.code is 'MODULE_NOT_FOUND'
-    throw e
+coreUtil.want('config/_' + config.env)?(config)
 
 
 module.exports = config
