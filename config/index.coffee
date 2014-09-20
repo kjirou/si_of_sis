@@ -2,7 +2,7 @@ express = require 'express'
 mongoose = require 'mongoose'
 path = require 'path'
 
-coreUtil = require 'lib/util/core'
+{want} = require 'lib/util/core'
 
 
 mongodbConfig =
@@ -27,7 +27,7 @@ config =
   mongodb: mongodbConfig
 
 
-coreUtil.want('config/_' + config.env)?(config)
+want('config/_' + config.env)?(config)
 
 
 module.exports = config
