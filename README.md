@@ -14,3 +14,14 @@ git clone git@github.com:kjirou/si_of_sis.git
 cd si_of_sis
 npm install
 ```
+
+### Run Web Server
+Run mongod process:
+```
+mongod
+```
+
+Run web server:
+```
+npm run dev
+```

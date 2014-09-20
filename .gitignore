@@ -26,7 +26,6 @@ bower_components/
 develop-eggs/
 dist/
 eggs/
-env/
 node_modules/
 sdist/
 coverage
