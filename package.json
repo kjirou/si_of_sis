@@ -21,7 +21,8 @@
   "devDependencies": {
     "coffeelint": "1.6.0",
     "node-dev": "2.1.6",
-    "mocha": "1.21.4"
+    "mocha": "1.21.4",
+    "supertest": "0.13.0"
   },
   "scripts": {
     "dev": "node-dev boot/development.js",
