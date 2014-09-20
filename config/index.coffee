@@ -2,7 +2,9 @@ path = require 'path'
 express = require 'express'
 
 
-config = module.exports =
+config =
   debug: true
   env: express().get 'env'
   root: path.resolve process.env.NODE_PATH
+
+module.exports = config

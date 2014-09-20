@@ -5,6 +5,8 @@ config = require 'config'
 routes = require 'apps/routes'
 
 
-app = module.exports = express()
+app = express()
 
 routes.resolve app
+
+module.exports = app
