@@ -1,8 +1,7 @@
 express = require 'express'
 mongoose = require 'mongoose'
 path = require 'path'
-
-{want} = require 'lib/util/core'
+wantit = require 'wantit'
 
 
 mongodbConfig =
@@ -27,7 +26,7 @@ config =
   mongodb: mongodbConfig
 
 
-want('config/_' + config.env)?(config)
+wantit('config/_' + config.env)?(config)
 
 
 module.exports = config
