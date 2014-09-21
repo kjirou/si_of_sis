@@ -1,6 +1,6 @@
 controllers = {}
 
 controllers.index = (req, res, next) ->
-  res.render 'apps/core/index'
+  res.renderSubApp 'index'
 
 module.exports = controllers

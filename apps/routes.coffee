@@ -1,8 +1,14 @@
 router = require 'express-nested-router'
 
-coreRoutes = require './core/routes'
+coreNamespace = require './core/routes'
+homeNamespace = require './home/routes'
 
 
-namespace = router.namespace coreRoutes
+coreNamespace.addRoute 'home', homeNamespace
 
-module.exports = namespace
+
+module.exports =
+  namespace: coreNamespace
+  subAppNamespaces:
+    core: coreNamespace
+    home: homeNamespace
