@@ -16,6 +16,7 @@
     "coffee-script": "1.8.0",
     "express": "3.17.2",
     "express-nested-router": "0.0.3",
+    "jade": "1.7.0",
     "mongoose": "3.8.15",
     "underscore": "1.7.0",
     "wantit": "0.0.1"
