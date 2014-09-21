@@ -6,7 +6,9 @@ si_of_sis
 
 ### Preparation
 1. Read [package.json](./package.json)
-2. `npm install -g gulp`
+2. Read [.travis.yml](./.travis.yml)
+3. Read [env](./env)
+4. Read [config](./config)
 
 ### Installation
 ```
@@ -16,12 +18,5 @@ npm install
 ```
 
 ### Run Web Server
-Run mongod process:
-```
-mongod
-```
-
-Run web server:
-```
-npm run dev
-```
+- 1. `mongod`
+- 2. `npm run dev`
