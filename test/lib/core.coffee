@@ -1,6 +1,6 @@
 assert = require 'assert'
 
-core = require 'lib/util/core'
+core = require 'lib/core'
 
 
 describe 'core Util', ->
