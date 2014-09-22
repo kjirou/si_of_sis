@@ -3,7 +3,7 @@ assert = require 'assert'
 middlewares = require 'lib/middlewares'
 
 
-describe 'filters Module', ->
+describe 'middlewares Lib', ->
 
   describe 'createSubAppMiddleware', ->
 
