@@ -1,4 +1,5 @@
 express = require 'express'
+path = require 'path'
 router = require 'express-nested-router'
 
 config = require 'config'
@@ -11,8 +12,15 @@ app = express()
 #
 # Settings
 #
-app.set 'views', "#{config.root}/views"
+app.set 'views', path.join(config.root, '/views')
 app.set 'view engine', 'jade'
+
+
+#
+# Locals
+#
+app.locals =
+  basedir: app.get 'views'
 
 
 #
