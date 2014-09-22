@@ -3,7 +3,7 @@ assert = require 'assert'
 core = require 'lib/core'
 
 
-describe 'core Util', ->
+describe 'core Lib', ->
 
   it 'bindPathRoot', ->
     # パスが付与されている、他の引数が渡されている
