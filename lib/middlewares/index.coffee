@@ -1,6 +1,7 @@
 _ = require 'underscore'
 
 config = require 'config'
+coreLib = require 'lib/core'
 
 
 module.exports =
@@ -15,10 +16,6 @@ module.exports =
         root: "#{root}/apps/#{subAppName}"
         viewRoot: subAppViewRoot
 
-      res.renderSubApp = ->
-        args = _.toArray arguments
-        if args[0]?
-          args[0] = "#{subAppViewRoot}/#{args[0]}"
-        res.render.apply res, args
+      res.renderSubApp = coreLib.bindPathRoot subAppViewRoot, res.render
 
       next()
