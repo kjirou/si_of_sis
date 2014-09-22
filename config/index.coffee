@@ -24,6 +24,8 @@ config =
   env: express().get 'env'
   root: path.resolve process.env.NODE_PATH
   mongodb: mongodbConfig
+  server:
+    port: '3000'
 
 
 wantit('config/_' + config.env)?(config)
