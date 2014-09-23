@@ -8,6 +8,16 @@ UserSchema = new Schema {
     index:
       unique: true
       sparse: true
+
+  # ハッシュ化されたパスワード
+  password:
+    type: String
+    required: true
+
+  salt:
+    type: String
+    required: true
+    unique: true
 }
 
 
