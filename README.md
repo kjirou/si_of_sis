@@ -20,3 +20,6 @@ npm install
 ### Run Web Server
 - 1. `mongod`
 - 2. `npm run dev`
+
+## Use Mongo Script
+- `mongo db_name scripts/mongo/script_name.js`
