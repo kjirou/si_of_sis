@@ -1,5 +1,6 @@
 _ = require 'underscore'
 assert = require 'assert'
+async = require 'async'
 {Model} = require 'mongoose'
 
 {User} = require 'apps/user/models'
@@ -67,6 +68,36 @@ describe 'User Model', ->
       user.save (e) ->
         _assertExpectedFieldError e, 'salt'
         done()
+
+
+  describe 'Queries', ->
+
+    before (done) ->
+      self = @
+      # 3 ユーザを用意
+      User.remove (e) ->
+        throw e if e
+        async.eachSeries [
+          'foo@example.com'
+          'bar@example.com'
+          'baz@example.com'
+        ], (email, next) ->
+          user = new User
+          _.extend user, self.validData, { email:email, salt:email + '_salt' }
+          user.save next
+        , (e) ->
+          throw e if e
+          done()
+
+    it 'queryActiveUserByEmail', (done) ->
+      User.queryActiveUserByEmail('foo@example.com').find (e, docs) ->
+        throw e if e
+        assert docs.length is 1
+        assert docs[0].email is 'foo@example.com'
+        User.queryActiveUserByEmail('foox@example.com').find (e, docs) ->
+          throw e if e
+          assert docs.length is 0
+          done()
 
 
   describe 'Properties', ->

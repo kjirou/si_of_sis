@@ -23,6 +23,13 @@ UserSchema = new Schema {
     unique: true
 }
 
+
+UserSchema.statics.queryActiveUsers = -> @where()
+
+UserSchema.statics.queryActiveUserByEmail = (email) ->
+  @queryActiveUsers().where({email: email}).limit 1
+
+
 UserSchema.methods.verifyPassword = (rawPassword) ->
   @password is cryptoUtil.generateHashedPassword rawPassword, @salt
 
