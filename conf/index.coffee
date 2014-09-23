@@ -28,6 +28,14 @@ conf =
   root: path.resolve process.env.NODE_PATH
   server:
     port: '3000'
+  session:
+    secret: 'default_session_secret_key'
+    mongodb:
+      host: mongodbConf.host
+      port: mongodbConf.port
+      databaseName: 'sos_session'
+      user: mongodbConf.user
+      pass: mongodbConf.pass
 
 
 wantit('conf/_' + conf.env)?(conf)

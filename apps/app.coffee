@@ -1,4 +1,5 @@
 express = require 'express'
+MongoStore = require('connect-mongo')(express)
 path = require 'path'
 router = require 'express-nested-router'
 
@@ -26,10 +27,27 @@ app.locals =
 #
 # Set middlewares
 #
+app.use express.cookieParser()
+app.use express.json()
+app.use express.urlencoded()
+#app.use express.multipart()  # Ref) #37
+app.use express.session {
+  secret: conf.session.secret
+  cookie: {
+    maxAge: 365 * 24 * 60 * 60 * 1000
+  }
+  store: new MongoStore {
+    db: conf.session.mongodb.databaseName
+    host: conf.session.mongodb.host
+    port: conf.session.mongodb.port
+    username: conf.session.mongodb.user
+    password: conf.session.mongodb.pass
+    clear_interval: 3600
+  }
+}
 
-# サブアプリ情報を設定する
 for subAppName, subAppNamespace of routes.subAppNamespaces
-  subAppNamespace.unshiftBeforeMiddleware(createSubAppMiddleware subAppName)
+  subAppNamespace.pushBeforeMiddleware(createSubAppMiddleware subAppName)
 
 
 #
