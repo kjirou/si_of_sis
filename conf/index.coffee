@@ -4,31 +4,31 @@ path = require 'path'
 wantit = require 'wantit'
 
 
-mongodbConfig =
+mongodbConf =
   host: 'localhost'
   port: '27017'
   databaseName: 'sos'
   user: ''
   pass: ''
   prepareConnections: ->
-    uri = "mongodb://#{mongodbConfig.host}:#{mongodbConfig.port}/#{mongodbConfig.databaseName}"
+    uri = "mongodb://#{mongodbConf.host}:#{mongodbConf.port}/#{mongodbConf.databaseName}"
     mongoose.connect uri, {
-      user: mongodbConfig.user
-      pass: mongodbConfig.pass
+      user: mongodbConf.user
+      pass: mongodbConf.pass
     }, (e) ->
       throw e if e
 
 
-config =
+conf =
   debug: true
   env: express().get 'env'
   root: path.resolve process.env.NODE_PATH
-  mongodb: mongodbConfig
+  mongodb: mongodbConf
   server:
     port: '3000'
 
 
-wantit('config/_' + config.env)?(config)
+wantit('conf/_' + conf.env)?(conf)
 
 
-module.exports = config
+module.exports = conf

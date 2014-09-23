@@ -3,7 +3,7 @@ process.env.NODE_PATH = __dirname + '/..'
 require('module')._initPaths()
 
 
-config = require 'config'
+conf = require 'conf'
 
 
-config.mongodb.prepareConnections()
+conf.mongodb.prepareConnections()

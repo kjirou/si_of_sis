@@ -8,7 +8,7 @@ si_of_sis
 1. Read [package.json](./package.json)
 2. Read [.travis.yml](./.travis.yml)
 3. Read [env](./env)
-4. Read [config](./config)
+4. Read [conf](./conf)
 
 ### Installation
 ```

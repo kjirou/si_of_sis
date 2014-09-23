@@ -2,7 +2,7 @@ express = require 'express'
 path = require 'path'
 router = require 'express-nested-router'
 
-config = require 'config'
+conf = require 'conf'
 routes = require 'apps/routes'
 {createSubAppMiddleware} = require 'lib/middlewares'
 
@@ -12,7 +12,7 @@ app = express()
 #
 # Settings
 #
-app.set 'views', path.join(config.root, '/views')
+app.set 'views', path.join(conf.root, '/views')
 app.set 'view engine', 'jade'
 
 

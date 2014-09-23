@@ -1,6 +1,6 @@
 _ = require 'underscore'
 
-config = require 'config'
+conf = require 'conf'
 coreLib = require 'lib/core'
 
 
@@ -9,7 +9,7 @@ module.exports =
   # サブアプリ情報を設定するミドルウェアを作成する
   createSubAppMiddleware: (subAppName) ->
     (req, res, next) ->
-      subAppViewRoot = "#{config.root}/views/apps/#{subAppName}"
+      subAppViewRoot = "#{conf.root}/views/apps/#{subAppName}"
 
       req.subApp =
         name: subAppName
