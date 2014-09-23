@@ -7,6 +7,7 @@ gulp.task 'lint', ->
     .src [
       './apps/**/*.coffee'
       './conf/**/*.coffee'
+      './env/**/*.coffee'
       './lib/**/*.coffee'
       './test/**/*.coffee'
     ]
