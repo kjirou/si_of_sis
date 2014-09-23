@@ -20,10 +20,12 @@ mongodbConf =
 
 
 conf =
+  auth:
+    hmacSecretKey: 'default_secret_key'
   debug: true
   env: express().get 'env'
-  root: path.resolve process.env.NODE_PATH
   mongodb: mongodbConf
+  root: path.resolve process.env.NODE_PATH
   server:
     port: '3000'
 
