@@ -11,6 +11,7 @@ describe 'User Model', ->
   before (done) ->
 
     @validData =
+      email: 'test@example.com'
       password: 'my_hashed_password'
       salt: 'my_salt'
 
@@ -40,16 +41,28 @@ describe 'User Model', ->
 
   describe 'Fields', ->
 
+    _assertExpectedFieldError = (e, fieldName) ->
+      assert e.name is 'ValidationError'
+      assert _.size(e.errors) is 1
+      assert fieldName of e.errors
+
+    it 'email', (done) ->
+      user = new User
+      _.extend user, @validData, { email:null }
+      user.save (e) ->
+        _assertExpectedFieldError e, 'email'
+        done()
+
     it 'password', (done) ->
       user = new User
       _.extend user, @validData, { password:null }
       user.save (e) ->
-        assert e.name is 'ValidationError'
+        _assertExpectedFieldError e, 'password'
         done()
 
     it 'salt', (done) ->
       user = new User
       _.extend user, @validData, { salt:null }
       user.save (e) ->
-        assert e.name is 'ValidationError'
+        _assertExpectedFieldError e, 'salt'
         done()

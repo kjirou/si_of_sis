@@ -5,6 +5,7 @@ mongoose = require 'mongoose'
 UserSchema = new Schema {
   email:
     type: String
+    required: true
     index:
       unique: true
       sparse: true
