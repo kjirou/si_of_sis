@@ -14,11 +14,14 @@
   "dependencies": {
     "async": "0.9.0",
     "coffee-script": "1.8.0",
+    "commander": "2.3.0",
     "connect-mongo": "0.4.1",
     "express": "3.17.2",
     "express-nested-router": "1.0.0",
     "jade": "1.7.0",
     "mongoose": "3.8.15",
+    "passport": "0.2.1",
+    "passport-local": "1.0.0",
     "underscore": "1.7.0",
     "wantit": "0.0.1"
   },

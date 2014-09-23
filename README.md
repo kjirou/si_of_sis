@@ -19,7 +19,8 @@ npm install
 
 ### Run Web Server
 - 1. `mongod`
-- 2. `npm run dev`
+- 2. `node boot/fixture.js --development`
+- 3. `npm run dev`
 
 ### Use Mongo Script
 - `mongo db_name scripts/mongo/script_name.js`

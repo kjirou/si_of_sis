@@ -8,6 +8,7 @@ gulp.task 'lint', ->
       './apps/**/*.coffee'
       './conf/**/*.coffee'
       './env/**/*.coffee'
+      './fixtures/**/*.coffee'
       './lib/**/*.coffee'
       './test/**/*.coffee'
     ]
