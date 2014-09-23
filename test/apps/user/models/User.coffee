@@ -3,6 +3,7 @@ assert = require 'assert'
 {Model} = require 'mongoose'
 
 {User} = require 'apps/user/models'
+{generateHashedPassword} = require 'lib/util/crypto'
 {purgeDatabase} = require 'lib/util/test'
 
 
@@ -66,3 +67,13 @@ describe 'User Model', ->
       user.save (e) ->
         _assertExpectedFieldError e, 'salt'
         done()
+
+
+  describe 'Properties', ->
+
+    it 'verifyPassword', ->
+      user = new User
+      user.salt = 'foo_salt'
+      user.password = generateHashedPassword 'pasuwado', user.salt
+      assert user.verifyPassword 'pasuwado'
+      assert user.verifyPassword('pasuwadox') is false

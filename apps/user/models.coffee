@@ -1,6 +1,8 @@
 mongoose = require 'mongoose'
 {Schema} = mongoose
 
+cryptoUtil = require 'lib/util/crypto'
+
 
 UserSchema = new Schema {
   email:
@@ -20,6 +22,9 @@ UserSchema = new Schema {
     required: true
     unique: true
 }
+
+UserSchema.methods.verifyPassword = (rawPassword) ->
+  @password is cryptoUtil.generateHashedPassword rawPassword, @salt
 
 
 module.exports =
