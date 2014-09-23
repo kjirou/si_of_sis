@@ -1,4 +1,4 @@
-si_of_sis
+si_of_sis [![Build Status](https://travis-ci.org/kjirou/si_of_sis.svg?branch=master)](https://travis-ci.org/kjirou/si_of_sis)
 =========
 
 
