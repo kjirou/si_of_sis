@@ -1,3 +1,5 @@
+async = require 'async'
+_ = require 'underscore'
 wantit = require 'wantit'
 
 
@@ -19,15 +21,31 @@ for subAppName in subAppNames
     logics: wantit "#{path}/logics"
     routes: wantit "#{path}/routes"
 
-{core, home, user} = subApps
+
+#
+# Models
+#
+models = {}
+for unused, subApp of subApps
+  _.extend models, subApp.models ? {}
 
 
 #
 # Routing
 #
+{core, home, user} = subApps
 core.routes.addRoute 'home', home.routes
 
 
 module.exports =
   routes: subApps.core.routes
+  models: models
   subApps: subApps
+
+  # 全 Model のインデックスを再生成する
+  ensureModelIndexes: (callback) ->
+    tasks = _.values(models).map (model) ->
+      (done) -> model.ensureIndexes done
+    async.parallel tasks, (e) ->
+      throw e if e
+      callback()
