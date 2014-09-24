@@ -4,7 +4,7 @@ path = require 'path'
 router = require 'express-nested-router'
 
 conf = require 'conf'
-routes = require 'apps/routes'
+apps = require 'apps'
 {createSubAppMiddleware} = require 'lib/middlewares'
 
 
@@ -46,14 +46,14 @@ app.use express.session {
   }
 }
 
-for subAppName, subAppNamespace of routes.subAppNamespaces
-  subAppNamespace.pushBeforeMiddleware(createSubAppMiddleware subAppName)
+for subAppName, subApp of apps.subApps when subApp.routes
+  subApp.routes.pushBeforeMiddleware(createSubAppMiddleware subAppName)
 
 
 #
 # Resolve routes
 #
-routes.namespace.resolve app
+apps.routes.resolve app
 
 
 module.exports = app
