@@ -4,6 +4,12 @@ require('coffee-script/register');
 
 require('../env/development');
 
+var http = require('http');
+
+var conf = require('conf');
+
 
 var app = require('apps/app');
-app.listen(3000);
+http.createServer(app).listen(conf.server.port, function(){
+  console.log('Express server listening on port ' + conf.server.port);
+});
