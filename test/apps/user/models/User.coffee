@@ -1,23 +1,22 @@
-_ = require 'underscore'
 assert = require 'assert'
 async = require 'async'
 {Model} = require 'mongoose'
+_ = require 'underscore'
 
 {User} = require 'apps/user/models'
+{resetDatabase} = require 'helpers/test'
 {generateHashedPassword} = require 'lib/util/crypto'
-{purgeDatabase} = require 'lib/util/test'
 
 
 describe 'User Model', ->
 
   before (done) ->
-
     @validData =
       email: 'test@example.com'
       password: 'my_hashed_password'
       salt: 'my_salt'
 
-    purgeDatabase done
+    resetDatabase done
 
   it 'Model definition', ->
     assert(User.prototype instanceof Model)
@@ -52,8 +51,38 @@ describe 'User Model', ->
       user = new User
       _.extend user, @validData, { email:null }
       user.save (e) ->
-        _assertExpectedFieldError e, 'email'
+        throw e if e  # Error is not occured
         done()
+
+    it 'emailがnullを除外したunique制約である', (done) ->
+      self = @
+      # unique, sparse 設定を代表で確認する
+      User.remove (e) ->
+        throw e if e
+        # 違うメルアドなら保存できること、email が存在しないなら重複できることを確認
+        data = _.extend {}, self.validData
+        delete data.email
+        dataExtensions = [
+          {email:'foo@example.com'}
+          {email:'bar@example.com'}
+          {}
+          {}
+        ]
+        async.eachSeries dataExtensions, (extData, nextLoop) ->
+          user = _.extend new User, data, extData
+          user.save (e) ->
+            throw e if e
+            nextLoop()
+        , (e) ->
+          throw e if e
+          # 重複したメルアドは保存できない
+          user = _.extend new User, data, { email:'bar@example.com' }
+          user.save (e) ->
+            assert e.name is 'MongoError'
+            User.find().count (e, count) ->
+              throw e if e
+              assert count is 4
+              done()
 
     it 'password', (done) ->
       user = new User

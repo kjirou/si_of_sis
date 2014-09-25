@@ -7,7 +7,6 @@ cryptoUtil = require 'lib/util/crypto'
 UserSchema = new Schema {
   email:
     type: String
-    required: true
     index:
       unique: true
       sparse: true
@@ -20,7 +19,6 @@ UserSchema = new Schema {
   salt:
     type: String
     required: true
-    unique: true
 }
 
 
