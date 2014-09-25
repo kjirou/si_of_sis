@@ -1,10 +1,13 @@
 express = require 'express'
 MongoStore = require('connect-mongo')(express)
-path = require 'path'
 router = require 'express-nested-router'
+passport = require 'passport'
+pathModule = require 'path'
+LocalStrategy = require('passport-local').Strategy
 
 conf = require 'conf'
 apps = require 'apps'
+{User} = require 'apps/user/models'
 {createSubAppMiddleware} = require 'lib/middlewares'
 
 
@@ -13,7 +16,7 @@ app = express()
 #
 # Settings
 #
-app.set 'views', path.join(conf.root, '/views')
+app.set 'views', pathModule.join(conf.root, '/views')
 app.set 'view engine', 'jade'
 
 
@@ -25,7 +28,32 @@ app.locals =
 
 
 #
-# Set middlewares
+# Passport Configurations
+#
+passport.use(
+  new LocalStrategy {
+    usernameField: 'email'
+  }, (email, password, next) ->
+    User.queryActiveUserByEmail(email).findOne (e, user) ->
+      if e
+        next e
+      else if user?.verifyPassword password
+        next null, user
+      else
+        next null, null
+)
+
+passport.serializeUser (user, callback) ->
+  callback null, user._id.toString()
+
+passport.deserializeUser (userId, callback) ->
+  User.findOne userId, (e, user) ->
+    return callback e if e
+    callback null, user ? null
+
+
+#
+# Middlewares Settings
 #
 app.use express.cookieParser()
 app.use express.json()
@@ -45,13 +73,18 @@ app.use express.session {
     clear_interval: 3600
   }
 }
+app.use passport.initialize()
+app.use passport.session()
 
 for subAppName, subApp of apps.subApps when subApp.routes
   subApp.routes.pushBeforeMiddleware(createSubAppMiddleware subAppName)
 
+if conf.env is 'development'
+  app.use express.errorHandler()
+
 
 #
-# Resolve routes
+# Resolve Routes
 #
 apps.routes.resolve app
 

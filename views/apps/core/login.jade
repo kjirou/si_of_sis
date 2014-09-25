@@ -1,0 +1,14 @@
+extends /apps/layout
+
+
+block contentBlock
+  h1 core.login
+  form(action='./login', method='POST')
+    div
+      label Email:
+      input(type='text', name='email')
+    div
+      label Password:
+      input(type='text', name='password')
+    div
+      input(type='submit', value='Submit')
