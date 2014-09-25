@@ -22,6 +22,7 @@
     "mongoose": "3.8.15",
     "passport": "0.2.1",
     "passport-local": "1.0.0",
+    "random-string": "0.1.1",
     "underscore": "1.7.0",
     "wantit": "0.0.1"
   },

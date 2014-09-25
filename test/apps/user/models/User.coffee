@@ -13,7 +13,14 @@ describe 'User Model', ->
   before (done) ->
     @validData =
       email: 'test@example.com'
-      password: 'my_hashed_password'
+      rawPassword: 'test1234'
+
+    @createValidUser = (data={}) ->
+      user = _.extend new User, {
+        email: @validData.email
+      }, data
+      user.setPassword data.rawPassword ? @validData.rawPassword
+      user
 
     resetDatabase done
 
@@ -26,36 +33,22 @@ describe 'User Model', ->
     afterEach (done) -> User.remove done
 
     it 'Create a document', (done) ->
-      user = new User
-      _.extend user, @validData
-      user.save (e) =>
-        throw e if e
-        User.find (e, docs) =>
-          throw e if e
-          assert docs.length is 1
-          doc = docs[0]
-          assert doc.password is @validData.password
-          assert typeof doc.salt is 'string'
-          assert typeof doc.salt is 'string'
-          assert doc.salt.length > 0
-          done()
-
-    it '新規作成時にsaltが自動生成され、更新時には変更されない', (done) ->
       self = @
-      user = _.extend new User, @validData
+
+      user = @createValidUser()
+      assert user.email is @validData.email
+      assert typeof user.salt is 'string'
+      assert user.salt.length is User.SALT_LENGTH
+      assert user.verifyPassword @validData.rawPassword
+
       user.save (e) ->
         throw e if e
-        keptSalt = user.salt
-        User.findOne email:self.validData.email, (e, user_) ->
+        User.find (e, users) ->
           throw e if e
-          nextEmail = 'x' + user_.email  # 一応何かの値を変える
-          user_.email = nextEmail
-          user_.save (e) ->
-            throw e if e
-            User.findOne email:nextEmail, (e, user__) ->
-              throw e if e
-              assert keptSalt is user__.salt
-              done()
+          assert users.length is 1
+          user = users[0]
+          assert user.verifyPassword self.validData.rawPassword
+          done()
 
 
   describe 'Fields', ->
@@ -66,15 +59,14 @@ describe 'User Model', ->
       assert fieldName of e.errors
 
     it 'email', (done) ->
-      user = new User
-      _.extend user, @validData, { email:null }
+      user = @createValidUser {email:null}
       user.save (e) ->
         throw e if e  # Error is not occured
         done()
 
-    it 'emailがnullを除外したunique制約である', (done) ->
-      self = @
+    it 'emailが未定義を除外したunique制約である', (done) ->
       # unique, sparse 設定を代表で確認する
+      self = @
       User.remove (e) ->
         throw e if e
         # 違うメルアドなら保存できること、email が存在しないなら重複できることを確認
@@ -83,18 +75,18 @@ describe 'User Model', ->
         dataExtensions = [
           {email:'foo@example.com'}
           {email:'bar@example.com'}
-          {}
-          {}
+          {email:undefined}
+          {email:undefined}
         ]
         async.eachSeries dataExtensions, (extData, nextLoop) ->
-          user = _.extend new User, data, extData
+          user = self.createValidUser extData
           user.save (e) ->
             throw e if e
             nextLoop()
         , (e) ->
           throw e if e
           # 重複したメルアドは保存できない
-          user = _.extend new User, data, { email:'bar@example.com' }
+          user = self.createValidUser {email:'bar@example.com'}
           user.save (e) ->
             assert e.name is 'MongoError'
             User.find().count (e, count) ->
@@ -103,8 +95,8 @@ describe 'User Model', ->
               done()
 
     it 'password', (done) ->
-      user = new User
-      _.extend user, @validData, { password:null }
+      user = @createValidUser {email:null}
+      user.password = undefined
       user.save (e) ->
         _assertExpectedFieldError e, 'password'
         done()
@@ -122,9 +114,7 @@ describe 'User Model', ->
           'bar@example.com'
           'baz@example.com'
         ], (email, next) ->
-          user = new User
-          _.extend user, self.validData, { email:email, salt:email + '_salt' }
-          user.save next
+          self.createValidUser(email:email).save next
         , (e) ->
           throw e if e
           done()
