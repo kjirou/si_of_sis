@@ -17,12 +17,12 @@ execute = ({
       return nextStep() unless isForDevelopment
       dataList = [{
         email: 'dev@example.com'
-        password: undefined
-        salt: 'my_salt'
+        rawPassword: 'testtest'
       }]
       async.eachSeries dataList, (data, nextLoop) ->
-        data.password = generateHashedPassword data.email, data.salt
-        user = _.extend new User, data
+        user = new User
+        user.email = data.email
+        user.setPassword data.rawPassword
         user.save (e) ->
           throw e if e
           console.log "Created a user: email=`#{data.email}`"
