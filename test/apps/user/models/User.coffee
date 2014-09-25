@@ -14,7 +14,6 @@ describe 'User Model', ->
     @validData =
       email: 'test@example.com'
       password: 'my_hashed_password'
-      salt: 'my_salt'
 
     resetDatabase done
 
@@ -36,8 +35,27 @@ describe 'User Model', ->
           assert docs.length is 1
           doc = docs[0]
           assert doc.password is @validData.password
-          assert doc.salt is @validData.salt
+          assert typeof doc.salt is 'string'
+          assert typeof doc.salt is 'string'
+          assert doc.salt.length > 0
           done()
+
+    it '新規作成時にsaltが自動生成され、更新時には変更されない', (done) ->
+      self = @
+      user = _.extend new User, @validData
+      user.save (e) ->
+        throw e if e
+        keptSalt = user.salt
+        User.findOne email:self.validData.email, (e, user_) ->
+          throw e if e
+          nextEmail = 'x' + user_.email  # 一応何かの値を変える
+          user_.email = nextEmail
+          user_.save (e) ->
+            throw e if e
+            User.findOne email:nextEmail, (e, user__) ->
+              throw e if e
+              assert keptSalt is user__.salt
+              done()
 
 
   describe 'Fields', ->
@@ -89,13 +107,6 @@ describe 'User Model', ->
       _.extend user, @validData, { password:null }
       user.save (e) ->
         _assertExpectedFieldError e, 'password'
-        done()
-
-    it 'salt', (done) ->
-      user = new User
-      _.extend user, @validData, { salt:null }
-      user.save (e) ->
-        _assertExpectedFieldError e, 'salt'
         done()
 
 

@@ -16,9 +16,9 @@ UserSchema = new Schema {
     type: String
     required: true
 
+  # 必ず存在する、required 無い点は #46 参照
   salt:
     type: String
-    required: true
 }
 
 
@@ -30,6 +30,14 @@ UserSchema.statics.queryActiveUserByEmail = (email) ->
 
 UserSchema.methods.verifyPassword = (rawPassword) ->
   @password is cryptoUtil.generateHashedPassword rawPassword, @salt
+
+UserSchema.methods._generateSalt = -> @_id.toString() + '_salt'
+
+
+UserSchema.pre 'save', (callback) ->
+  if @isNew
+    @salt = @_generateSalt()
+  callback()
 
 
 module.exports =
