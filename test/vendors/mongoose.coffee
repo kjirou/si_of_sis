@@ -1,10 +1,19 @@
 assert = require 'assert'
-{ObjectId} = require('mongoose').Types
+async = require 'async'
+mongoose = require 'mongoose'
+{Schema} = mongoose
+{ObjectId} = mongoose.Types
+_ = require 'underscore'
 
 {Sandbox} = require 'apps/core/models'
+databaseHelper = require 'helpers/database'
+testHelper = require 'helpers/test'
 
 
 describe 'mongoose Vendor', ->
+
+  before (done) ->
+    databaseHelper.resetDatabase done
 
   it '同ObjectIdでsaveされた場合エラーになる', (done) ->
     # 同プロセス内では new によるドキュメント生成時にユニークな _id が振られるので重複しない。
@@ -26,3 +35,32 @@ describe 'mongoose Vendor', ->
         # なお、素の MongoDB の db.coll.save は上書き更新になる
         assert e.name is 'MongoError'
         done()
+
+  it 'Model.ensureIndexesはインデックスに失敗するとエラーを返す', (done) ->
+    testHelper.createTestModel new Schema({
+      x:
+        type: String
+        index:
+          unique: true
+    }, {
+      autoIndex: false
+    }), (e, Test) ->
+      Test.collection.getIndexes (e, indexes) ->
+        # インデックスが張られていないことを確認
+        assert _.size(indexes) is 0
+        task = (nextStep) ->
+          testDoc = new Test
+          testDoc.x = 'foo'
+          testDoc.save nextStep
+        async.parallel [task,task], (e) ->
+          throw e if e
+          Test.find({x:'foo'}).count (e, count) ->
+            throw e if e
+            # x = 'foo' が重複している
+            assert count is 2
+            Test.ensureIndexes (e) ->
+              # エラーを返す
+              # 11000 の定義は何故か資料が見つからなかった、詳細不明
+              assert e.name is 'MongoError'
+              assert e.code is 11000
+              done()

@@ -10,9 +10,13 @@ _uniqueModelId = 0
 helper.createTestModel = (schema, callback) ->
   _uniqueModelId += 1
   Model = mongoose.model 'Test' + _uniqueModelId, schema
+  # autoIndex が有効なら明示的にインデックスを張る
   # 前に dropDatabase しているとインデックスが付与されないことがあるため
-  Model.ensureIndexes (e) ->
-    return callback e if e
+  if schema.options.autoIndex
+    Model.ensureIndexes (e) ->
+      return callback e if e
+      callback null, Model
+  else
     callback null, Model
 
 
