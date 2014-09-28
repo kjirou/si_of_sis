@@ -55,6 +55,11 @@ passport.deserializeUser (userId, callback) ->
 #
 # Middlewares Settings
 #
+switch conf.env
+  when 'development'
+    app.use express.logger { format:'dev' }
+  when 'production'
+    app.use express.logger { format:'combined' }
 app.use express.cookieParser()
 app.use express.json()
 app.use express.urlencoded()
