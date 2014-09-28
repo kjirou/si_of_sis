@@ -14,11 +14,15 @@ execute = ->
   subCommandName = options._[0] ? 'default'
   subCommand = wantit "commands/#{subCommandName}"
   if subCommand
+    console.log colo.blue "Start `#{subCommandName}`"
     subCommand.execute (e) ->
       if e
-        console.error e
+        console.log colo.red "Error is occured in `#{subCommandName}`"
+        console.error e.stack or error
         exit 1
-      exit()
+      else
+        console.log colo.blue "Finish `#{subCommandName}`"
+        exit()
   else
     console.error colo.red "Not found `#{subCommandName}` sub command"
     exit 1
