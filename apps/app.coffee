@@ -75,6 +75,8 @@ app.use express.session {
 }
 app.use passport.initialize()
 app.use passport.session()
+app.use app.router
+app.use(express.static(pathModule.join(conf.root, 'public')))
 
 for subAppName, subApp of apps.subApps when subApp.routes
   subApp.routes.pushBeforeMiddleware(createSubAppMiddleware subAppName)
