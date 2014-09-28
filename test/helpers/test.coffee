@@ -2,8 +2,14 @@ assert = require 'assert'
 mongoose = require 'mongoose'
 {Model, Schema} = mongoose
 
+databaseHelper = require 'helpers/database'
+testHelper = require 'helpers/test'
+
 
 describe 'test Helper', ->
+
+  before (done) ->
+    databaseHelper.resetDatabase done
 
   it 'createTestModel', (done) ->
     testHelper.createTestModel new Schema, (e, TestModel) ->

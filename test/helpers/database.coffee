@@ -28,4 +28,6 @@ describe 'database Helper', ->
       done()
 
   it 'resetDatabase', (done) ->
-    databaseHelper.resetDatabase done
+    databaseHelper.resetDatabase (e) ->
+      throw e if e
+      done()
