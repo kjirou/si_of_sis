@@ -4,7 +4,7 @@ async = require 'async'
 _ = require 'underscore'
 
 {User} = require 'apps/user/models'
-{resetDatabase} = require 'helpers/test'
+{resetDatabase} = require 'helpers/database'
 {generateHashedPassword} = require 'lib/util/crypto'
 
 
