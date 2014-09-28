@@ -1,20 +1,25 @@
 async = require 'async'
+minimist = require 'minimist'
 mongoose = require 'mongoose'
-_ = require 'underscore'
 
 {User} = require 'apps/user/models'
-{generateHashedPassword} = require 'lib/util/crypto'
 
 
-execute = ({
-  isForDevelopment
-}) ->
-  bucket = {}
+execute = (callback) ->
+
+  parsed = minimist process.argv.slice(3),
+    default:
+      d: false
+    alias:
+      d: 'development'
+
+  inputs =
+    # 開発環境用のデータを設定する
+    development: parsed.development
 
   async.waterfall [
-    # 開発環境用の初期データ
     (nextStep, err) ->
-      return nextStep() unless isForDevelopment
+      return nextStep() unless inputs.development
       dataList = [{
         email: 'dev@example.com'
         rawPassword: 'testtest'
@@ -28,12 +33,10 @@ execute = ({
           console.log "Created a user: email=`#{data.email}`"
           nextLoop()
       , (e) ->
-        throw e if e
+        return nextStep e if e
         nextStep()
   ], (e) ->
-    throw e if e
-    mongoose.disconnect ->
-      process.exit 0
+    callback e
 
 
 module.exports =

@@ -1,4 +1,4 @@
-process.env.NODE_ENV = 'fixture'
+process.env.NODE_ENV = 'cli'
 process.env.NODE_PATH = __dirname + '/..'
 require('module')._initPaths()
 
