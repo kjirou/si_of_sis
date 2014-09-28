@@ -41,11 +41,3 @@ module.exports =
   routes: subApps.core.routes
   models: models
   subApps: subApps
-
-  # 全 Model のインデックスを再生成する
-  ensureModelIndexes: (callback) ->
-    tasks = _.values(models).map (model) ->
-      (done) -> model.ensureIndexes done
-    async.parallel tasks, (e) ->
-      throw e if e
-      callback()
