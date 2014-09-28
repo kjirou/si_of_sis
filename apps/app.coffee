@@ -80,6 +80,9 @@ app.use express.session {
 }
 app.use passport.initialize()
 app.use passport.session()
+app.use (req, res, next) ->
+  res.locals.req = req
+  next()
 app.use app.router
 app.use(express.static(pathModule.join(conf.root, 'public')))
 

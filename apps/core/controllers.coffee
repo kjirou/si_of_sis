@@ -15,9 +15,9 @@ controllers.login = (req, res, next) ->
         else unless user
           res.redirect '/login?failue=1'
         else
-          req.logIn user, (e) ->
+          req.login user, (e) ->
             return next e if e
-            res.redirect '/?logged_in=1'
+            res.redirect '/home'
       )(req, res, next)
     else
       res.renderSubApp 'login'
