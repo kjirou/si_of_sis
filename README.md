@@ -7,8 +7,8 @@ si_of_sis [![Build Status](https://travis-ci.org/kjirou/si_of_sis.svg?branch=mas
 ### Preparation
 1. Read [package.json](./package.json)
 2. Read [.travis.yml](./.travis.yml)
-3. Read [env](./env)
-4. Read [conf](./conf)
+3. Read [env/development.coffee](./env/development.coffee)
+4. Read [conf/index.coffee](./conf/index.coffee)
 
 ### Installation
 ```
@@ -19,8 +19,12 @@ npm install
 
 ### Run Web Server
 - 1. `mongod`
-- 2. `node boot/fixture.js --development`
+- 2. `node boot/command.js fixture --development`
 - 3. `npm run dev`
+
+### Run Tests
+- 1. `mongod`
+- 2. `npm test`
 
 ### Use Mongo Script
 - `mongo db_name scripts/mongo/script_name.js`
