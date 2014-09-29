@@ -35,6 +35,7 @@ for unused, subApp of subApps
 #
 {core, home, user} = subApps
 core.routes.addRoute 'home', home.routes
+core.routes.addRoute 'user', user.routes
 
 
 module.exports =

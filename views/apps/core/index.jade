@@ -2,9 +2,9 @@ extends /apps/layout
 
 
 block contentBlock
-  h1 core.index
-  div Hello, template!
+  h2 core.index
   ul
+    li: a(href='user/create') Create User
     li
       if req.user
         a(href='/home') Home

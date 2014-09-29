@@ -1,0 +1,18 @@
+extends /apps/layout
+
+
+block contentBlock
+  h1 User
+  form(action=req.path, method='POST')
+    div
+      label Email:
+      input(type='text', name='email', value=inputs.email)
+    if errors.email
+      p #{errors.email.message}
+    div
+      label Password:
+      input(type='text', name='password', value=inputs.password)
+    if errors.password
+      p #{errors.password.message}
+    div
+      input(type='submit', value='Submit')
