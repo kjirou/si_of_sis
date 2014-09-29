@@ -9,7 +9,7 @@ var http = require('http');
 var conf = require('conf');
 
 
-var app = require('apps/app');
+var app = require('app');
 http.createServer(app).listen(conf.server.port, function(){
   console.log('Express server listening on port ' + conf.server.port);
 });

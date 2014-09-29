@@ -1,7 +1,7 @@
 http = require 'http'
 request = require 'supertest'
 
-app = require 'apps/app'
+app = require 'app'
 conf = require 'conf'
 
 

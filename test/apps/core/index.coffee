@@ -1,6 +1,6 @@
 request = require 'supertest'
 
-app = require 'apps/app'
+app = require 'app'
 
 
 describe 'core Application', ->
