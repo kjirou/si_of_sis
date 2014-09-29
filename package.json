@@ -25,6 +25,7 @@
     "passport-local": "1.0.0",
     "random-string": "0.1.1",
     "underscore": "1.7.0",
+    "validator": "3.19.0",
     "wantit": "0.0.1"
   },
   "devDependencies": {
