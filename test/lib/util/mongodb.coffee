@@ -1,10 +1,19 @@
 assert = require 'assert'
+{ObjectId} = require('mongoose').Types
 
-mongodbUtil = require 'lib/util/mongodb'
 {Sandbox} = require 'apps/core/models'
+mongodbUtil = require 'lib/util/mongodb'
 
 
 describe 'mongodb Util', ->
+
+  it 'isObjectIdString', ->
+    assert mongodbUtil.isObjectIdString '0123456789abcdef01234567'
+    assert mongodbUtil.isObjectIdString('0123456789abcdef012345670') is false
+    assert mongodbUtil.isObjectIdString('0123456789abcdeg01234567') is false
+    assert mongodbUtil.isObjectIdString(null) is false
+    assert mongodbUtil.isObjectIdString(undefined) is false
+    assert mongodbUtil.isObjectIdString(ObjectId('0123456789abcdef01234567')) is false
 
   it 'purgeDatabase', (done) ->
     # モデルを空にして 0 件か

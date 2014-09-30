@@ -1,7 +1,12 @@
 mongoose = require 'mongoose'
+_ = require 'underscore'
 
 
 module.exports =
+
+  # ObjectId 書式の文字列であるかを判定する
+  isObjectIdString: (any) ->
+    _.isString(any) and /^[0-9a-f]{24}$/.test(any)
 
   # DB を削除する, インデックスも消える
   purgeDatabase: (callback) ->
