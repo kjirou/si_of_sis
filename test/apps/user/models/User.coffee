@@ -26,6 +26,7 @@ describe 'User Model', ->
 
   it 'Model definition', ->
     assert(User.prototype instanceof Model)
+    assert(User.queryOneById typeof 'function')
 
 
   describe 'Save Processing', ->

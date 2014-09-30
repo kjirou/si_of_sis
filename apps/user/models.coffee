@@ -3,6 +3,7 @@ mongoose = require 'mongoose'
 randomString = require 'random-string'
 _ = require 'underscore'
 
+{getPlugins} = require 'lib/mongoose-plugins'
 {generateHashedPassword} = require 'lib/util/crypto'
 
 
@@ -29,6 +30,7 @@ UserSchema = new Schema {
       randomString length:consts.SALT_LENGTH
 }
 
+UserSchema.plugin getPlugins()
 
 _.extend UserSchema.statics, consts
 
