@@ -15,6 +15,13 @@ describe 'mongodb Util', ->
     assert mongodbUtil.isObjectIdString(undefined) is false
     assert mongodbUtil.isObjectIdString(ObjectId('0123456789abcdef01234567')) is false
 
+  it 'isObjectId', ->
+    assert mongodbUtil.isObjectId '0123456789abcdef01234567'
+    assert mongodbUtil.isObjectId('0123456789abcdef012345670') is false
+    assert mongodbUtil.isObjectId(null) is false
+    assert mongodbUtil.isObjectId(undefined) is false
+    assert mongodbUtil.isObjectId(ObjectId('0123456789abcdef01234567'))
+
   it 'purgeDatabase', (done) ->
     # モデルを空にして 0 件か
     Sandbox.remove ->
