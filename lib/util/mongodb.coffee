@@ -3,14 +3,18 @@ mongoose = require 'mongoose'
 _ = require 'underscore'
 
 
-module.exports =
+utils =
 
   # ObjectId 書式の文字列であるかを判定する
   isObjectIdString: (any) ->
     _.isString(any) and /^[0-9a-f]{24}$/.test(any)
 
   isObjectId: (any) ->
-    (any instanceof ObjectId) or @isObjectIdString(any)
+    (any instanceof ObjectId) or utils.isObjectIdString(any)
+
+  # ObjectId か不正な値な場合は null へ変換する
+  toObjectIdCondition: (any) ->
+    if utils.isObjectId(any) then ObjectId(any) else null
 
   # DB を削除する, インデックスも消える
   purgeDatabase: (callback) ->
@@ -21,3 +25,6 @@ module.exports =
       else
         setTimeout arguments.callee, 50
     , 1
+
+
+module.exports = utils
