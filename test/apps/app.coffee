@@ -12,9 +12,9 @@ describe 'app Module', ->
     it 'Webアプリケーションサーバを起動できる', (done) ->
       # @TODO listen でエラーを出す方法が不明でエラー時の動作確認してない
       server = http.createServer(app).listen conf.server.port, (e) ->
-        throw e if e
+        return done e if e
         server.close (e) ->
-          throw e if e
+          return done e if e
           done()
 
     it '静的ファイルへリクエストできる', (done) ->

@@ -18,7 +18,7 @@ describe 'mongoose-plugins Lib', ->
     schema = new Schema
     schema.plugin plugins.baseQueries
     testHelper.createTestModel schema, (e, Test) ->
-      throw e if e
+      return done e if e
       # プラグインで付与したメソッドがある
       assert Test.queryOneById typeof 'function'
       # _id を固定にして 1 行保存する
@@ -27,12 +27,12 @@ describe 'mongoose-plugins Lib', ->
       testObj.save (e) ->
         # その 1 行を findOneById で取得できる
         Test.findOneById objectId, (e, doc) ->
-          throw e if e
+          return done e if e
           assert doc
           assert doc._id.toString() is objectId.toString()
           # 不正な _id 文字列指定の場合は null を返す
           Test.findOneById 'invalid_object_id', (e, doc) ->
-            throw e if e
+            return done e if e
             assert doc is null
             done()
 

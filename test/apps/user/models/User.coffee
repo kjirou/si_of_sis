@@ -43,9 +43,9 @@ describe 'User Model', ->
       assert user.verifyPassword @validData.rawPassword
 
       user.save (e) ->
-        throw e if e
+        return done e if e
         User.find (e, users) ->
-          throw e if e
+          return done e if e
           assert users.length is 1
           user = users[0]
           assert user.verifyPassword self.validData.rawPassword
@@ -62,14 +62,14 @@ describe 'User Model', ->
     it 'email', (done) ->
       user = @createValidUser {email:null}
       user.save (e) ->
-        throw e if e  # Error is not occured
+        return done e if e
         done()
 
     it 'emailが未定義を除外したunique制約である', (done) ->
       # unique, sparse 設定を代表で確認する
       self = @
       User.remove (e) ->
-        throw e if e
+        return done e if e
         # 違うメルアドなら保存できること、email が存在しないなら重複できることを確認
         data = _.extend {}, self.validData
         delete data.email
@@ -82,16 +82,16 @@ describe 'User Model', ->
         async.eachSeries dataExtensions, (extData, nextLoop) ->
           user = self.createValidUser extData
           user.save (e) ->
-            throw e if e
+            return done e if e
             nextLoop()
         , (e) ->
-          throw e if e
+          return done e if e
           # 重複したメルアドは保存できない
           user = self.createValidUser {email:'bar@example.com'}
           user.save (e) ->
             assert e.name is 'MongoError'
             User.find().count (e, count) ->
-              throw e if e
+              return done e if e
               assert count is 4
               done()
 
@@ -109,7 +109,7 @@ describe 'User Model', ->
       self = @
       # 3 ユーザを用意
       User.remove (e) ->
-        throw e if e
+        return done e if e
         async.eachSeries [
           'foo@example.com'
           'bar@example.com'
@@ -117,16 +117,16 @@ describe 'User Model', ->
         ], (email, next) ->
           self.createValidUser(email:email).save next
         , (e) ->
-          throw e if e
+          return done e if e
           done()
 
     it 'queryActiveUserByEmail', (done) ->
       User.queryActiveUserByEmail('foo@example.com').find (e, docs) ->
-        throw e if e
+        return done e if e
         assert docs.length is 1
         assert docs[0].email is 'foo@example.com'
         User.queryActiveUserByEmail('foox@example.com').find (e, docs) ->
-          throw e if e
+          return done e if e
           assert docs.length is 0
           done()
 

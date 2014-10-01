@@ -20,7 +20,7 @@ describe 'database Helper', ->
     spies = for modelName, model of apps.models
       sinon.spy model, 'ensureIndexes'
     databaseHelper.ensureModelIndexes (e) =>
-      throw e if e
+      return done e if e
       assert spies.length > 0
       for spy in spies
         assert spy.callCount is 1
@@ -29,5 +29,5 @@ describe 'database Helper', ->
 
   it 'resetDatabase', (done) ->
     databaseHelper.resetDatabase (e) ->
-      throw e if e
+      return done e if e
       done()

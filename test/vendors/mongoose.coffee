@@ -23,7 +23,7 @@ describe 'mongoose Vendor', ->
     id = sandbox._id
     assert id instanceof ObjectId
     sandbox.save (e) ->
-      throw e if e
+      return done e if e
       sandbox_ = new Sandbox
       sandbox_._id = id
       sandbox_.save (e) ->
@@ -53,9 +53,9 @@ describe 'mongoose Vendor', ->
           testDoc.x = 'foo'
           testDoc.save nextStep
         async.parallel [task,task], (e) ->
-          throw e if e
+          return done e if e
           Test.find({x:'foo'}).count (e, count) ->
-            throw e if e
+            return done e if e
             # x = 'foo' が重複している
             assert count is 2
             Test.ensureIndexes (e) ->
