@@ -1,4 +1,4 @@
-assert = require 'assert'
+assert = require 'power-assert'
 sinon = require 'sinon'
 
 apps = require 'apps'

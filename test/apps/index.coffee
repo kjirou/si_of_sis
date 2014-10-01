@@ -1,4 +1,4 @@
-assert = require 'assert'
+assert = require 'power-assert'
 _ = require 'underscore'
 
 apps = require 'apps'

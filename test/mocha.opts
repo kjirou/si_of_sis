@@ -1,4 +1,5 @@
 --compilers coffee:coffee-script/register
+--require espower-coffee/guess
 --require env/test.coffee
 --recursive
 --timeout 3000

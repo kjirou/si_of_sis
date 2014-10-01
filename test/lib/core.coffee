@@ -1,4 +1,4 @@
-assert = require 'assert'
+assert = require 'power-assert'
 
 core = require 'lib/core'
 

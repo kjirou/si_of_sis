@@ -1,4 +1,4 @@
-assert = require 'assert'
+assert = require 'power-assert'
 
 conf = require 'conf'
 cryptoUtil = require 'lib/util/crypto'

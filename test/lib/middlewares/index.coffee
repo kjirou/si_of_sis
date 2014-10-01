@@ -1,4 +1,4 @@
-assert = require 'assert'
+assert = require 'power-assert'
 
 middlewares = require 'lib/middlewares'
 

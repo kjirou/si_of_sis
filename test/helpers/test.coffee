@@ -1,4 +1,4 @@
-assert = require 'assert'
+assert = require 'power-assert'
 mongoose = require 'mongoose'
 {Model, Schema} = mongoose
 

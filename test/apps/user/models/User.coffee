@@ -1,4 +1,4 @@
-assert = require 'assert'
+assert = require 'power-assert'
 async = require 'async'
 {Model} = require 'mongoose'
 _ = require 'underscore'

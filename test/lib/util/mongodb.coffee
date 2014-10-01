@@ -1,4 +1,4 @@
-assert = require 'assert'
+assert = require 'power-assert'
 {ObjectId} = require('mongoose').Types
 
 {Sandbox} = require 'apps/core/models'

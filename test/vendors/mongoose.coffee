@@ -1,4 +1,4 @@
-assert = require 'assert'
+assert = require 'power-assert'
 async = require 'async'
 mongoose = require 'mongoose'
 {Schema} = mongoose
