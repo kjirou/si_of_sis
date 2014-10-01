@@ -5,7 +5,6 @@ mongoose = require 'mongoose'
 {ObjectId} = mongoose.Types
 _ = require 'underscore'
 
-{Sandbox} = require 'apps/core/models'
 databaseHelper = require 'helpers/database'
 testHelper = require 'helpers/test'
 
@@ -19,22 +18,24 @@ describe 'mongoose Vendor', ->
     # 同プロセス内では new によるドキュメント生成時にユニークな _id が振られるので重複しない。
     # しかし、複数のアプリサーバを建てた場合はこの限りではなくなる。
     # テストも別プロセスでやるべきだが、とりあえずは同プロセスでテストする。
-    sandbox = new Sandbox
-    id = sandbox._id
-    assert id instanceof ObjectId
-    sandbox.save (e) ->
+    testHelper.createTestModel new Schema, (e, Test) ->
       return done e if e
-      sandbox_ = new Sandbox
-      sandbox_._id = id
-      sandbox_.save (e) ->
-        # このようなエラーが出る:
-        #
-        #   Uncaught MongoError: insertDocument :: caused by :: 11000 E11000 duplicate key error index:
-        #   sos_test.sandboxes.$_id_  dup key: { : ObjectId('542524f2f08d6a781ae3f9a9') }
-        #
-        # なお、素の MongoDB の db.coll.save は上書き更新になる
-        assert e.name is 'MongoError'
-        done()
+      doc = new Test
+      id = doc._id
+      assert id instanceof ObjectId
+      doc.save (e) ->
+        return done e if e
+        test_ = new Test
+        test_._id = id
+        test_.save (e) ->
+          # このようなエラーが出る:
+          #
+          #   Uncaught MongoError: insertDocument :: caused by :: 11000 E11000 duplicate key error index:
+          #   db_name.coll_name.$_id_  dup key: { : ObjectId('542524f2f08d6a781ae3f9a9') }
+          #
+          # なお、素の MongoDB の db.coll.save は上書き更新になる
+          assert e.name is 'MongoError'
+          done()
 
   it 'Model.ensureIndexesはインデックスに失敗するとエラーを返す', (done) ->
     testHelper.createTestModel new Schema({

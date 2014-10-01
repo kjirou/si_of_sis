@@ -1,7 +1,5 @@
 mongoose = require 'mongoose'
 
-{Sandbox} = require('apps').models
-
 
 helper = {}
 

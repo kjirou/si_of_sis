@@ -1,7 +1,9 @@
+mongoose = require 'mongoose'
+{Schema} = mongoose
+{ObjectId} = mongoose.Types
 assert = require 'power-assert'
-{ObjectId} = require('mongoose').Types
 
-{Sandbox} = require 'apps/core/models'
+testHelper = require 'helpers/test'
 mongodbUtil = require 'lib/util/mongodb'
 
 
@@ -34,15 +36,17 @@ describe 'mongodb Util', ->
 
   it 'purgeDatabase', (done) ->
     # モデルを空にして 0 件か
-    Sandbox.remove ->
-      Sandbox.find().count (e, count) ->
-        assert count is 0
-        # 1 件保存して 1 件か
-        (new Sandbox).save (e) ->
-          Sandbox.find().count (e, count) ->
-            assert count is 1
-            # purgeDatabase して 0 件か
-            mongodbUtil.purgeDatabase (e) ->
-              Sandbox.find().count (e, count) ->
-                assert count is 0
-                done()
+    testHelper.createTestModel new Schema, (e, Test) ->
+      return done e if e
+      Test.remove ->
+        Test.find().count (e, count) ->
+          assert count is 0
+          # 1 件保存して 1 件か
+          (new Test).save (e) ->
+            Test.find().count (e, count) ->
+              assert count is 1
+              # purgeDatabase して 0 件か
+              mongodbUtil.purgeDatabase (e) ->
+                Test.find().count (e, count) ->
+                  assert count is 0
+                  done()
