@@ -49,6 +49,9 @@ describe 'User Model', ->
           assert users.length is 1
           user = users[0]
           assert user.verifyPassword self.validData.rawPassword
+          # 共通 plugin で設定されるフィールド群を代表して確認する
+          assert user.created_at instanceof Date
+          assert user.updated_at instanceof Date
           done()
 
 
