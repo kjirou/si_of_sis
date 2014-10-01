@@ -1,4 +1,6 @@
 mongoose = require 'mongoose'
+{ObjectId} = mongoose.Types
+_ = require 'underscore'
 
 
 helper = {}
@@ -16,6 +18,16 @@ helper.createTestModel = (schema, callback) ->
       callback null, Model
   else
     callback null, Model
+
+# 重複しないランダムな ObjectId を作成する
+_createdObjectIdStrings = []
+helper.createUniqueObjectId = ->
+  letters = '0123456789abcdef'
+  idStr = null
+  while (not idStr?) or (idStr in _createdObjectIdStrings)
+    idStr = (letters[_.random letters.length - 1] for i in [0..23]).join ''
+  _createdObjectIdStrings.push idStr
+  ObjectId idStr
 
 
 module.exports = helper

@@ -1,9 +1,11 @@
 assert = require 'power-assert'
 mongoose = require 'mongoose'
 {Model, Schema} = mongoose
+{ObjectId} = mongoose.Types
 
 databaseHelper = require 'helpers/database'
 testHelper = require 'helpers/test'
+{isObjectIdString} = require 'lib/util/mongodb'
 
 
 describe 'test Helper', ->
@@ -30,3 +32,9 @@ describe 'test Helper', ->
           TestModel3.collection.getIndexes (e, indexes) ->
             assert 'x_1' of indexes
             done()
+
+  it 'createUniqueObjectId', ->
+    for i in [0..99]
+      id = testHelper.createUniqueObjectId()
+      assert id instanceof ObjectId
+      assert isObjectIdString id.toString()
