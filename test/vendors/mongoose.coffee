@@ -64,3 +64,25 @@ describe 'mongoose Vendor', ->
               assert e.name is 'MongoError'
               assert e.code is 11000
               done()
+
+  it 'pre(\'save\')を複数回設定できる', (done) ->
+    steps = []
+    schema = new Schema {
+      x: String
+    }
+    schema.pre 'save', (callback) ->
+      steps.push 1
+      callback()
+    schema.pre 'save', (callback) ->
+      steps.push 2
+      callback()
+    schema.pre 'save', (callback) ->
+      steps.push 3
+      callback()
+    testHelper.createTestModel schema, (e, Test) ->
+      return done e if e
+      assert.deepEqual [], steps
+      (new Test).save (e) ->
+        return done e if e
+        assert.deepEqual [1, 2, 3], steps
+        done()
