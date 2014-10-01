@@ -5,9 +5,9 @@ passport = require 'passport'
 pathModule = require 'path'
 LocalStrategy = require('passport-local').Strategy
 
-conf = require 'conf'
 apps = require 'apps'
 {User} = require 'apps/user/models'
+conf = require 'conf'
 {createSubAppMiddleware} = require 'lib/middlewares'
 
 
