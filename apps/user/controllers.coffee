@@ -52,7 +52,7 @@ controllers.create = (req, res, next) ->
     else
       next new Http404Error
 
-controllers['update/:id'] = chain requireObjectId User, (req, res, next) ->
+controllers['update/:id'] = chain requireObjectId(User), (req, res, next) ->
   switch req.method
     when 'GET'
       renderUpdatePage res,

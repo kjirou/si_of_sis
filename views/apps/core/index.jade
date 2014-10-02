@@ -4,8 +4,4 @@ extends /apps/layout
 block contentBlock
   h2 core.index
   ul
-    li: a(href='user/create') Create User
-    li: a(href='/login') Login #{req.user ? '': '*'}
-    li: a(href='/home') Home #{req.user ? '*': ''}
-    li: a(href='logout') Logout
     li: a(href='home/session_counter') Session Counter
