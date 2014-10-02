@@ -4,6 +4,7 @@ _ = require 'underscore'
 validator = require 'validator'
 
 {User} = require './models'
+{Http404Error} = require 'lib/errors'
 
 
 renderUpdatePage = (res, data={}) ->
@@ -25,7 +26,7 @@ updateAction = (id, req, res, next) ->
           if e
             nextStep e
           else unless user
-            nextStep new Error '404'
+            nextStep new Http404Error
           else
             nextStep null, user
       else
@@ -61,7 +62,7 @@ controllers.create = (req, res, next) ->
     when 'POST'
       updateAction null, arguments...
     else
-      next new Error 404
+      next new Http404Error
 
 controllers['update/:id'] = (req, res, next) ->
   switch req.method
@@ -70,7 +71,7 @@ controllers['update/:id'] = (req, res, next) ->
         if e
           next e
         else unless user
-          next new Error '404'
+          next new Http404Error
         else
           renderUpdatePage res, {
             inputs:
@@ -79,7 +80,7 @@ controllers['update/:id'] = (req, res, next) ->
     when 'POST'
       updateAction req.params.id, arguments...
     else
-      next new Error 404
+      next new Http404Error
 
 
 module.exports = controllers

@@ -2,6 +2,7 @@ assert = require 'power-assert'
 express = require 'express'
 request = require 'supertest'
 
+{Http404Error} = require 'lib/errors'
 authenticationMiddleware = require 'lib/middlewares/authentication'
 
 
@@ -12,7 +13,7 @@ describe 'authentication Middleware', ->
     middleware {user:{}}, {}, (e) ->
       assert not e
       middleware {}, {}, (e) ->
-        assert(e instanceof Error)
+        assert(e instanceof Http404Error)
 
   it 'requireUserでリダイレクト先を設定できる', (done) ->
     app_ = express()

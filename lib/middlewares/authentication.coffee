@@ -1,5 +1,7 @@
 _ = require 'underscore'
 
+{Http404Error} = require 'lib/errors'
+
 
 middlewares =
 
@@ -13,7 +15,7 @@ middlewares =
         if options.redirectTo?
           res.redirect options.redirectTo
         else
-          next new Error '404 by requireUser'  # @TODO
+          next new Http404Error
       else
         next()
 
