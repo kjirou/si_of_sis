@@ -9,7 +9,7 @@ mongodbUtil = require 'lib/util/mongodb'
 middlewares =
 
   # サブアプリ情報を設定する
-  setSubAppData: (subAppName) ->
+  applySubAppData: (subAppName) ->
     (req, res, next) ->
       subAppViewRoot = "#{conf.root}/views/apps/#{subAppName}"
 

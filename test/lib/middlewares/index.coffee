@@ -13,8 +13,8 @@ describe 'middlewares Lib', ->
   before (done) ->
     databaseHelper.resetDatabase done
 
-  it 'setSubAppData', ->
-    mw = middlewares.setSubAppData 'foo'
+  it 'applySubAppData', ->
+    mw = middlewares.applySubAppData 'foo'
     assert typeof mw is 'function'
     [req, res, next] = [{}, {}, -> ]
     mw req, res, next

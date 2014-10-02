@@ -8,7 +8,7 @@ LocalStrategy = require('passport-local').Strategy
 apps = require 'apps'
 {User} = require 'apps/user/models'
 conf = require 'conf'
-{setSubAppData} = require 'lib/middlewares'
+{applySubAppData} = require 'lib/middlewares'
 
 
 app = express()
@@ -87,7 +87,7 @@ app.use app.router
 app.use(express.static(pathModule.join(conf.root, 'public')))
 
 for subAppName, subApp of apps.subApps when subApp.routes
-  subApp.routes.pushBeforeMiddleware(setSubAppData subAppName)
+  subApp.routes.pushBeforeMiddleware(applySubAppData subAppName)
 
 
 #
