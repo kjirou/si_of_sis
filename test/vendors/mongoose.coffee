@@ -1,8 +1,8 @@
-assert = require 'power-assert'
 async = require 'async'
 mongoose = require 'mongoose'
 {Schema} = mongoose
 {ObjectId} = mongoose.Types
+assert = require 'power-assert'
 _ = require 'underscore'
 
 databaseHelper = require 'helpers/database'
@@ -86,4 +86,16 @@ describe 'mongoose Vendor', ->
       (new Test).save (e) ->
         return done e if e
         assert.deepEqual [1, 2, 3], steps
+        done()
+
+  it 'save後に渡されるdocオブジェクトはsave前のものの参照である', (done) ->
+    testHelper.createTestModel new Schema({
+      x: Date
+    }), (e, Test) ->
+      doc = new Test
+      doc.x = new Date
+      doc.save (e, savedDoc) ->
+        assert doc is savedDoc
+        assert doc._id is savedDoc._id
+        assert doc.x is savedDoc.x
         done()
