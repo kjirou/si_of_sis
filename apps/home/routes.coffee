@@ -1,6 +1,11 @@
 router = require 'express-nested-router'
 
 controllers = require './controllers'
+authenticationMiddleware = require 'lib/middlewares/authentication'
 
 
-module.exports = router.namespace controllers
+routes = router.namespace controllers
+routes.pushBeforeMiddleware authenticationMiddleware.requireLogin()
+
+
+module.exports = routes
