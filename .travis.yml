@@ -10,6 +10,7 @@ before_install:
   - npm install -g gulp
 
 script:
+  - mongo --version
   - npm run ci
 
 branches:
