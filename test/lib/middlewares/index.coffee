@@ -2,9 +2,9 @@ async = require 'async'
 {Model, Schema} = require 'mongoose'
 assert = require 'power-assert'
 
-
 databaseHelper = require 'helpers/database'
 testHelper = require 'helpers/test'
+{Http404Error} = require 'lib/errors'
 middlewares = require 'lib/middlewares'
 
 
@@ -13,8 +13,8 @@ describe 'middlewares Lib', ->
   before (done) ->
     databaseHelper.resetDatabase done
 
-  it 'createSubAppMiddleware', ->
-    mw = middlewares.createSubAppMiddleware 'foo'
+  it 'setSubAppData', ->
+    mw = middlewares.setSubAppData 'foo'
     assert typeof mw is 'function'
     [req, res, next] = [{}, {}, -> ]
     mw req, res, next
@@ -23,9 +23,9 @@ describe 'middlewares Lib', ->
     assert typeof res.renderSubApp is 'function'
 
 
-  it 'createDocIdMiddleware', (done) ->
+  it 'applyObjectId', (done) ->
     testHelper.createTestModel new Schema, (e, Test) ->
-      mw = middlewares.createDocIdMiddleware Test
+      mw = middlewares.applyObjectId Test
       assert typeof mw is 'function'
       # テスト用に予め 2 docs 作成する
       ids = (testHelper.createUniqueObjectId() for i in [0..1])
@@ -51,3 +51,11 @@ describe 'middlewares Lib', ->
               mw req, {}, (e) ->
                 assert req.doc is null
                 done()
+
+  it 'requireObjectId', (done) ->
+    testHelper.createTestModel new Schema, (e, Test) ->
+      middleware = middlewares.requireObjectId Test
+      assert typeof middleware is 'function'
+      middleware {params:{}}, {}, (e) ->
+        assert e instanceof Http404Error
+        done()
