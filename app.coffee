@@ -89,9 +89,6 @@ app.use(express.static(pathModule.join(conf.root, 'public')))
 for subAppName, subApp of apps.subApps when subApp.routes
   subApp.routes.pushBeforeMiddleware(createSubAppMiddleware subAppName)
 
-if conf.env is 'development'
-  app.use express.errorHandler()
-
 
 #
 # Resolve Routes
