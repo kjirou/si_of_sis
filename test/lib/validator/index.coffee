@@ -51,6 +51,23 @@ describe 'validator Lib', ->
         ]
       }
 
+    it 'merge', ->
+      reporter = new ErrorReporter
+      reporter.set 'foo', 'Invalid foo'
+      another = new ErrorReporter
+      another.set 'bar', 'Invalid bar'
+      another.set 'foo', 'Invalid foo2'
+      reporter.merge another
+      assert.deepEqual reporter.report(), {
+        foo: [
+          { key:'foo', msg:'Invalid foo' }
+          { key:'foo', msg:'Invalid foo2' }
+        ]
+        bar: [
+          { key:'bar', msg:'Invalid bar' }
+        ]
+      }
+
     it 'i18n用のフィルターを設定できる', ->
       reporter = new ErrorReporter
       reporter.set 'foo', 'Invalid foo'

@@ -90,6 +90,10 @@ class ErrorReporter
   set: (key, message) ->
     @_errors.push { key:key, message:message }
 
+  merge: (errorReporter) ->
+    for error in errorReporter._errors
+      @_errors.push error
+
   hasOccured: -> @_errors.length > 0
 
   setI18nFilter: (@_i18nFilter) ->
