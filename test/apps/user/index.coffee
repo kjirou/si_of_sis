@@ -52,10 +52,20 @@ describe 'user App', ->
         assert _.size(result.errors) is 2
         done()
 
+    it 'updateUserで既に存在するemailで新規作成できない', (done) ->
+      @prepareUser (user) ->
+        values =
+          email: user.email
+          password: 'abcd1234'
+        logics.updateUser null, values, (e, result) ->
+          return done e if e
+          assert result.isValid is false
+          done()
+
     it 'updateUserでユーザーを更新できる', (done) ->
       @prepareUser (user) ->
         values =
-          email: 'bar@example.com'
+          email: user.email  # 更新時は重複判定されないことも確認
           password: 'bcde2345'
         logics.updateUser user, values, (e, result) ->
           return done e if e
