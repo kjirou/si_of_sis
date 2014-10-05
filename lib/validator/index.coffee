@@ -14,6 +14,9 @@ validator.extend 'isLessThan', (str, threshold) ->
   num = parseFloat str
   not isNaN(num) and num < threshold
 
+validator.extend 'isRequired', (str) ->
+  str.length > 0
+
 
 # 各バリデーションに対応するデフォルトエラーメッセージ群
 ERROR_MESSAGES =
@@ -49,6 +52,7 @@ ERROR_MESSAGES =
   IS_MULTIBYTE: ''
   IS_NULL: 'String is not empty'
   IS_NUMERIC: 'Invalid characters'
+  IS_REQUIRED: 'Required value'
   IS_SURROGATE_PAIR: 'Invalid characters'
   IS_UPPERCASE: 'Invalid characters'
   IS_URL: 'Invalid URL'

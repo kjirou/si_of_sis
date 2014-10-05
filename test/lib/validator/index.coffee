@@ -31,6 +31,11 @@ describe 'validator Lib', ->
       assert validator.isLessThan('3', 3) is false
       assert validator.isLessThan '3', 3.1
 
+    it 'isRequired', ->
+      assert typeof validator.isInvalid is 'function'
+      assert validator.isRequired 'a'
+      assert validator.isRequired('') is false
+
 
   describe 'ErrorReporter Class', ->
 

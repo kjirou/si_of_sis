@@ -4,6 +4,7 @@ async = require 'async'
 _ = require 'underscore'
 validator = require 'validator'
 
+logics = require './logics'
 {User} = require './models'
 {Http404Error} = require 'lib/errors'
 {requireObjectId} = require 'lib/middlewares'
@@ -15,30 +16,22 @@ renderUpdatePage = (res, data={}) ->
     errors: {}
   }, data
 
-updateAction = (user, req, res, next) ->
+updateAction = (userOrNull, req, res, next) ->
   inputs = _.extend {
     email: ''
     password: ''
   }, req.body
 
-  user = user ? new User
-
-  errors = {}
-  unless validator.isEmail inputs.email
-    errors.email = { message:'Invalid email.' }
-  unless validator.isLength inputs.password, 4, 16
-    errors.password = { message:'Invalid password.' }
-
-  if _.size(errors) > 0
-    return renderUpdatePage res,
-      inputs: inputs
-      errors: errors
-
-  user.email = inputs.email
-  user.setPassword inputs.password
-  user.save (e) ->
-    return next e if e
-    res.redirect '/home'
+  logics.updateUser userOrNull, inputs, (e, result) ->
+    if e
+      next e
+    else if result instanceof User
+      res.redirect '/home'
+    else
+      renderUpdatePage res, {
+        inputs: inputs
+        errors: result.errors
+      }
 
 
 controllers = {}
