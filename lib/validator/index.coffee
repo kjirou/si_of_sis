@@ -48,6 +48,7 @@ ERROR_MESSAGES =
   IS_LOWERCASE: 'Invalid characters'
   IS_MULTIBYTE: ''
   IS_NULL: 'String is not empty'
+  IS_NUMERIC: 'Invalid characters'
   IS_SURROGATE_PAIR: 'Invalid characters'
   IS_UPPERCASE: 'Invalid characters'
   IS_URL: 'Invalid URL'
@@ -263,8 +264,57 @@ class Field
       }
 
 
+# フィールドの集合を定義するフォームクラス
+# 基本的には継承して使うことを意図している
+class Form
+
+  constructor: (fieldValues={}) ->
+    @_fields = []
+    @_fieldValues = {}
+    @values fieldValues
+
+  _hasField: (fieldName) ->
+    for fieldData in @_fields
+      return true if fieldName is fieldData.fieldName
+    false
+
+  # 特定のフィールドに紐付かないものも
+  # 適当な名前を付けてカスタムバリデーションのみのフィールドとして定義する
+  field: (fieldName, field) ->
+    if @_hasField fieldName
+      throw new Error "#{fieldName} is already defined"
+    @_fields.push {fieldName, field}
+
+  value: (fieldName, fieldValue) ->
+    @_fieldValues[fieldName] = fieldValue
+
+  values: (fieldValues) ->
+    _.extend @_fieldValues, fieldValues
+
+  validate: (callback) ->
+    reporter = new ErrorReporter
+    async.eachSeries @_fields, ({fieldName, field}, nextLoop) =>
+      fieldValue = if fieldName of @_fieldValues then @_fieldValues[fieldName] else ''
+      field.validate fieldValue, (e, {isValid, errorMessages}) ->
+        if e
+          nextLoop e if e
+        else
+          unless isValid
+            for errorMessage in errorMessages
+              reporter.set fieldName, errorMessage
+          nextLoop()
+    , (e) ->
+      return callback e, {} if e
+      callback null, {
+        isValid: not reporter.hasOccured()
+        errors: reporter.report()
+        reporter: reporter
+      }
+
+
 module.exports =
   ERROR_MESSAGES: ERROR_MESSAGES
   ErrorReporter: ErrorReporter
   Field: Field
+  Form: Form
   validator: validator
