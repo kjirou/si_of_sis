@@ -47,7 +47,7 @@ passport.serializeUser (user, callback) ->
   callback null, user._id.toString()
 
 passport.deserializeUser (userId, callback) ->
-  User.findOne userId, (e, user) ->
+  User.findOneById userId, (e, user) ->
     return callback e if e
     callback null, user ? null
 
