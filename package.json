@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "async": "0.9.0",
+    "callback-end": "0.0.2",
     "coffee-script": "1.8.0",
     "colo": "0.2.0",
     "connect-mongo": "0.4.1",
@@ -27,6 +28,7 @@
     "power-assert": "0.9.0",
     "random-string": "0.1.1",
     "underscore": "1.7.0",
+    "underscore.string": "2.3.3",
     "validator": "3.19.0",
     "wantit": "0.0.1"
   },

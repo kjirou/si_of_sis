@@ -1,18 +1,24 @@
 extends /apps/layout
 
 
+mixin fieldErrors(fieldName)
+  - var fieldErrors = errors[fieldName]
+  if fieldErrors
+    each fieldError in fieldErrors
+      p #{fieldError.msg}
+
 block contentBlock
   h1 User
   form(action=req.path, method='POST')
-    div
-      label Email:
-      input(type='text', name='email', value=inputs.email)
-    if errors.email
-      p #{errors.email.message}
-    div
-      label Password:
-      input(type='text', name='password', value=inputs.password)
-    if errors.password
-      p #{errors.password.message}
+    fieldset
+      div
+        label Email:
+        input(type='text', name='email', value=inputs.email)
+      +fieldErrors('email')
+    fieldset
+      div
+        label Password:
+        input(type='password', name='password', value=inputs.password)
+      +fieldErrors('password')
     div
       input(type='submit', value='Submit')
