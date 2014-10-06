@@ -276,9 +276,12 @@ class Field
 # 基本的には継承して使うことを意図している
 class Form
 
-  constructor: (fieldValues={}) ->
+  constructor: (fieldValues={}, options={}) ->
     @_fields = []
-    @_fieldValues = {}
+    @resetValues()
+    @options = _.extend {
+      shouldCheckAll: true
+    }, options
     @values fieldValues
 
   getField: (fieldName) ->
@@ -301,10 +304,22 @@ class Form
   values: (fieldValues) ->
     _.extend @_fieldValues, fieldValues
 
+  resetValues: -> @_fieldValues = {}
+
   validate: (callback) ->
     reporter = new ErrorReporter
     async.eachSeries @_fields, ({fieldName, field}, nextLoop) =>
-      fieldValue = if fieldName of @_fieldValues then @_fieldValues[fieldName] else ''
+      # バリデーションフィールドに定義されている値が存在しない場合
+      unless fieldName of @_fieldValues
+        # 空文字列の入力とみなす
+        if @options.shouldCheckAll
+          fieldValue = ''
+        # バリデーションを無視する
+        else
+          return nextLoop()
+      else
+        fieldValue = @_fieldValues[fieldName]
+
       field.validate fieldValue, (e, {isValid, errorMessages}) ->
         if e
           nextLoop e if e

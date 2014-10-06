@@ -423,7 +423,15 @@ describe 'validator Lib', ->
             assert isValid is false
             assert reporter instanceof ErrorReporter
             assert _.size(errors) is 2
-            done()
+            # shouldCheckAll オプションが false だと存在しないフィールドを無視する
+            form.options.shouldCheckAll = false
+            form.resetValues()
+            form.values {
+              email: 'foo@example.com'
+            }
+            form.validate (e, {isValid, reporter, errors}) ->
+              assert isValid is true
+              done()
 
       it 'フォームを継承してサブフォームを定義できる', (done) ->
         class FooForm extends Form
