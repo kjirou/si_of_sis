@@ -317,6 +317,28 @@ describe 'validator Lib', ->
                 ]
                 done()
 
+      it 'passIfEmptyオプション', (done) ->
+        field = new Field {passIfEmpty:true}
+        field.type 'isEmail'
+        field.validate '', (e, {isValid, errorMessages}) ->
+          assert isValid is true
+          done()
+
+      it 'Fieldを継承できる', (done) ->
+        field = new class extends Field
+          constructor: ->
+            super
+            @type 'isEmail'
+        field.validate 'fooexamplecom', (e, {isValid, errorMessages}) ->
+          assert isValid is false
+          assert.deepEqual errorMessages, [ERROR_MESSAGES.IS_EMAIL]
+          # コンストラクタ引数が有効である
+          class FooField extends Field
+          field = new FooField {passIfEmpty:true, shouldCheckAll:true}
+          assert field.options.passIfEmpty is true
+          assert field.options.shouldCheckAll is true
+          done()
+
 
   describe 'Form Class', ->
 

@@ -145,13 +145,14 @@ class ErrorReporter
 class Field
 
   constructor: (options={}) ->
+    @_checks = []
     @options = _.extend {
+      # 空文字列の場合に入力チェックを行わない
+      passIfEmpty: false
       # 判定が複数ある場合に
       # false=不正な判定が発生したら終了する, true=継続して全てを判定する
       shouldCheckAll: false
     }, options
-
-    @_checks = []
 
   _addCheck: (params) ->
     @_checks.push(_.extend {
@@ -246,20 +247,23 @@ class Field
       invalidResults.push message:message
 
     async.eachSeries @_checks, ({type, args, message, validation}, nextLoop) =>
-      if self.options.shouldCheckAll is false and invalidResults.length > 0
-        nextLoop()
+      if (
+        self.options.passIfEmpty and value is '' or
+        self.options.shouldCheckAll is false and invalidResults.length > 0
+      )
+        return nextLoop()
       else if validation?
         @_validateCustom validation, value, (e, {isValid, errorMessages}) ->
           return nextLoop e if e
           unless isValid
             addInvalidResult errorMessage for errorMessage in errorMessages
-          nextLoop()
+          return nextLoop()
       else
         try
           addInvalidResult message unless @_validateTypically(type, args ? [], value)
-          nextLoop()
+          return nextLoop()
         catch e
-          nextLoop e
+          return nextLoop e
     , (e) ->
       return callback e, {} if e
       callback null, {
