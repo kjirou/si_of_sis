@@ -19,7 +19,7 @@ for subAppName in subAppNames
     path: path
     models: wantit "#{path}/models"
     logics: wantit "#{path}/logics"
-    routes: wantit "#{path}/routes"
+    routes: wantit "#{path}"
 
 
 #
