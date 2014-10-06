@@ -10,13 +10,13 @@ logics = require './logics'
 {requireObjectId} = require 'lib/middlewares'
 
 
-renderUpdatePage = (res, data={}) ->
+renderPostPage = (res, data={}) ->
   res.renderSubApp 'update', _.extend {
     inputs: {}
     errors: {}
   }, data
 
-updateAction = (userOrNull, req, res, next) ->
+postAction = (userOrNull, req, res, next) ->
   inputs = _.extend {
     email: ''
     password: ''
@@ -28,7 +28,7 @@ updateAction = (userOrNull, req, res, next) ->
     else if result instanceof User
       res.redirect '/home'
     else
-      renderUpdatePage res, {
+      renderPostPage res, {
         inputs: inputs
         errors: result.errors
       }
@@ -39,20 +39,20 @@ controllers = {}
 controllers.create = (req, res, next) ->
   switch req.method
     when 'GET'
-      renderUpdatePage res
+      renderPostPage res
     when 'POST'
-      updateAction null, arguments...
+      postAction null, arguments...
     else
       next new Http404Error
 
 controllers['update/:id'] = chain requireObjectId(User), (req, res, next) ->
   switch req.method
     when 'GET'
-      renderUpdatePage res,
+      renderPostPage res,
         inputs:
           email: req.doc.email
     when 'POST'
-      updateAction req.doc, arguments...
+      postAction req.doc, arguments...
     else
       next new Http404Error
 
