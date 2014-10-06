@@ -46,16 +46,24 @@ describe 'middlewares Lib', ->
             mw req, {}, (e) ->
               assert req.doc instanceof Model
               assert req.doc._id.toString() is ids[1].toString()
-              # undefined など null
+              # ObjectId として不正なものは null
               req.params.id = undefined
               mw req, {}, (e) ->
                 assert req.doc is null
-                done()
+                # 正しい ObjectId だがデータが存在しない :id
+                req.params.id = testHelper.createUniqueObjectId()
+                mw req, {}, (e) ->
+                  assert req.doc is null
+                  done()
 
   it 'requireObjectId', (done) ->
     testHelper.createTestModel new Schema, (e, Test) ->
       middleware = middlewares.requireObjectId Test
-      assert typeof middleware is 'function'
+      # :id が存在しない
       middleware {params:{}}, {}, (e) ->
         assert e instanceof Http404Error
-        done()
+        # 正しい :id だがデータが存在しない
+        id = testHelper.createUniqueObjectId()
+        middleware {params:{id:id}}, {}, (e) ->
+          assert e instanceof Http404Error
+          done()

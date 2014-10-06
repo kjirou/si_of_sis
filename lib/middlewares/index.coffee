@@ -26,18 +26,27 @@ middlewares =
   # パス以外からも受け取れるようにする必要が出るかも
   applyObjectId: (model, options={}) ->
     options = _.extend {
+      # doc が抽出できなかった場合にエラーを返すか
       errorClass: null
     }, options
 
     (req, res, next) ->
+      toNext = ->
+        if not req.doc and options.errorClass
+          next new options.errorClass
+        else
+          next()
+      req.doc = null
+
       id = mongodbUtil.toObjectIdCondition req.params.id
-      unless id
-        req.doc = null
-        return next (if options.errorClass then (new options.errorClass) else null)
+      return toNext() unless id
+
       model.findOne {_id:id}, (e, doc) ->
-        return next e if e
-        req.doc = doc ? null
-        next()
+        if e
+          next e
+        else
+          req.doc = doc if doc
+          toNext()
 
   requireObjectId: (model) ->
     middlewares.applyObjectId model, errorClass:Http404Error
