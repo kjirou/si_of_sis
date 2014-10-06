@@ -281,15 +281,17 @@ class Form
     @_fieldValues = {}
     @values fieldValues
 
-  _hasField: (fieldName) ->
+  getField: (fieldName) ->
     for fieldData in @_fields
-      return true if fieldName is fieldData.fieldName
-    false
+      return fieldData.field if fieldName is fieldData.fieldName
+    null
+  getFieldOrError: (fieldName) ->
+    @getField(fieldName) or throw new Error("#{fieldName} is not defined")
 
   # 特定のフィールドに紐付かないものも
   # 適当な名前を付けてカスタムバリデーションのみのフィールドとして定義する
   field: (fieldName, field) ->
-    if @_hasField fieldName
+    if @getField fieldName
       throw new Error "#{fieldName} is already defined"
     @_fields.push {fieldName, field}
 

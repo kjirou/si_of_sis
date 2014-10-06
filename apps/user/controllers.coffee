@@ -22,7 +22,7 @@ postAction = (userOrNull, req, res, next) ->
     password: ''
   }, req.body
 
-  logics.updateUser userOrNull, inputs, (e, result) ->
+  logics.postUser userOrNull, inputs, (e, result) ->
     if e
       next e
     else if result instanceof User

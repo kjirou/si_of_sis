@@ -4,7 +4,7 @@
 
 logics = {}
 
-logics.UserForm = class UserForm extends Form
+class UserForm extends Form
   constructor: ->
     super
     self = @
@@ -29,17 +29,18 @@ logics.UserForm = class UserForm extends Form
     )
   bindUser: (@_user) ->
 
-logics.updateUser = (user, values, callback) ->
+logics.postUser = (user, values, callback) ->
   form = new UserForm values
   if user
     form.bindUser user
+    form.getField('password').options.passIfEmpty = true
   else
     user = new User
   form.validate (e, validated) ->
     return callback e if e
     return callback null, validated unless validated.isValid
     user.email = values.email
-    user.setPassword values.password
+    user.setPassword values.password if values.password
     user.save callback
 
 

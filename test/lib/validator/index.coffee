@@ -358,6 +358,16 @@ describe 'validator Lib', ->
         form.field 'foo', new Field
       , /foo/
 
+    it 'getField / getFieldOrError', ->
+      form = new Form
+      form.field 'foo', new Field
+      assert form.getField('foo')
+      assert form.getField('bar') is null
+      assert form.getFieldOrError('foo')
+      assert.throws ->
+        form.getFieldOrError 'baz'
+      , /baz/
+
     it 'value / values', ->
       form = new Form
       form.value 'foo', 'foo_value'

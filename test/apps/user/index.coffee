@@ -19,7 +19,7 @@ describe 'user App', ->
         email: 'foo@example.com'
         password: 'abcd1234'
       @prepareUser = (callback) =>
-        logics.updateUser null, @defaultValues, (e, user) ->
+        logics.postUser null, @defaultValues, (e, user) ->
           return callback e if e
           User.findOneById user._id, (e, user) ->
             return callback e if e
@@ -28,11 +28,11 @@ describe 'user App', ->
     beforeEach (done) ->
       User.remove done
 
-    it 'updateUserでユーザーを新規作成できる', (done) ->
+    it 'postUserでユーザーを新規作成できる', (done) ->
       values =
         email: 'foo@example.com'
         password: 'abcd1234'
-      logics.updateUser null, values, (e, result) ->
+      logics.postUser null, values, (e, result) ->
         return done e if e
         assert result instanceof User
         user = result
@@ -41,36 +41,50 @@ describe 'user App', ->
           assert user instanceof User
           done()
 
-    it 'updateUserでバリデーション失敗時にエラーを返せる', (done) ->
+    it 'postUserでバリデーション失敗時にエラーを返せる', (done) ->
       values =
         email: 'fooexamplecom'
         password: ''
-      logics.updateUser null, values, (e, result) ->
+      logics.postUser null, values, (e, result) ->
         return done e if e
         assert(result instanceof User is false)
         assert result.isValid is false
         assert _.size(result.errors) is 2
         done()
 
-    it 'updateUserで既に存在するemailで新規作成できない', (done) ->
+    it 'postUserで既に存在するemailで新規作成できない', (done) ->
       @prepareUser (user) ->
         values =
           email: user.email
           password: 'abcd1234'
-        logics.updateUser null, values, (e, result) ->
+        logics.postUser null, values, (e, result) ->
           return done e if e
           assert result.isValid is false
           done()
 
-    it 'updateUserでユーザーを更新できる', (done) ->
+    it 'postUserでユーザーを更新できる', (done) ->
       @prepareUser (user) ->
         values =
           email: user.email  # 更新時は重複判定されないことも確認
           password: 'bcde2345'
-        logics.updateUser user, values, (e, result) ->
+        logics.postUser user, values, (e, result) ->
           return done e if e
           User.findOneById result._id, (e, user) ->
             return done e if e
             assert user.email is values.email
             assert user.verifyPassword values.password
+            done()
+
+    it 'postUserでパスワードを空で更新できる', (done) ->
+      @prepareUser (user) ->
+        beforePassword = user.password
+        values =
+          email: 'bar@example.com'
+          password: ''
+        logics.postUser user, values, (e, result) ->
+          return done e if e
+          User.findOneById result._id, (e, user) ->
+            return done e if e
+            assert user.email is 'bar@example.com'
+            assert beforePassword is user.password
             done()
