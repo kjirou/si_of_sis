@@ -1,0 +1,5 @@
+mixin fieldErrors(errors, fieldName)
+  - var fieldErrors = errors[fieldName]
+  if fieldErrors
+    each fieldError in fieldErrors
+      p(style='color:red;') #{fieldError.msg}
