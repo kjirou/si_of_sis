@@ -11,7 +11,7 @@ logics = require './logics'
 
 
 renderPostPage = (res, data={}) ->
-  res.renderSubApp 'update', _.extend {
+  res.renderSubApp 'post', _.extend {
     inputs: {}
     errors: {}
   }, data
