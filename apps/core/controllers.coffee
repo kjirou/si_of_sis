@@ -31,7 +31,7 @@ controllers.login = (req, res, next) ->
           next e
         else unless user
           reporter = new ErrorReporter
-          reporter.set 'email', 'Invalid email or password'
+          reporter.error 'email', 'Invalid email or password'
           renderPage {
             inputs: inputs
             errors: reporter.report()
