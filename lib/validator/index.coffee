@@ -98,14 +98,14 @@ class ErrorReporter
 
     @setI18nFilter options.i18n if options.i18n
 
-  set: (key, message) ->
+  error: (key, message) ->
     @_errors.push { key:key, message:message }
 
   merge: (errorReporter) ->
     for error in errorReporter._errors
       @_errors.push error
 
-  hasOccured: -> @_errors.length > 0
+  isErrorOcurred: -> @_errors.length > 0
 
   setI18nFilter: (@_i18nFilter) ->
 
@@ -326,12 +326,12 @@ class Form
         else
           unless isValid
             for errorMessage in errorMessages
-              reporter.set fieldName, errorMessage
+              reporter.error fieldName, errorMessage
           nextLoop()
     , (e) ->
       return callback e, {} if e
       callback null, {
-        isValid: not reporter.hasOccured()
+        isValid: not reporter.isErrorOcurred()
         errors: reporter.report()
         reporter: reporter
       }

@@ -45,11 +45,11 @@ describe 'validator Lib', ->
 
     it 'エラーを格納し、エラー存否判定と報告ができる', ->
       reporter = new ErrorReporter
-      assert reporter.hasOccured() is false
-      reporter.set 'foo', 'Invalid foo'
-      assert reporter.hasOccured()
-      reporter.set 'bar', 'Invalid bar'
-      reporter.set 'foo', 'Required foo'
+      assert reporter.isErrorOcurred() is false
+      reporter.error 'foo', 'Invalid foo'
+      assert reporter.isErrorOcurred()
+      reporter.error 'bar', 'Invalid bar'
+      reporter.error 'foo', 'Required foo'
       assert.deepEqual reporter.report(), {
         foo: [
           { key:'foo', msg:'Invalid foo' }
@@ -62,10 +62,10 @@ describe 'validator Lib', ->
 
     it 'merge', ->
       reporter = new ErrorReporter
-      reporter.set 'foo', 'Invalid foo'
+      reporter.error 'foo', 'Invalid foo'
       another = new ErrorReporter
-      another.set 'bar', 'Invalid bar'
-      another.set 'foo', 'Invalid foo2'
+      another.error 'bar', 'Invalid bar'
+      another.error 'foo', 'Invalid foo2'
       reporter.merge another
       assert.deepEqual reporter.report(), {
         foo: [
@@ -79,7 +79,7 @@ describe 'validator Lib', ->
 
     it 'i18n用のフィルターを設定できる', ->
       reporter = new ErrorReporter
-      reporter.set 'foo', 'Invalid foo'
+      reporter.error 'foo', 'Invalid foo'
       reporter.setI18nFilter (msg) -> msg.toUpperCase()
       assert.deepEqual reporter.report(), {
         foo: [{
@@ -90,7 +90,7 @@ describe 'validator Lib', ->
 
       # コンストラクタからも設定できる
       reporter = new ErrorReporter({i18n: (msg) -> msg.toLowerCase()})
-      reporter.set 'foo', 'Invalid foo'
+      reporter.error 'foo', 'Invalid foo'
       assert.deepEqual reporter.report(), {
         foo: [{
           key: 'foo'
