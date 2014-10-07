@@ -1,9 +1,9 @@
 async = require 'async'
 _ = require 'underscore'
-_s = require 'underscore.string'
 validator = require 'validator'
 
-{ErrorReporter} = require './error-reporter'
+defaultErrorMessages = require './default-error-messages'
+ErrorReporter = require './error-reporter'
 
 
 validator.extend 'isGreaterThan', (str, threshold) ->
@@ -18,49 +18,6 @@ validator.extend 'isLessThan', (str, threshold) ->
 
 validator.extend 'isRequired', (str) ->
   str.length > 0
-
-
-# 各バリデーションに対応するデフォルトエラーメッセージ群
-ERROR_MESSAGES =
-  CONTAINS: 'Not contained'
-  EQUALS: 'Not equal'
-  IS_AFTER: 'Invalid date'
-  IS_ALPHA: 'Invalid characters'
-  IS_ALPHANUMERIC: 'Invalid characters'
-  IS_ASCII: 'Invalid characters'
-  IS_BASE64: 'Invalid characters'
-  IS_BEFORE: 'Invalid date'
-  IS_BYTE_LENGTH: ''
-  IS_CREDIT_CARD: 'Invalid credit card'
-  IS_DATE: 'Not a date'
-  IS_DIVISIBLE_BY: 'Not divisible'
-  IS_EMAIL: 'Invalid email'
-  IS_FLOAT: 'Invalid float'
-  IS_FQDN: 'Invalid FQDN'
-  IS_FULL_WIDTH: ''
-  IS_GREATER_THAN: ''
-  IS_HALF_WIDTH: ''
-  IS_IN: 'Unexpected value or invalid argument'
-  IS_INT: 'Invalid integer'
-  IS_INVALID: 'Invalid value'
-  IS_IP: 'Invalid IP'
-  IS_ISBN: 'Invalid ISBN'
-  IS_HEXADECIMAL: 'Invalid hexadecimal'
-  IS_HEX_COLOR: 'Invalid hexcolor'
-  IS_JSON: 'Invalid JSON'
-  IS_LENGTH: 'String is not in range'
-  IS_LESS_THAN: ''
-  IS_LOWERCASE: 'Invalid characters'
-  IS_MULTIBYTE: ''
-  IS_NULL: 'String is not empty'
-  IS_NUMERIC: 'Invalid characters'
-  IS_REQUIRED: 'Required value'
-  IS_SURROGATE_PAIR: 'Invalid characters'
-  IS_UPPERCASE: 'Invalid characters'
-  IS_URL: 'Invalid URL'
-  IS_UUID: 'Invalid UUID'
-  IS_VARIABLE_WIDTH: ''
-  MATCHES: ''
 
 
 class Field
@@ -103,12 +60,11 @@ class Field
     if _.isString validationArgs  # Apply overloading
       message = validationArgs
       validationArgs = null
-    defaultMessageKey = _s.underscored(type).toUpperCase()  # 'isURL' -> 'IS_URL'
     @_getTypicalValidationOrError type
     @_addCheck {
       type: type
       args: validationArgs
-      message: message ? ERROR_MESSAGES[defaultMessageKey] ? ERROR_MESSAGES.IS_INVALID
+      message: message ? defaultErrorMessages[type] ? defaultErrorMessages.isInvalid
     }
     @
 
@@ -158,7 +114,7 @@ class Field
             else if _.isArray message
               message.slice()
             else
-              if isValid then [] else [ERROR_MESSAGES.IS_INVALID]
+              if isValid then [] else [defaultErrorMessages.isInvalid]
           }
 
   validate: (value, callback) ->
@@ -259,7 +215,7 @@ class Form
 
 
 module.exports =
-  ERROR_MESSAGES: ERROR_MESSAGES
+  defaultErrorMessages: defaultErrorMessages
   ErrorReporter: ErrorReporter
   Field: Field
   Form: Form

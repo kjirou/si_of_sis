@@ -82,5 +82,4 @@ class ErrorReporter
     errors
 
 
-module.exports =
-  ErrorReporter: ErrorReporter
+module.exports = ErrorReporter

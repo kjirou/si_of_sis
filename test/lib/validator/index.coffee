@@ -1,15 +1,15 @@
 assert = require 'power-assert'
 _ = require 'underscore'
 
-{ERROR_MESSAGES, ErrorReporter, Field, Form, validator} = require 'lib/validator'
+{defaultErrorMessages, ErrorReporter, Field, Form, validator} = require 'lib/validator'
 
 
 describe 'validator Lib', ->
 
   it 'Module definition', ->
     assert typeof validator is 'object'
-    assert typeof ERROR_MESSAGES is 'object'
-    assert _.size(ERROR_MESSAGES) > 0
+    assert typeof defaultErrorMessages is 'object'
+    assert _.size(defaultErrorMessages) > 0
     assert typeof ErrorReporter is 'function'
 
 
@@ -57,7 +57,7 @@ describe 'validator Lib', ->
       field = new Field
       field.type 'isEmail'
       assert.deepEqual field._checks, [
-        {type:'isEmail', args:null, message:ERROR_MESSAGES.IS_EMAIL, validation:null}
+        {type:'isEmail', args:null, message:defaultErrorMessages.isEmail, validation:null}
       ]
       # validator 側で使用する引数を設定できる
       # また、引数 3 つのパターンで定義できる
@@ -146,7 +146,7 @@ describe 'validator Lib', ->
       field._validateCustom validation, '', (e, {isValid, errorMessages}) ->
         assert not e
         assert isValid is false
-        assert.deepEqual errorMessages, [ERROR_MESSAGES.IS_INVALID]
+        assert.deepEqual errorMessages, [defaultErrorMessages.isInvalid]
         done()
 
 
@@ -165,18 +165,18 @@ describe 'validator Lib', ->
           field.validate 'fooexamplecom', (e2, {isValid, errorMessages}) ->
             assert not e2
             assert isValid is false
-            assert.deepEqual errorMessages, [ERROR_MESSAGES.IS_EMAIL]
+            assert.deepEqual errorMessages, [defaultErrorMessages.isEmail]
             # 文字数が足りなかった
             field.validate 'f@e.com', (e3, {isValid, errorMessages}) ->
               assert not e3
               assert isValid is false
-              assert.deepEqual errorMessages, [ERROR_MESSAGES.IS_LENGTH]
+              assert.deepEqual errorMessages, [defaultErrorMessages.isLength]
               # Email ではなく文字数も足りなかったが shouldCheckAll=false なのでエラー行数は 1
               field.validate 'fecom', (e4, {isValid, errorMessages}) ->
                 assert not e4
                 assert isValid is false
                 assert.deepEqual errorMessages, [
-                  ERROR_MESSAGES.IS_EMAIL
+                  defaultErrorMessages.isEmail
                 ]
                 # Email ではなく文字数も足りない、shouldCheckAll=true なのでエラー行数は 2
                 field.options.shouldCheckAll = true
@@ -184,8 +184,8 @@ describe 'validator Lib', ->
                   assert not e5
                   assert isValid is false
                   assert.deepEqual errorMessages, [
-                    ERROR_MESSAGES.IS_EMAIL
-                    ERROR_MESSAGES.IS_LENGTH
+                    defaultErrorMessages.isEmail
+                    defaultErrorMessages.isLength
                   ]
                   done()
 
@@ -214,7 +214,7 @@ describe 'validator Lib', ->
           field.validate 'bar', (e, {isValid, errorMessages}) ->
             assert not e
             assert isValid is false
-            assert.deepEqual errorMessages, [ERROR_MESSAGES.IS_INVALID]
+            assert.deepEqual errorMessages, [defaultErrorMessages.isInvalid]
             done()
 
       it '定型とカスタムバリデーションが混在している', (done) ->
@@ -237,20 +237,20 @@ describe 'validator Lib', ->
           field.validate 'abc123_', (e, {isValid, errorMessages}) ->
             assert not e
             assert isValid is false
-            assert.deepEqual errorMessages, [ERROR_MESSAGES.IS_ALPHANUMERIC]
+            assert.deepEqual errorMessages, [defaultErrorMessages.isAlphanumeric]
             # 入力が 2 点誤り
             field.validate 'ab12_', (e, {isValid, errorMessages}) ->
               assert isValid is false
               assert.deepEqual errorMessages, [
-                ERROR_MESSAGES.IS_ALPHANUMERIC
-                ERROR_MESSAGES.IS_LENGTH
+                defaultErrorMessages.isAlphanumeric
+                defaultErrorMessages.isLength
               ]
               # 入力が 3 点誤り
               field.validate '1ab2_', (e, {isValid, errorMessages}) ->
                 assert isValid is false
                 assert.deepEqual errorMessages, [
-                  ERROR_MESSAGES.IS_ALPHANUMERIC
-                  ERROR_MESSAGES.IS_LENGTH
+                  defaultErrorMessages.isAlphanumeric
+                  defaultErrorMessages.isLength
                   'Can not set numeric string as prefix'
                 ]
                 done()
@@ -269,7 +269,7 @@ describe 'validator Lib', ->
             @type 'isEmail'
         field.validate 'fooexamplecom', (e, {isValid, errorMessages}) ->
           assert isValid is false
-          assert.deepEqual errorMessages, [ERROR_MESSAGES.IS_EMAIL]
+          assert.deepEqual errorMessages, [defaultErrorMessages.isEmail]
           # コンストラクタ引数が有効である
           class FooField extends Field
           field = new FooField {passIfEmpty:true, shouldCheckAll:true}
