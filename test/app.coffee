@@ -55,7 +55,11 @@ describe 'app Module', ->
       @sessionStore = conf.session.mongodbStore.prepareConnection()
       @sessionStore.clear (e) ->
         return done e if e
-        User.remove done
+        # Travis-CI で落ちたことがあるので I/O (MongoDB) 系を疑って一拍入れた
+        # Ref) https://travis-ci.org/kjirou/si_of_sis/builds/37384104
+        setTimeout ->
+          User.remove done
+        , 10
 
     it 'ユーザーがPOSTでログインできる', (done) ->
       self = @
