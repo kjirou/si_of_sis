@@ -52,7 +52,7 @@ app.use express.session {
   cookie: {
     maxAge: 365 * 24 * 60 * 60 * 1000
   }
-  store: conf.session.mongodbStore.createStore()
+  store: conf.session.mongodbStore.prepareConnection()
 }
 app.use passport.initialize()
 app.use passport.session()

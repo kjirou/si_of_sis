@@ -12,13 +12,13 @@ describe 'conf Module', ->
       @createSessionMock = -> {foo:'foo', bar:'bar'}
 
     it 'MongoDBセッションストレージへ接続できる', ->
-      store = conf.session.mongodbStore.createStore()
+      store = conf.session.mongodbStore.prepareConnection()
       store.length()  # 接続失敗時はランタイムエラーになる
 
     it '同じMongoDBセッションストレージへ複数のインスタンスから接続できる', (done) ->
       self = @
-      store1 = conf.session.mongodbStore.createStore()
-      store2 = conf.session.mongodbStore.createStore()
+      store1 = conf.session.mongodbStore.prepareConnection()
+      store2 = conf.session.mongodbStore.prepareConnection()
 
       # DB が空なことを確認
       store1.clear (e) ->

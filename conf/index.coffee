@@ -26,7 +26,7 @@ sessionMongoDbStoreConf =
   user: mongodbConf.user
   pass: mongodbConf.pass
   clearInterval: 3600
-  createStore: ->
+  prepareConnection: ->
     new MongoStore {
       host: sessionMongoDbStoreConf.host
       port: sessionMongoDbStoreConf.port
