@@ -30,6 +30,9 @@ app.locals =
 #
 # Passport Configurations
 #
+
+# 新しくログインする際のログイン判定処理
+# passport.authenticate で生成したミドルウェアを実行した時に起動する
 passport.use(
   new LocalStrategy {
     usernameField: 'email'
@@ -43,9 +46,11 @@ passport.use(
         next null, null
 )
 
+# ログイン成功後に、セッションDBへその状態を格納する処理
 passport.serializeUser (user, callback) ->
   callback null, user._id.toString()
 
+# ログイン済みの場合に、セッションDBからログイン状態を復元する処理
 passport.deserializeUser (userId, callback) ->
   User.findOneById userId, (e, user) ->
     return callback e if e
