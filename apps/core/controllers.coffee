@@ -11,11 +11,11 @@ controllers.index = (req, res, next) ->
   res.renderSubApp 'index'
 
 controllers.login = (req, res, next) ->
-  renderPage = (data={}) ->
+  renderLoginPage = (locals={}) ->
     res.renderSubApp 'login', _.extend {
       inputs: {}
       errors: {}
-    }, data
+    }, locals
 
   inputs = _.extend {
     email: ''
@@ -24,15 +24,15 @@ controllers.login = (req, res, next) ->
 
   switch req.method
     when 'GET'
-      renderPage()
+      renderLoginPage()
     when 'POST'
-      (passport.authenticate 'local', (e, user) ->
+      authMiddleware = passport.authenticate 'local', (e, user) ->
         if e
           next e
         else unless user
           reporter = new ErrorReporter
           reporter.error 'email', 'Invalid email or password'
-          renderPage {
+          renderLoginPage {
             inputs: inputs
             errors: reporter.report()
           }
@@ -40,7 +40,7 @@ controllers.login = (req, res, next) ->
           req.login user, (e) ->
             return next e if e
             res.redirect '/home'
-      )(req, res, next)
+      authMiddleware req, res, next
     else
       next new Http404Error
 
