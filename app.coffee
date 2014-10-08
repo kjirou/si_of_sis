@@ -1,5 +1,4 @@
 express = require 'express'
-MongoStore = require('connect-mongo')(express)
 router = require 'express-nested-router'
 passport = require 'passport'
 pathModule = require 'path'
@@ -74,14 +73,7 @@ app.use express.session {
   cookie: {
     maxAge: 365 * 24 * 60 * 60 * 1000
   }
-  store: new MongoStore {
-    db: conf.session.mongodb.databaseName
-    host: conf.session.mongodb.host
-    port: conf.session.mongodb.port
-    username: conf.session.mongodb.user
-    password: conf.session.mongodb.pass
-    clear_interval: 3600
-  }
+  store: conf.session.mongodbStore.createStore()
 }
 app.use passport.initialize()
 app.use passport.session()

@@ -1,4 +1,5 @@
 express = require 'express'
+MongoStore = require('connect-mongo')(express)
 mongoose = require 'mongoose'
 path = require 'path'
 wantit = require 'wantit'
@@ -18,6 +19,23 @@ mongodbConf =
     }, (e) ->
       throw e if e
 
+sessionMongoDbStoreConf =
+  host: mongodbConf.host
+  port: mongodbConf.port
+  databaseName: 'sos_session'
+  user: mongodbConf.user
+  pass: mongodbConf.pass
+  clearInterval: 3600
+  createStore: ->
+    new MongoStore {
+      host: sessionMongoDbStoreConf.host
+      port: sessionMongoDbStoreConf.port
+      db: sessionMongoDbStoreConf.databaseName
+      username: sessionMongoDbStoreConf.user
+      password: sessionMongoDbStoreConf.pass
+      clear_interval: sessionMongoDbStoreConf.clearInterval
+    }
+
 
 conf =
   auth:
@@ -30,12 +48,7 @@ conf =
     port: '3000'
   session:
     secret: 'default_session_secret_key'
-    mongodb:
-      host: mongodbConf.host
-      port: mongodbConf.port
-      databaseName: 'sos_session'
-      user: mongodbConf.user
-      pass: mongodbConf.pass
+    mongodbStore: sessionMongoDbStoreConf
 
 
 wantit('conf/_' + conf.env)?(conf)
