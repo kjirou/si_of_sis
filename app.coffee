@@ -5,6 +5,7 @@ pathModule = require 'path'
 LocalStrategy = require('passport-local').Strategy
 
 apps = require 'apps'
+{passportConfigurations} = require 'apps/user/logics'
 {User} = require 'apps/user/models'
 conf = require 'conf'
 {applySubAppData} = require 'lib/middlewares'
@@ -29,35 +30,13 @@ app.locals =
 #
 # Passport Configurations
 #
-
-# 新しくログインする際のログイン判定処理
-# passport.authenticate で生成したミドルウェアを実行した時に起動する
-passport.use(
-  new LocalStrategy {
-    usernameField: 'email'
-  }, (email, password, next) ->
-    User.queryActiveUserByEmail(email).findOne (e, user) ->
-      if e
-        next e
-      else if user?.verifyPassword password
-        next null, user
-      else
-        next null, null
-)
-
-# ログイン成功後に、セッションDBへその状態を格納する処理
-passport.serializeUser (user, callback) ->
-  callback null, user._id.toString()
-
-# ログイン済みの場合に、セッションDBからログイン状態を復元する処理
-passport.deserializeUser (userId, callback) ->
-  User.findOneById userId, (e, user) ->
-    return callback e if e
-    callback null, user ? null
+passport.use passportConfigurations.localStrategy()
+passport.serializeUser passportConfigurations.serializeUser()
+passport.deserializeUser passportConfigurations.deserializeUser()
 
 
 #
-# Middlewares Settings
+# Middlewares
 #
 switch conf.env
   when 'development'
