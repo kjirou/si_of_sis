@@ -24,7 +24,7 @@ describe 'Company Model', ->
     it 'Create a document', (done) ->
       monky.build 'Company', (e, company) ->
         assert company.user instanceof User
-        assert.strictEqual company.name, 'Default Company'
+        assert company.name.length > 0
         assert.strictEqual company.cash, 0
         company.save (e) ->
           return done e if e
