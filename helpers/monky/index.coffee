@@ -14,11 +14,10 @@ valueSets = {}
 # User
 #
 valueSets.user =
-  email: 'foo@example.com'
-  rawPassword: 'test1234'
-monky.factory 'User', _.extend {
+  email: 'test-#n@example.com'
   password: -> crypto.generateHashedPassword valueSets.user.rawPassword, @salt
-}, _.omit(valueSets.user, 'rawPassword')
+  rawPassword: 'test1234'
+monky.factory 'User', _.omit(valueSets.user, 'rawPassword')
 
 
 #

@@ -1,8 +1,8 @@
 assert = require 'power-assert'
 _ = require 'underscore'
 
+{Company, User} = require('apps').models
 logics = require 'apps/user/logics'
-{User} = require 'apps/user/models'
 {resetDatabase} = require 'helpers/database'
 
 
@@ -25,8 +25,7 @@ describe 'user App', ->
             return callback e if e
             callback user
 
-    beforeEach (done) ->
-      User.remove done
+    beforeEach (done) -> Company.remove -> User.remove done
 
     it 'postUserでユーザーを新規作成できる', (done) ->
       values =
@@ -39,7 +38,10 @@ describe 'user App', ->
         User.findOneById user._id, (e, user) ->
           return done e if e
           assert user instanceof User
-          done()
+          Company.findOne (e, company) ->
+            return done e if e
+            assert company instanceof Company
+            done()
 
     it 'postUserでバリデーション失敗時にエラーを返せる', (done) ->
       values =

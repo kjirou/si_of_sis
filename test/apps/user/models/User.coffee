@@ -25,7 +25,7 @@ describe 'User Model', ->
 
     it 'Create a document', (done) ->
       monky.build 'User', (e, user) ->
-        assert.strictEqual user.email, valueSets.user.email
+        assert user.email.length > 0
         assert.strictEqual user.salt.length, User.SALT_LENGTH
         assert user.verifyPassword valueSets.user.rawPassword
         user.save (e) ->

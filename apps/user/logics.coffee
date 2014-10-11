@@ -1,5 +1,6 @@
 LocalStrategy = require('passport-local').Strategy
 
+{Company} = require 'apps/company/models'
 {User} = require 'apps/user/models'
 {Field, Form} = require 'lib/validator'
 
@@ -63,7 +64,9 @@ class UserForm extends Form
 
 logics.postUser = (user, values, callback) ->
   form = new UserForm values
+  isNew = true
   if user
+    isNew = false
     form.bindUser user
     form.getField('password').options.passIfEmpty = true
   else
@@ -73,7 +76,16 @@ logics.postUser = (user, values, callback) ->
     return callback null, validated unless validated.isValid
     user.email = values.email
     user.setPassword values.password if values.password
-    user.save callback
+    user.save (e) ->
+      return callback e if e
+      if isNew
+        company = new Company
+        company.user = user._id
+        company.save (e) ->
+          return callback e if e
+          callback null, user
+      else
+        callback null, user
 
 
 module.exports = logics
