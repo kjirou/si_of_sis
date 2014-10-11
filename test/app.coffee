@@ -30,7 +30,7 @@ describe 'app Module', ->
 
   describe 'Login', ->
 
-    beforeEach (done) ->
+    before ->
       self = @
       @defaultParams =
           email: 'foo@example.com'
@@ -53,6 +53,8 @@ describe 'app Module', ->
             callback null, session
 
       @sessionStore = conf.session.mongodbStore.prepareConnection()
+
+    beforeEach (done) ->
       @sessionStore.clear (e) ->
         return done e if e
         # Travis-CI で落ちたことがあるので I/O (MongoDB) 系を疑って一拍入れた
