@@ -11,7 +11,7 @@ consts =
   SALT_LENGTH: 20
 
 
-UserSchema = new Schema {
+userSchema = new Schema {
   email:
     type: String
     index:
@@ -30,23 +30,23 @@ UserSchema = new Schema {
       randomString length:consts.SALT_LENGTH
 }
 
-UserSchema.plugin getPlugins()
+userSchema.plugin getPlugins()
 
-_.extend UserSchema.statics, consts
-
-
-UserSchema.statics.queryActiveUsers = -> @where()
-
-UserSchema.statics.queryActiveUserByEmail = (email) ->
-  @queryActiveUsers().where({email: email}).limit 1
+_.extend userSchema.statics, consts
 
 
-UserSchema.methods.setPassword = (rawPassword) ->
+userSchema.statics.queryActiveUsers = -> @where()
+
+userSchema.statics.queryActiveUserByEmail = (email) ->
+  @queryActiveUsers().where({email: email}).findOne()
+
+
+userSchema.methods.setPassword = (rawPassword) ->
   @password = generateHashedPassword rawPassword, @salt
 
-UserSchema.methods.verifyPassword = (rawPassword) ->
+userSchema.methods.verifyPassword = (rawPassword) ->
   @password is generateHashedPassword rawPassword, @salt
 
 
 module.exports =
-  User: mongoose.model 'User', UserSchema
+  User: mongoose.model 'User', userSchema

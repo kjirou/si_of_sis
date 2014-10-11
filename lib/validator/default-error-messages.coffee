@@ -31,6 +31,7 @@ module.exports =
   isMultibyte: ''
   isNull: 'String is not empty'
   isNumeric: 'Invalid characters'
+  isPositiveInt: 'Invalid positive integer'
   isRequired: 'Required value'
   isSurrogatePair: 'Invalid characters'
   isUppercase: 'Invalid characters'
