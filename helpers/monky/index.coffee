@@ -7,15 +7,27 @@ crypto = require 'lib/util/crypto'
 
 
 monky = new Monky mongoose
-valueSets =
-  user:
-    email: 'foo@example.com'
-    rawPassword: 'test1234'
+valueSets = {}
 
 
+#
+# User
+#
+valueSets.user =
+  email: 'foo@example.com'
+  rawPassword: 'test1234'
 monky.factory 'User', _.extend {
   password: -> crypto.generateHashedPassword valueSets.user.rawPassword, @salt
-}, _.pick(valueSets.user, 'email')
+}, _.omit(valueSets.user, 'rawPassword')
+
+
+#
+# Company
+#
+valueSets.company = {}
+monky.factory 'Company', {
+  user: monky.ref 'User'
+}
 
 
 module.exports =
