@@ -38,7 +38,7 @@ _.extend userSchema.statics, consts
 userSchema.statics.queryActiveUsers = -> @where()
 
 userSchema.statics.queryActiveUserByEmail = (email) ->
-  @queryActiveUsers().where({email: email}).limit 1
+  @queryActiveUsers().where({email: email}).findOne()
 
 
 userSchema.methods.setPassword = (rawPassword) ->
