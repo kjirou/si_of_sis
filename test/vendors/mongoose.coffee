@@ -99,3 +99,14 @@ describe 'mongoose Vendor', ->
         assert doc._id is savedDoc._id
         assert doc.x is savedDoc.x
         done()
+
+  it 'Modelオブジェクトへ特異プロパティを設定できる', (done) ->
+    testHelper.createTestModel new Schema({
+      x: Number
+    }), (e, Test) ->
+      doc = new Test
+      doc.x = 1
+      doc.y = 2
+      assert.strictEqual doc.x, 1
+      assert.strictEqual doc.y, 2
+      done()
