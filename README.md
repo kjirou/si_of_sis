@@ -29,5 +29,12 @@ npm install
 ### Use Mongo Script
 - `mongo db_name scripts/mongo/script_name.js`
 
+### direnv Configurations (optional)
+```
+cd /path/to/si_of_sis
+cp .envrc.example .envrc
+```
+Ref) http://qiita.com/kompiro/items/5fc46089247a56243a62
+
 ### Documents
 - [アプリケーション設計](./doc/application-design.md)
