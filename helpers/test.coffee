@@ -2,6 +2,9 @@ mongoose = require 'mongoose'
 {ObjectId} = mongoose.Types
 _ = require 'underscore'
 
+{Company, User} = require('apps').models
+mongooseUtil = require 'lib/util/mongoose'
+
 
 helper = {}
 
@@ -28,6 +31,12 @@ helper.createUniqueObjectId = ->
     idStr = (letters[_.random letters.length - 1] for i in [0..23]).join ''
   _createdObjectIdStrings.push idStr
   ObjectId idStr
+
+# 削除メソッド群
+helper.removeUserCompletely = (callback) ->
+  mongooseUtil.executeRemovingToEachModels [Company, User], callback
+helper.removeCompanyCompletely = (callback) ->
+  mongooseUtil.executeRemovingToEachModels [Company, User], callback
 
 
 module.exports = helper
