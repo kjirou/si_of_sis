@@ -1,0 +1,15 @@
+include /apps/mixins/errors
+
+extends /apps/layout
+
+
+block contentBlock
+  h1 company.update
+  form(action=req.path, method='POST')
+    fieldset
+      div
+        label Name:
+        input(type='text', name='name', value=inputs.name)
+      +fieldErrors(errors, 'name')
+    div
+      input(type='submit', value='Submit')

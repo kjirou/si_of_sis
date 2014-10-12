@@ -2,6 +2,7 @@ LocalStrategy = require('passport-local').Strategy
 
 {Company} = require 'apps/company/models'
 {User} = require 'apps/user/models'
+{Http500Error} = require 'lib/errors'
 {Field, Form} = require 'lib/validator'
 
 
@@ -23,19 +24,39 @@ logics.passportConfigurations =
         else
           next null, null
 
-  # passport.serializeUser へ渡す、
   # ログイン成功後に、セッションDBへその状態を格納する処理
+  # passport.serializeUser へ設定する
   serializeUser: ->
     (user, callback) ->
       callback null, user._id.toString()
 
-  # passport.deserializeUser へ渡す、
   # ログイン済みの場合に、セッションDBからログイン状態を復元する処理
+  # passport.deserializeUser へ設定する
   deserializeUser: ->
-    (userId, callback) ->
-      User.findOneById userId, (e, user) ->
-        return callback e if e
-        callback null, user ? null
+    (userIdFromSession, callback) ->
+      User.findOneById userIdFromSession, (e, user) ->
+        return if e
+          callback e
+        else unless user
+          callback new Http500Error 'Cannot find user by session data'
+        Company.findOne {user:user._id}, (e, company) ->
+          return if e
+            callback e
+          else unless company
+            callback new Http500Error 'Cannot find user\'s company'
+          # e.g.
+          #
+          #   req.user = {
+          #     user: User ドキュメント
+          #     company: Company ドキュメント
+          #   }
+          #
+          # req.user へ直接ドキュメントを格納していない。
+          # 理由は、この場合 req.user.company などに特異プロパティで他ドキュメントを
+          # 設定する必要があるが、mongoose 側でそれが期待された使い方では無さそうだから。
+          callback null,
+            user: user
+            company: company
 
 class UserForm extends Form
   constructor: ->
