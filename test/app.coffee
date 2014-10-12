@@ -57,11 +57,7 @@ describe 'app Module', ->
     beforeEach (done) ->
       @sessionStore.clear (e) ->
         return done e if e
-        # Travis-CI で落ちたことがあるので I/O (MongoDB) 系を疑って一拍入れた
-        # Ref) https://travis-ci.org/kjirou/si_of_sis/builds/37384104
-        setTimeout ->
-          User.remove done
-        , 10
+        User.remove done
 
     it 'ユーザーがPOSTでログインできる', (done) ->
       self = @
@@ -73,9 +69,11 @@ describe 'app Module', ->
           .expect 200
           .end ->
             self.sessionStore.length (e, count) ->
-              assert count is 1
               self.getSessionData (e, session) ->
                 assert user._id.toString() is session.passport?.user
+                # この位置にあるのは、稀にテストが落ちることがあるため。Ref) #98
+                # 他の部分が正しいのかを先にチェックする
+                assert count is 1
                 done()
 
     it 'GETリクエストだとログイン出来ない', (done) ->
