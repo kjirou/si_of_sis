@@ -3,7 +3,7 @@ _ = require 'underscore'
 conf = require 'conf'
 coreLib = require 'lib/core'
 {Http404Error} = require 'lib/errors'
-mongodbUtil = require 'lib/util/mongodb'
+mongooseUtils = require 'modules/mongoose-utils'
 
 
 middlewares =
@@ -46,7 +46,7 @@ middlewares =
           next()
       req.doc = null
 
-      id = mongodbUtil.toObjectIdCondition req.params.id
+      id = mongooseUtils.toObjectIdCondition req.params.id
       return toNext() unless id
 
       model.findOne {_id:id}, (e, doc) ->

@@ -3,7 +3,7 @@ Monky = require 'monky'
 _ = require 'underscore'
 
 require 'apps'  # 全 Model 生成が必要なので呼んでいる
-crypto = require 'lib/util/crypto'
+crypto = require 'lib/crypto'
 
 
 monky = new Monky mongoose

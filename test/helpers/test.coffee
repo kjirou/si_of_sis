@@ -5,7 +5,7 @@ mongoose = require 'mongoose'
 
 databaseHelper = require 'helpers/database'
 testHelper = require 'helpers/test'
-{isObjectIdString} = require 'lib/util/mongodb'
+{isObjectIdString} = require 'modules/mongoose-utils'
 
 
 describe 'test Helper', ->

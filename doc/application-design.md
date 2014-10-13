@@ -5,11 +5,11 @@
 標準モジュール
 外部モジュール
 　↑
+modules/*
+　↑
 conf
 　↑
 lib/core
-　↑
-lib/util/*
 　↑
 lib/*
 　↑

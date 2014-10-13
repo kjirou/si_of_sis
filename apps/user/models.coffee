@@ -4,7 +4,7 @@ randomString = require 'random-string'
 _ = require 'underscore'
 
 {getPlugins} = require 'lib/mongoose-plugins'
-{generateHashedPassword} = require 'lib/util/crypto'
+{generateHashedPassword} = require 'lib/crypto'
 
 
 consts =

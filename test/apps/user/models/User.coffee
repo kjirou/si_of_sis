@@ -6,7 +6,7 @@ _ = require 'underscore'
 {User} = require('apps').models
 {resetDatabase} = require 'helpers/database'
 {monky, valueSets} = require 'helpers/monky'
-{generateHashedPassword} = require 'lib/util/crypto'
+{generateHashedPassword} = require 'lib/crypto'
 
 
 describe 'User Model', ->

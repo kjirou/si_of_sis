@@ -3,7 +3,7 @@ mongoose = require 'mongoose'
 _ = require 'underscore'
 
 {getPlugins} = require 'lib/mongoose-plugins'
-textUtil = require 'lib/util/text'
+textLib = require 'lib/text'
 {createValidator, defaultErrorMessages} = require 'lib/validator'
 
 
@@ -18,7 +18,7 @@ companySchema = new Schema {
   # 会社名、表示用
   name:
     type: String
-    default: -> textUtil.createRandomCompanyName()
+    default: -> textLib.createRandomCompanyName()
     required: true
 
   # 現金
