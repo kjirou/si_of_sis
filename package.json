@@ -19,7 +19,7 @@
     "connect-flash": "0.1.1",
     "connect-mongo": "0.4.1",
     "espower-coffee": "0.9.1",
-    "express": "3.17.2",
+    "express": "3.17.7",
     "express-nested-router": "1.1.0",
     "jade": "1.7.0",
     "minimist": "1.1.0",
