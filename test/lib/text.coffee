@@ -1,11 +1,11 @@
 assert = require 'power-assert'
 
-textUtil = require 'lib/util/text'
+textLib = require 'lib/text'
 
 
-describe 'text Util', ->
+describe 'text Lib', ->
 
   it 'createRandomCompanyName', ->
     for i in [0..100]
-      word = textUtil.createRandomCompanyName()
+      word = textLib.createRandomCompanyName()
       assert /^[a-z]{10} /i.test word
