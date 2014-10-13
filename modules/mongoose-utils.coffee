@@ -1,3 +1,4 @@
+async = require 'async'
 mongoose = require 'mongoose'
 {ObjectId} = mongoose.Types
 _ = require 'underscore'
@@ -25,6 +26,12 @@ utils =
       else
         setTimeout arguments.callee, 50
     , 1
+
+  # Model をリストで指定し、順番に remove を実行させる
+  executeRemovingToEachModels: (models, callback) ->
+    async.eachSeries models, (model, nextLoop) ->
+      model.remove nextLoop
+    , callback
 
 
 module.exports = utils

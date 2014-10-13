@@ -2,7 +2,7 @@ async = require 'async'
 _ = require 'underscore'
 
 apps = require 'apps'
-mongodbUtil = require 'lib/util/mongodb'
+mongooseUtils = require 'modules/mongoose-utils'
 
 
 helper = {}
@@ -16,7 +16,7 @@ helper.ensureModelIndexes = (callback) ->
     callback()
 
 helper.resetDatabase = (callback) ->
-  mongodbUtil.purgeDatabase (e) ->
+  mongooseUtils.purgeDatabase (e) ->
     throw e if e
     helper.ensureModelIndexes callback
 

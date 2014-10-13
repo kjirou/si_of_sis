@@ -3,7 +3,7 @@ mongoose = require 'mongoose'
 _ = require 'underscore'
 
 {Company, User} = require('apps').models
-mongooseUtil = require 'lib/util/mongoose'
+mongooseUtils = require 'modules/mongoose-utils'
 
 
 helper = {}
@@ -34,9 +34,9 @@ helper.createUniqueObjectId = ->
 
 # 削除メソッド群
 helper.removeUserCompletely = (callback) ->
-  mongooseUtil.executeRemovingToEachModels [Company, User], callback
+  mongooseUtils.executeRemovingToEachModels [Company, User], callback
 helper.removeCompanyCompletely = (callback) ->
-  mongooseUtil.executeRemovingToEachModels [Company, User], callback
+  mongooseUtils.executeRemovingToEachModels [Company, User], callback
 
 
 module.exports = helper

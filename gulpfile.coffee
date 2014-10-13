@@ -11,6 +11,8 @@ gulp.task 'lint', ->
       './env/**/*.coffee'
       './helpers/**/*.coffee'
       './lib/**/*.coffee'
+      './modules/**/*.coffee'
+      './scripts/**/*.coffee'
       './test/**/*.coffee'
     ]
     .pipe coffeelint()

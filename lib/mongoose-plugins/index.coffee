@@ -2,7 +2,7 @@ mongoose = require 'mongoose'
 {ObjectId} = mongoose.Types
 _ = require 'underscore'
 
-mongodbUtil = require 'lib/util/mongodb'
+mongooseUtils = require 'modules/mongoose-utils'
 
 
 plugins = {}
@@ -12,7 +12,7 @@ plugins.baseQueries = (schema, options) ->
   _.extend schema.statics,
 
     queryOneById: (id) ->
-      @findOne({_id:mongodbUtil.toObjectIdCondition id})
+      @findOne({_id:mongooseUtils.toObjectIdCondition id})
 
     findOneById: (id, callback) ->
       @queryOneById(id).exec callback
