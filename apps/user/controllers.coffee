@@ -7,7 +7,7 @@ validator = require 'validator'
 logics = require './logics'
 {User} = require './models'
 {Http404Error} = require 'lib/errors'
-{requireObjectId} = require 'lib/middlewares'
+{requireObjectId} = require 'lib/middlewares/core'
 
 
 renderPostPage = (res, data={}) ->

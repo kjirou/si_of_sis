@@ -5,16 +5,16 @@ assert = require 'power-assert'
 databaseHelper = require 'helpers/database'
 testHelper = require 'helpers/test'
 {Http404Error} = require 'lib/errors'
-middlewares = require 'lib/middlewares'
+coreMiddleware = require 'lib/middlewares/core'
 
 
-describe 'middlewares Lib', ->
+describe 'core Middleware', ->
 
   before (done) ->
     databaseHelper.resetDatabase done
 
   it 'applySubAppData', ->
-    mw = middlewares.applySubAppData 'foo'
+    mw = coreMiddleware.applySubAppData 'foo'
     assert typeof mw is 'function'
     [req, res, next] = [{}, {}, -> ]
     mw req, res, next
@@ -25,7 +25,7 @@ describe 'middlewares Lib', ->
 
   it 'applyObjectId', (done) ->
     testHelper.createTestModel new Schema, (e, Test) ->
-      mw = middlewares.applyObjectId Test
+      mw = coreMiddleware.applyObjectId Test
       assert typeof mw is 'function'
       # テスト用に予め 2 docs 作成する
       ids = (testHelper.createUniqueObjectId() for i in [0..1])
@@ -58,7 +58,7 @@ describe 'middlewares Lib', ->
 
   it 'requireObjectId', (done) ->
     testHelper.createTestModel new Schema, (e, Test) ->
-      middleware = middlewares.requireObjectId Test
+      middleware = coreMiddleware.requireObjectId Test
       # :id が存在しない
       middleware {params:{}}, {}, (e) ->
         assert e instanceof Http404Error

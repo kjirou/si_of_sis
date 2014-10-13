@@ -4,7 +4,7 @@ _ = require 'underscore'
 logics = require './logics'
 {Company} = require './models'
 {Http404Error} = require 'lib/errors'
-{requireObjectId} = require 'lib/middlewares'
+{requireObjectId} = require 'lib/middlewares/core'
 
 
 controllers = {}

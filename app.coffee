@@ -8,7 +8,7 @@ apps = require 'apps'
 {passportConfigurations} = require 'apps/user/logics'
 {User} = require 'apps/user/models'
 conf = require 'conf'
-{applySubAppData} = require 'lib/middlewares'
+{applySubAppData} = require 'lib/middlewares/core'
 xflashMiddleware = require 'lib/middlewares/extended-connect-flash'
 
 
