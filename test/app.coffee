@@ -69,12 +69,16 @@ describe 'app Module', ->
           .expect 200
           .end ->
             self.sessionStore.length (e, count) ->
-              self.getSessionData (e, session) ->
-                assert user._id.toString() is session.passport?.user
-                # この位置にあるのは、稀にテストが落ちることがあるため。Ref) #98
-                # 他の部分が正しいのかを先にチェックする
-                assert count is 1
-                done()
+              self.sessionStore._get_collection (coll) ->
+                coll.find().toArray (e, sessionRows) ->
+                  # 2 行でエラーになることが稀にあるので、デバッグプリントを出す
+                  # Ref) #98
+                  if count > 1
+                    console.error sessionRows
+                  assert count is 1
+                  self.getSessionData (e, session) ->
+                    assert user._id.toString() is session.passport?.user
+                    done()
 
     it 'GETリクエストだとログイン出来ない', (done) ->
       self = @
