@@ -17,12 +17,13 @@ controllers['update/:id'] = chain requireObjectId(Company), (req, res, next) ->
   switch req.method
     when 'GET'
       res.subApp.renderPostPage
-        inputs: _.extend {}, req.doc.toObject()
+        inputs: req.doc.toObject()
     when 'POST'
       logics.postCompany req.doc, inputs, (e, result) ->
         if e
           next e
         else if result instanceof Company
+          req.xflash 'success', 'Update was completed.'
           res.redirect '/home'
         else
           res.subApp.renderPostPage
