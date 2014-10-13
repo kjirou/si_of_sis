@@ -1,3 +1,4 @@
+connectFlash = require 'connect-flash'
 express = require 'express'
 router = require 'express-nested-router'
 passport = require 'passport'
@@ -47,6 +48,7 @@ app.use express.cookieParser()
 app.use express.json()
 app.use express.urlencoded()
 #app.use express.multipart()  # Ref) #37
+app.use connectFlash()
 app.use express.session {
   secret: conf.session.secret
   cookie: {
