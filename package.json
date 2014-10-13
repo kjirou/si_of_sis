@@ -16,6 +16,7 @@
     "callback-end": "0.0.2",
     "coffee-script": "1.8.0",
     "colo": "0.2.0",
+    "connect-flash": "0.1.1",
     "connect-mongo": "0.4.1",
     "espower-coffee": "0.9.1",
     "express": "3.17.2",
