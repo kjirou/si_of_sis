@@ -1,0 +1,9 @@
+mixin flashSuccessMessage(req)
+  - var message = req.xflash('success')
+  if message
+    div(style='background-color:lightgreen; color:green;') #{message}
+
+mixin flashFailureMessage(req)
+  - var message = req.xflash('failure')
+  if message
+    div(style='background-color:pink; color:red;') #{message}
