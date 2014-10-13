@@ -1,4 +1,3 @@
-connectFlash = require 'connect-flash'
 express = require 'express'
 router = require 'express-nested-router'
 passport = require 'passport'
@@ -10,6 +9,7 @@ apps = require 'apps'
 {User} = require 'apps/user/models'
 conf = require 'conf'
 {applySubAppData} = require 'lib/middlewares'
+xflashMiddleware = require 'lib/middlewares/extended-connect-flash'
 
 
 app = express()
@@ -48,7 +48,7 @@ app.use express.cookieParser()
 app.use express.json()
 app.use express.urlencoded()
 #app.use express.multipart()  # Ref) #37
-app.use connectFlash()
+app.use xflashMiddleware()
 app.use express.session {
   secret: conf.session.secret
   cookie: {
