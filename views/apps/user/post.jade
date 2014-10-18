@@ -1,24 +1,19 @@
+include /apps/mixins/errors
 extends /apps/layout
 
-
-mixin fieldErrors(fieldName)
-  - var fieldErrors = errors[fieldName]
-  if fieldErrors
-    each fieldError in fieldErrors
-      p #{fieldError.msg}
 
 block contentBlock
   h1 User
   form(action=req.path, method='POST')
+    input(type='hidden', name='_csrf', value=req.csrfToken())
     fieldset
       div
         label Email:
         input(type='text', name='email', value=inputs.email)
-      +fieldErrors('email')
-    fieldset
+      +fieldErrors(errors, 'email')
       div
         label Password:
         input(type='password', name='password', value=inputs.password)
-      +fieldErrors('password')
+      +fieldErrors(errors, 'password')
     div
       input(type='submit', value='Submit')

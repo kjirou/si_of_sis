@@ -6,6 +6,7 @@ extends /apps/layout
 block contentBlock
   h1 company.update
   form(action=req.path, method='POST')
+    input(type='hidden', name='_csrf', value=req.csrfToken())
     fieldset
       div
         label Name:

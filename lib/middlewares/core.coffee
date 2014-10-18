@@ -1,3 +1,4 @@
+express = require 'express'
 _ = require 'underscore'
 
 conf = require 'conf'
@@ -58,6 +59,18 @@ middlewares =
 
   requireObjectId: (model) ->
     middlewares.applyObjectId model, errorClass:Http404Error
+
+  csrf: ->
+    (req, res, next) ->
+      if req.disableCsrf
+        next()
+      else
+        express.csrf()(req, res, next)
+
+  disableCsrf: ->
+    (req, res, next) ->
+      req.disableCsrf = true
+      next()
 
 
 module.exports = middlewares

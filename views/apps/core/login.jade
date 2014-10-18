@@ -1,16 +1,16 @@
-extends /apps/layout
 include /apps/mixins/errors
+extends /apps/layout
 
 
 block contentBlock
   h1 Login
   form(action=req.path, method='POST')
+    input(type='hidden', name='_csrf', value=req.csrfToken())
     fieldset
       div
         label Email:
         input(type='text', name='email', value=inputs.email)
       +fieldErrors(errors, 'email')
-    fieldset
       div
         label Password:
         input(type='password', name='password', value=inputs.password)

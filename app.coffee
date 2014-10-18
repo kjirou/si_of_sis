@@ -8,7 +8,7 @@ apps = require 'apps'
 {passportConfigurations} = require 'apps/user/logics'
 {User} = require 'apps/user/models'
 conf = require 'conf'
-{applySubAppData} = require 'lib/middlewares/core'
+{applySubAppData, csrf, disableCsrf} = require 'lib/middlewares/core'
 xflashMiddleware = require 'lib/middlewares/extended-connect-flash'
 
 
@@ -56,6 +56,9 @@ app.use express.session {
   }
   store: conf.session.mongodbStore.prepareConnection()
 }
+if conf.env is 'test'
+  app.use disableCsrf()
+app.use csrf()
 app.use passport.initialize()
 app.use passport.session()
 app.use (req, res, next) ->
