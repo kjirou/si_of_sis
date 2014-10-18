@@ -13,7 +13,7 @@ html(lang="ja")
         ul
           li: a(href='/user/create') Create User
           if req.user
-            li: a(href='/user/update/' + req.user._id) Update User
+            li: a(href='/user/update/' + req.user.user._id) Update User
           li: a(href='/login') Login #{req.user ? '': '*'}
           li: a(href='/home') Home #{req.user ? '*': ''}
           li: a(href='/logout') Logout
