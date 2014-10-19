@@ -4,19 +4,8 @@ include /apps/mixins/flash-messages
 doctype html
 html(lang="ja")
   head
-    block titleBlock
-      title The SI of SIs
+    block headBlock
+      block titleBlock
+        title The SI of SIs
   body
-    header
-      h1: a(href='/') The SI of SIs
-      nav
-        ul
-          li: a(href='/user/create') Create User
-          if req.user
-            li: a(href='/user/update/' + req.user.user._id) Update User
-          li: a(href='/login') Login #{req.user ? '': '*'}
-          li: a(href='/home') Home #{req.user ? '*': ''}
-          li: a(href='/logout') Logout
-    +flashSuccessMessage(req)
-    +flashFailureMessage(req)
-    block contentBlock
+    block bodyBlock
