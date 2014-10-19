@@ -19,6 +19,7 @@ app = express()
 #
 app.set 'views', pathModule.join(conf.root, '/views')
 app.set 'view engine', 'jade'
+#app.set 'view options', {}
 
 
 #
@@ -26,6 +27,7 @@ app.set 'view engine', 'jade'
 #
 app.locals =
   basedir: app.get 'views'
+  pretty: true
 
 
 #
