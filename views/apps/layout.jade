@@ -5,7 +5,14 @@ doctype html
 html(lang="ja")
   head
     block headBlock
+      meta(charset='utf-8')
+      meta(name='author', content='')
+      meta(name='description', content='')
+      meta(name='viewport' content='width=device-width, initial-scale=1')
       block titleBlock
         title The SI of SIs
+      link(rel='stylesheet', href='bower_components/semantic-ui/build/packaged/css/semantic.css')
+      script(src='bower_components/jquery/dist/jquery.js')
+      script(src='bower_components/semantic-ui/build/packaged/javascript/semantic.js')
   body
     block bodyBlock
