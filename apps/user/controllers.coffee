@@ -26,7 +26,8 @@ postAction = (userOrNull, req, res, next) ->
     if e
       next e
     else if result instanceof User
-      res.redirect '/home'
+      req.xflash 'success', 'Update was completed.'
+      res.redirect req.path
     else
       renderPostPage res, {
         inputs: inputs
