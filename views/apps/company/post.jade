@@ -1,16 +1,20 @@
 include /apps/mixins/errors
-
-extends /apps/layout
+extends /apps/layouts/game
 
 
 block contentBlock
-  h1 company.update
-  form(action=req.path, method='POST')
+  h1.ui.medium.header
+    i.home.icon
+    |Company Settings
+  form.ui.form.segment(action=req.path, method='POST')
     input(type='hidden', name='_csrf', value=req.csrfToken())
-    fieldset
-      div
-        label Name:
-        input(type='text', name='name', value=inputs.name)
+    .field
+      label Name
+      .ui.left.labeled.icon.input
+        input(type='text', name='name', value=inputs.name, placeholder='Your Company Name')
+        i.user.icon
+        .ui.corner.label
+          i.asterisk.icon
       +fieldErrors(errors, 'name')
     div
-      input(type='submit', value='Submit')
+      input.ui.blue.submit.button(type='submit', value='Submit')

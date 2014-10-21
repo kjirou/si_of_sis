@@ -1,0 +1,9 @@
+{
+  "name": "si_of_sis",
+  "private": true,
+  "dependencies": {
+    "semantic-ui": "0.19.3"
+  },
+  "devDependencies": {
+  }
+}

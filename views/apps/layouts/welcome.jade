@@ -1,0 +1,29 @@
+extends /apps/layouts/app
+
+
+block bodyBlock
+  header.ui.grid
+    .ui.six.wide.column
+      h1.ui.header: a(href='/') The SIer of SIers
+    .ui.ten.wide.column
+      nav.ui.menu
+        if req.user
+          a.item(href='/home')
+            i.home.icon
+            span Home
+        else
+          a.item(href='/login')
+            i.sign.in.icon
+            span Login
+        a.item(href='/')
+          i.flag.icon
+          span Ranking
+        a.item(href='/')
+          i.users.icon
+          span Forums
+        a.item(href='/')
+          i.book.icon
+          span Game Guide
+  main.ui.page.grid
+    .column
+      block contentBlock

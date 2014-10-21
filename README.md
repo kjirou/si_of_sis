@@ -15,6 +15,7 @@ si_of_sis [![Build Status](https://travis-ci.org/kjirou/si_of_sis.svg?branch=mas
 git clone git@github.com:kjirou/si_of_sis.git
 cd si_of_sis
 npm install
+bower install
 ```
 
 ### Run Web Server
