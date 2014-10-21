@@ -3,17 +3,25 @@ extends /apps/welcome-layout
 
 
 block contentBlock
-  h1 Login
-  form(action=req.path, method='POST')
-    input(type='hidden', name='_csrf', value=req.csrfToken())
-    fieldset
+  .column
+    h2.ui.medium.header Login
+    form.ui.form.segment(action=req.path, method='POST')
+      input(type='hidden', name='_csrf', value=req.csrfToken())
+      .field
+        label Email
+        .ui.left.labeled.icon.input
+          input(type='text', name='email', value=inputs.email, placeholder='Email')
+          i.user.icon
+          .ui.corner.label
+            i.asterisk.icon
+        +fieldErrors(errors, 'email')
+      .field
+        label Password
+        .ui.left.labeled.icon.input
+          input(type='password', name='password', value=inputs.password, placeholder='Password')
+          i.lock.icon
+          .ui.corner.label
+            i.asterisk.icon
+        +fieldErrors(errors, 'password')
       div
-        label Email:
-        input(type='text', name='email', value=inputs.email)
-      +fieldErrors(errors, 'email')
-      div
-        label Password:
-        input(type='password', name='password', value=inputs.password)
-      +fieldErrors(errors, 'password')
-    div
-      input(type='submit', value='Submit')
+        input.ui.blue.submit.button(type='submit', value='Login')

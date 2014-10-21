@@ -2,10 +2,22 @@ extends /apps/layout
 
 
 block bodyBlock
-  header
-    h1: a(href='/') The SI of SIs
-    nav
-      ul
-        li: a(href='/login') Login
-  main
+  header.ui.grid
+    .ui.six.wide.column
+      h1.ui.header: a(href='/') The SIer of SIers
+    .ui.ten.wide.column
+      .ui.menu
+        a.item(href='/login')
+          i.user.icon
+          span Login
+        a.item(href='/')
+          i.flag.icon
+          span Ranking
+        a.item(href='/')
+          i.users.icon
+          span Forums
+        a.item(href='/')
+          i.book.icon
+          span Game Guide
+  main.ui.page.grid
     block contentBlock
