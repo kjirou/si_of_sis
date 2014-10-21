@@ -1,18 +1,66 @@
+include /apps/mixins/flash-messages
 extends /apps/layouts/app
 
 
 block bodyBlock
-  header
-    h1: a(href='/') The SI of SIs
-    nav
-      ul
-        li: a(href='/user/create') Create User
-        if req.user
-          li: a(href='/user/update/' + req.user.user._id) Update User
-        li: a(href='/login') Login #{req.user ? '': '*'}
-        li: a(href='/home') Home #{req.user ? '*': ''}
-        li: a(href='/logout') Logout
-  +flashSuccessMessage(req)
-  +flashFailureMessage(req)
-  main
-    block contentBlock
+  header.ui.grid
+    nav.ui.menu
+      a.item(href='/home')
+        i.home.icon
+      a.item(href='/team')
+        i.block.layout.icon
+        span Teams
+      a.item(href='/human_resource')
+        i.user.icon
+        span HR
+      a.item(href='/business')
+        i.building.icon
+        span Businesses
+      .right.menu
+        .ui.dropdown.item
+          span More
+          i.icon.dropdown
+          .menu
+            a.item(href='/ranking')
+              i.flag.icon
+              span Ranking
+            a.item(href='/guide')
+              i.book.icon
+              span Game Guide
+            a.item(href='/user/update/' + req.user.user._id)
+              i.setting.icon
+              span Account Settings
+            a.item(href='/logout')
+              i.sign.out.icon
+              span Logout
+    .ui.divided.horizontal.list
+      .item
+        a(href='/images/default-company.png', target='_blank')
+          img(src='/images/default-company.png', width='32', height='32')
+      .item
+        a(href='/company/update/' + req.user.company._id) #{req.user.company.name}
+      .item
+        i.calendar.icon
+        span 12 月 3 週
+      .item
+        i.yen.icon
+        span 12,345 千円
+      .item
+        i.block.layout.icon
+        span 3 チーム
+      .item
+        i.user.icon
+        span 13 人
+      .item
+        i.building.icon
+        span 4 件
+    .ui.divider
+  script.
+    $(function(){
+      $('header nav .right.menu .ui.dropdown.item').dropdown({on:'hover'});
+    });
+  main.ui.page.grid
+    .column
+      +flashSuccessMessage(req)
+      +flashFailureMessage(req)
+      block contentBlock

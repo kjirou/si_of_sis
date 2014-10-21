@@ -1,9 +1,13 @@
 mixin flashSuccessMessage(req)
-  - var message = req.xflash('success')
-  if message
-    div(style='background-color:lightgreen; color:green;') #{message}
+  - var messages = req.xflash('success')
+  if messages.length
+    .ui.green.message
+      each message in messages
+        p #{message}
 
 mixin flashFailureMessage(req)
-  - var message = req.xflash('failure')
-  if message
-    div(style='background-color:pink; color:red;') #{message}
+  - var messages = req.xflash('failure')
+  if messages.length
+    .ui.red.message
+      each message in messages
+        p #{message}

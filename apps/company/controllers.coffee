@@ -24,7 +24,7 @@ controllers['update/:id'] = chain requireObjectId(Company), (req, res, next) ->
           next e
         else if result instanceof Company
           req.xflash 'success', 'Update was completed.'
-          res.redirect '/home'
+          res.redirect req.path
         else
           res.subApp.renderPostPage
             inputs: inputs
