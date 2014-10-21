@@ -7,9 +7,14 @@ block bodyBlock
       h1.ui.header: a(href='/') The SIer of SIers
     .ui.ten.wide.column
       .ui.menu
-        a.item(href='/login')
-          i.user.icon
-          span Login
+        if req.user
+          a.item(href='/home')
+            i.home.icon
+            span Home
+        else
+          a.item(href='/login')
+            i.user.icon
+            span Login
         a.item(href='/')
           i.flag.icon
           span Ranking
