@@ -13,7 +13,7 @@ block bodyBlock
             span Home
         else
           a.item(href='/login')
-            i.user.icon
+            i.sign.in.icon
             span Login
         a.item(href='/')
           i.flag.icon
@@ -25,4 +25,5 @@ block bodyBlock
           i.book.icon
           span Game Guide
   main.ui.page.grid
-    block contentBlock
+    .column
+      block contentBlock
