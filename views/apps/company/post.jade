@@ -1,4 +1,4 @@
-include /apps/mixins/errors
+include /apps/mixins/fields
 extends /apps/layouts/game
 
 
@@ -8,13 +8,6 @@ block contentBlock
     |Company Settings
   form.ui.form.segment(action=req.path, method='POST')
     input(type='hidden', name='_csrf', value=req.csrfToken())
-    .field
-      label Name
-      .ui.left.labeled.icon.input
-        input(type='text', name='name', value=inputs.name, placeholder='Your Company Name')
-        i.user.icon
-        .ui.corner.label
-          i.asterisk.icon
-      +fieldErrors(errors, 'name')
+    +formField('name', inputs.name, error, {required:true, placeholder:'Your Company Inc.'})
     div
       input.ui.blue.submit.button(type='submit', value='Submit')

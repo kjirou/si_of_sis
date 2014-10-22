@@ -1,5 +1,5 @@
 {chain} = require 'express-nested-router'
-_ = require 'underscore'
+_ = require 'lodash'
 
 logics = require './logics'
 {Company} = require './models'
@@ -16,19 +16,19 @@ controllers['update/:id'] = chain requireObjectId(Company), (req, res, next) ->
 
   switch req.method
     when 'GET'
-      res.subApp.renderPostPage
+      res.subApp.renderPost 'post',
         inputs: req.doc.toObject()
     when 'POST'
-      logics.postCompany req.doc, inputs, (e, result) ->
+      logics.postCompany req.doc, inputs, (e, any) ->
         if e
           next e
-        else if result instanceof Company
+        else if any instanceof Company
           req.xflash 'success', 'Update was completed.'
           res.redirect req.path
         else
-          res.subApp.renderPostPage
+          res.subApp.renderPost 'post',
             inputs: inputs
-            errors: result.errors
+            error: any.reporter
     else
       next new Http404Error
 

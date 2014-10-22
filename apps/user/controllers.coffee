@@ -20,7 +20,7 @@ controllers.create = (req, res, next) ->
 
   switch req.method
     when 'GET'
-      res.subApp.renderUpdatePage 'create'
+      res.subApp.renderPost 'create'
     when 'POST'
       logics.postUser null, inputs, (e, any) ->
         if e
@@ -31,9 +31,9 @@ controllers.create = (req, res, next) ->
             req.xflash 'success', 'Update was completed.'
             res.redirect '/home'
         else
-          res.subApp.renderUpdatePage 'create',
+          res.subApp.renderPost 'create',
             inputs: inputs
-            errors: any.errors
+            error: any.reporter
     else
       next new Http404Error
 
@@ -42,7 +42,7 @@ controllers['update/:id'] = chain requireLogin(), requireObjectId(User), (req, r
 
   switch req.method
     when 'GET'
-      res.subApp.renderUpdatePage 'update',
+      res.subApp.renderPost 'update',
         inputs: _.pick req.doc.toObject(), 'email'
     when 'POST'
       logics.postUser req.doc, inputs, (e, any) ->
@@ -52,9 +52,9 @@ controllers['update/:id'] = chain requireLogin(), requireObjectId(User), (req, r
           req.xflash 'success', 'Update was completed.'
           res.redirect req.path
         else
-          res.subApp.renderUpdatePage 'update',
+          res.subApp.renderPost 'update',
             inputs: inputs
-            errors: any.errors
+            error: any.reporter
     else
       next new Http404Error
 
