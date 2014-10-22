@@ -8,7 +8,7 @@ apps = require 'apps'
 {passportConfigurations} = require 'apps/user/logics'
 {User} = require 'apps/user/models'
 conf = require 'conf'
-{applySubAppData, csrf, disableCsrf} = require 'lib/middlewares/core'
+{applySubAppData, csrf, disableCsrf, logServer} = require 'lib/middlewares/core'
 xflashMiddleware = require 'lib/middlewares/extended-connect-flash'
 
 
@@ -41,11 +41,7 @@ passport.deserializeUser passportConfigurations.deserializeUser()
 #
 # Middlewares
 #
-switch conf.env
-  when 'development'
-    app.use express.logger { format:'dev' }
-  when 'production'
-    app.use express.logger { format:'combined' }
+app.use logServer()
 app.use express.cookieParser()
 app.use express.json()
 app.use express.urlencoded()

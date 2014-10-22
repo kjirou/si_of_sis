@@ -1,5 +1,7 @@
 express = require 'express'
-_ = require 'underscore'
+_ = require 'lodash'
+morgan = require 'morgan'
+urlModule = require 'url'
 
 conf = require 'conf'
 coreLib = require 'lib/core'
@@ -71,6 +73,17 @@ middlewares =
     (req, res, next) ->
       req.disableCsrf = true
       next()
+
+  logServer: ->
+    formatType = conf.server.logFormatType ?
+      switch conf.env
+        when 'production' then 'combined'
+        else 'dev'
+    morgan formatType,
+      skip: (req, res) ->
+        return false if conf.server.isVerboseLogging
+        urlData = urlModule.parse req.url
+        /\.(css|gif|jpeg|jpg|js|png|woff)$/.test urlData.pathname
 
 
 module.exports = middlewares
