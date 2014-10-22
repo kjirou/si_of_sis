@@ -27,6 +27,7 @@
     "minimist": "1.1.0",
     "mongoose": "3.8.17",
     "monky": "0.4.2",
+    "morgan": "^1.4.0",
     "passport": "0.2.1",
     "passport-local": "1.0.0",
     "power-assert": "0.9.1",
