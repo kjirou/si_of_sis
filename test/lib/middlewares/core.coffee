@@ -20,7 +20,7 @@ describe 'core Middleware', ->
     mw req, res, next
     assert typeof req.subApp is 'object'
     assert req.subApp.name is 'foo'
-    assert typeof res.renderSubApp is 'function'
+    assert typeof res.subApp.render is 'function'
 
 
   it 'applyObjectId', (done) ->

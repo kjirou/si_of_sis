@@ -1,7 +1,7 @@
 controllers = {}
 
 controllers.index = (req, res, next) ->
-  res.renderSubApp 'index'
+  res.subApp.render 'index'
 
 controllers.session_counter = (req, res, next) ->
   req.session._counter ?= 0

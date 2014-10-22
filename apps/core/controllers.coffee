@@ -8,11 +8,11 @@ _ = require 'underscore'
 controllers = {}
 
 controllers.index = (req, res, next) ->
-  res.renderSubApp 'index'
+  res.subApp.render 'index'
 
 controllers.login = (req, res, next) ->
   renderLoginPage = (locals={}) ->
-    res.renderSubApp 'login', _.extend {
+    res.subApp.render 'login', _.extend {
       inputs: {}
       errors: {}
     }, locals
