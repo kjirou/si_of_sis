@@ -26,8 +26,10 @@ controllers.create = (req, res, next) ->
         if e
           next e
         else if any instanceof User
-          req.xflash 'success', 'Update was completed.'
-          res.redirect '/'
+          req.login any, (e) ->
+            return next e if e
+            req.xflash 'success', 'Update was completed.'
+            res.redirect '/home'
         else
           res.subApp.renderUpdatePage 'create',
             inputs: inputs
