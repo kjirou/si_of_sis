@@ -15,8 +15,6 @@ lib/*
 　↑
 apps/subapp/conf
 　↑
-apps/subapp/lib/*
-　↑
 apps/subapp/models
 　↑
 apps/subapp/logics
@@ -38,6 +36,7 @@ env/*
 boot/*
 scripts/*
 test/*
+mochaやcoffeelintなどの外部モジュールが提供するコマンド群
 ```
 
 
@@ -48,11 +47,11 @@ test/*
     - 以下に書いた図の中で一段階高い層から、そのモジュールトップのみ参照できる
       - `index` -> `controllers` -> `logics` -> `models` -> `conf`
 - `boot/`
-  - 起動ファイル、mocha など他の起動ファイルもある
-  - 外部との API を node コマンドに統一したかったので設置した
+  - 起動ファイル群
+  - エントリポイントをなるべく一箇所にまとめたかったのと、外部との API を node コマンドに統一するため
 - `env/`
   - 環境別に実行が必要な、副作用を発生させる処理を定義する。値は返さない
-    - 副作用が無いものは conf/_env に分離する
+    - 副作用が無いものは `conf/_{env}` に分離する
 
 
 ## ファイル名の `_` プレフィックス

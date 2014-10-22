@@ -20,7 +20,7 @@ bower install
 
 ### Run Web Server
 - 1. `mongod`
-- 2. `node boot/command.js fixture --development`
+- 2. `node boot/command.js fixture --development` (現在不要、というか実行してはダメ)
 - 3. `npm run dev`
 
 ### Run Tests
