@@ -25,13 +25,16 @@ middlewares =
 
       res.subApp.render = _.bind(coreLib.bindPathRoot(subAppViewRoot, res.render), res)
 
+      # この 2 つは廃棄予定、renderPost にまとめる
       res.subApp.renderUpdatePage = (templatePath, locals={}) ->
         res.subApp.render templatePath, _.extend {
           inputs: {}
           errors: {}
+          error: null
         }, locals
-
       res.subApp.renderPostPage = _.partial res.subApp.renderUpdatePage, 'post'
+
+      res.subApp.renderPost = res.subApp.renderUpdatePage
 
       next()
 

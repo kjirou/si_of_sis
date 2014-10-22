@@ -1,0 +1,38 @@
+mixin baseFormField(fieldName, options)
+  - options = options || {}
+  - var label = 'label' in options ? options.label : _s.titleize(_s.humanize(fieldName))
+  - var name = 'name' in options ? options.name : fieldName
+  - var value = 'value' in options ? options.value : ''
+  - var type = 'type' in options ? options.type : 'text'
+  - var placeholder = 'placeholder' in options ? options.placeholder : _s.titleize(_s.humanize(fieldName))
+  - var icon = 'icon' in options ? options.icon : 'right arrow'
+  - var required = 'required' in options ? options.required : false
+  - var error = 'error' in options ? options.error : null
+  .field
+    label #{label}
+    .ui.left.labeled.icon.input
+      input(type=type, name=name, value=value, placeholder=placeholder)
+      i.icon(class=icon)
+      if required
+        .ui.corner.label
+          i.asterisk.icon
+  if error
+    - var fieldErrors = error.report()[fieldName]
+    if fieldErrors
+      .ui.red.message
+        each fieldError in fieldErrors
+          p #{fieldError.msg}
+
+mixin formField(fieldName, value, error, options)
+  - options = options || {}
+  - options.value = value
+  - options.error = error
+  +baseFormField(fieldName, options)
+
+mixin emailField(fieldName, value, error, options)
+  - options = _.extend({required:true, icon:'user', placeholder:'yourmail@example.com'}, options || {})
+  +formField('email', value, error, options)
+
+mixin passwordField(fieldName, value, error)
+  - options = _.extend({type:'password', required:true, icon:'lock', placeholder:''}, options || {})
+  +formField('password', value, error, options)

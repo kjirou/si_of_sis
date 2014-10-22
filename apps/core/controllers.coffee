@@ -11,12 +11,6 @@ controllers.index = (req, res, next) ->
   res.subApp.render 'index'
 
 controllers.login = (req, res, next) ->
-  renderLoginPage = (locals={}) ->
-    res.subApp.render 'login', _.extend {
-      inputs: {}
-      errors: {}
-    }, locals
-
   inputs = _.extend {
     email: ''
     password: ''
@@ -24,7 +18,7 @@ controllers.login = (req, res, next) ->
 
   switch req.method
     when 'GET'
-      renderLoginPage()
+      res.subApp.renderPost 'login'
     when 'POST'
       authMiddleware = passport.authenticate 'local', (e, user) ->
         if e
@@ -32,9 +26,9 @@ controllers.login = (req, res, next) ->
         else unless user
           reporter = new ErrorReporter
           reporter.error 'email', 'Invalid email or password'
-          renderLoginPage {
+          res.subApp.renderPost 'login', {
             inputs: inputs
-            errors: reporter.report()
+            error: reporter
           }
         else
           req.login user, (e) ->

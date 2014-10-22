@@ -1,5 +1,7 @@
 express = require 'express'
 router = require 'express-nested-router'
+_ = require 'lodash'
+_s = require 'underscore.string'
 passport = require 'passport'
 pathModule = require 'path'
 LocalStrategy = require('passport-local').Strategy
@@ -60,7 +62,10 @@ app.use csrf()
 app.use passport.initialize()
 app.use passport.session()
 app.use (req, res, next) ->
-  res.locals.req = req
+  _.extend res.locals,
+    req: req
+    _: _
+    _s: _s
   next()
 app.use app.router
 app.use(express.static(pathModule.join(conf.root, 'public')))
