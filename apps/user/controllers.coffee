@@ -1,8 +1,5 @@
-async = require 'async'
 {chain} = require 'express-nested-router'
-{ObjectId} = require('mongoose').Types
-_ = require 'underscore'
-validator = require 'validator'
+_ = require 'lodash'
 
 logics = require './logics'
 {User} = require './models'
@@ -10,50 +7,51 @@ logics = require './logics'
 {requireObjectId} = require 'lib/middlewares/core'
 
 
-renderPostPage = (res, data={}) ->
-  res.renderSubApp 'post', _.extend {
-    inputs: {}
-    errors: {}
-  }, data
-
-postAction = (userOrNull, req, res, next) ->
-  inputs = _.extend {
-    email: ''
-    password: ''
-  }, req.body
-
-  logics.postUser userOrNull, inputs, (e, result) ->
-    if e
-      next e
-    else if result instanceof User
-      req.xflash 'success', 'Update was completed.'
-      res.redirect req.path
-    else
-      renderPostPage res, {
-        inputs: inputs
-        errors: result.errors
-      }
+defaultInputs =
+  email: ''
+  password: ''
 
 
 controllers = {}
 
 controllers.create = (req, res, next) ->
+  inputs = _.extend {}, defaultInputs, req.body
+
   switch req.method
     when 'GET'
-      renderPostPage res
+      res.subApp.renderPostPage()
     when 'POST'
-      postAction null, arguments...
+      logics.postUser null, inputs, (e, any) ->
+        if e
+          next e
+        else if any instanceof User
+          req.xflash 'success', 'Update was completed.'
+          res.redirect '/'
+        else
+          res.subApp.renderPostPage
+            inputs: inputs
+            errors: any.errors
     else
       next new Http404Error
 
 controllers['update/:id'] = chain requireObjectId(User), (req, res, next) ->
+  inputs = _.extend {}, defaultInputs, req.body
+
   switch req.method
     when 'GET'
-      renderPostPage res,
-        inputs:
-          email: req.doc.email
+      res.subApp.renderPostPage
+        inputs: _.pick req.doc.toObject(), 'email'
     when 'POST'
-      postAction req.doc, arguments...
+      logics.postUser req.doc, inputs, (e, any) ->
+        if e
+          next e
+        else if any instanceof User
+          req.xflash 'success', 'Update was completed.'
+          res.redirect req.path
+        else
+          res.subApp.renderPostPage
+            inputs: inputs
+            errors: any.errors
     else
       next new Http404Error
 

@@ -23,10 +23,12 @@ middlewares =
 
       res.subApp = {}
 
+      # res.subApp.render へ移行中
       res.renderSubApp = coreLib.bindPathRoot subAppViewRoot, res.render
+      res.subApp.render = res.renderSubApp
 
       res.subApp.renderPostPage = (locals={}) ->
-        res.renderSubApp 'post', _.extend {
+        res.subApp.render 'post', _.extend {
           inputs: {}
           errors: {}
         }, locals
