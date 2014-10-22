@@ -18,7 +18,7 @@ controllers.login = (req, res, next) ->
 
   switch req.method
     when 'GET'
-      res.subApp.renderPost 'login'
+      res.subApp.renderForm 'login'
     when 'POST'
       authMiddleware = passport.authenticate 'local', (e, user) ->
         if e
@@ -26,7 +26,7 @@ controllers.login = (req, res, next) ->
         else unless user
           reporter = new ErrorReporter
           reporter.error 'email', 'Invalid email or password'
-          res.subApp.renderPost 'login', {
+          res.subApp.renderForm 'login', {
             inputs: inputs
             error: reporter
           }

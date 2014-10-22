@@ -16,7 +16,7 @@ controllers['update/:id'] = chain requireObjectId(Company), (req, res, next) ->
 
   switch req.method
     when 'GET'
-      res.subApp.renderPost 'post',
+      res.subApp.renderForm 'post',
         inputs: req.doc.toObject()
     when 'POST'
       logics.postCompany req.doc, inputs, (e, any) ->
@@ -26,7 +26,7 @@ controllers['update/:id'] = chain requireObjectId(Company), (req, res, next) ->
           req.xflash 'success', 'Update was completed.'
           res.redirect req.path
         else
-          res.subApp.renderPost 'post',
+          res.subApp.renderForm 'post',
             inputs: inputs
             error: any.reporter
     else
