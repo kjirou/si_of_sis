@@ -1,6 +1,6 @@
 assert = require 'power-assert'
 
-{defaultErrorMessages, Field} = require 'lib/validator'
+{DEFAULT_ERROR_MESSAGES, Field} = require 'lib/validator'
 
 
 describe 'Field Class', ->
@@ -23,7 +23,7 @@ describe 'Field Class', ->
     field = new Field
     field.type 'isEmail'
     assert.deepEqual field._checks, [
-      {type:'isEmail', args:null, message:defaultErrorMessages.isEmail, validation:null}
+      {type:'isEmail', args:null, message:DEFAULT_ERROR_MESSAGES.isEmail, validation:null}
     ]
     # validator 側で使用する引数を設定できる
     # また、引数 3 つのパターンで定義できる
@@ -112,7 +112,7 @@ describe 'Field Class', ->
     field._validateCustom validation, '', (e, {isValid, errorMessages}) ->
       assert not e
       assert isValid is false
-      assert.deepEqual errorMessages, [defaultErrorMessages.isInvalid]
+      assert.deepEqual errorMessages, [DEFAULT_ERROR_MESSAGES.isInvalid]
       done()
 
 
@@ -131,18 +131,18 @@ describe 'Field Class', ->
         field.validate 'fooexamplecom', (e2, {isValid, errorMessages}) ->
           assert not e2
           assert isValid is false
-          assert.deepEqual errorMessages, [defaultErrorMessages.isEmail]
+          assert.deepEqual errorMessages, [DEFAULT_ERROR_MESSAGES.isEmail]
           # 文字数が足りなかった
           field.validate 'f@e.com', (e3, {isValid, errorMessages}) ->
             assert not e3
             assert isValid is false
-            assert.deepEqual errorMessages, [defaultErrorMessages.isLength]
+            assert.deepEqual errorMessages, [DEFAULT_ERROR_MESSAGES.isLength]
             # Email ではなく文字数も足りなかったが shouldCheckAll=false なのでエラー行数は 1
             field.validate 'fecom', (e4, {isValid, errorMessages}) ->
               assert not e4
               assert isValid is false
               assert.deepEqual errorMessages, [
-                defaultErrorMessages.isEmail
+                DEFAULT_ERROR_MESSAGES.isEmail
               ]
               # Email ではなく文字数も足りない、shouldCheckAll=true なのでエラー行数は 2
               field.options.shouldCheckAll = true
@@ -150,8 +150,8 @@ describe 'Field Class', ->
                 assert not e5
                 assert isValid is false
                 assert.deepEqual errorMessages, [
-                  defaultErrorMessages.isEmail
-                  defaultErrorMessages.isLength
+                  DEFAULT_ERROR_MESSAGES.isEmail
+                  DEFAULT_ERROR_MESSAGES.isLength
                 ]
                 done()
 
@@ -180,7 +180,7 @@ describe 'Field Class', ->
         field.validate 'bar', (e, {isValid, errorMessages}) ->
           assert not e
           assert isValid is false
-          assert.deepEqual errorMessages, [defaultErrorMessages.isInvalid]
+          assert.deepEqual errorMessages, [DEFAULT_ERROR_MESSAGES.isInvalid]
           done()
 
     it '定型とカスタムバリデーションが混在している', (done) ->
@@ -203,20 +203,20 @@ describe 'Field Class', ->
         field.validate 'abc123_', (e, {isValid, errorMessages}) ->
           assert not e
           assert isValid is false
-          assert.deepEqual errorMessages, [defaultErrorMessages.isAlphanumeric]
+          assert.deepEqual errorMessages, [DEFAULT_ERROR_MESSAGES.isAlphanumeric]
           # 入力が 2 点誤り
           field.validate 'ab12_', (e, {isValid, errorMessages}) ->
             assert isValid is false
             assert.deepEqual errorMessages, [
-              defaultErrorMessages.isAlphanumeric
-              defaultErrorMessages.isLength
+              DEFAULT_ERROR_MESSAGES.isAlphanumeric
+              DEFAULT_ERROR_MESSAGES.isLength
             ]
             # 入力が 3 点誤り
             field.validate '1ab2_', (e, {isValid, errorMessages}) ->
               assert isValid is false
               assert.deepEqual errorMessages, [
-                defaultErrorMessages.isAlphanumeric
-                defaultErrorMessages.isLength
+                DEFAULT_ERROR_MESSAGES.isAlphanumeric
+                DEFAULT_ERROR_MESSAGES.isLength
                 'Can not set numeric string as prefix'
               ]
               done()
@@ -235,7 +235,7 @@ describe 'Field Class', ->
           @type 'isEmail'
       field.validate 'fooexamplecom', (e, {isValid, errorMessages}) ->
         assert isValid is false
-        assert.deepEqual errorMessages, [defaultErrorMessages.isEmail]
+        assert.deepEqual errorMessages, [DEFAULT_ERROR_MESSAGES.isEmail]
         # コンストラクタ引数が有効である
         class FooField extends Field
         field = new FooField {passIfEmpty:true, shouldCheckAll:true}

@@ -1,10 +1,10 @@
 _ = require 'underscore'
 
-defaultErrorMessages = require './default-error-messages'
+DEFAULT_ERROR_MESSAGES = require './default-error-messages'
 ErrorReporter = require './error-reporter'
 validator = require './validator'
 
-{Field} = require('./fields')(validator, defaultErrorMessages)
+{Field} = require('./fields')(validator, DEFAULT_ERROR_MESSAGES)
 {Form} = require('./forms')(ErrorReporter)
 
 
@@ -25,13 +25,13 @@ createValidator = (settings) ->
     validator: (value) ->
       settings.passIfEmpty and value is '' or
         validator[settings.validator].apply validator, [value].concat(settings.arguments)
-    msg: settings.message ? defaultErrorMessages[settings.validator] ? defaultErrorMessages.isInvalid
+    msg: settings.message ? DEFAULT_ERROR_MESSAGES[settings.validator] ? DEFAULT_ERROR_MESSAGES.isInvalid
   }
 
 
 module.exports =
   createValidator: createValidator
-  defaultErrorMessages: defaultErrorMessages
+  DEFAULT_ERROR_MESSAGES: DEFAULT_ERROR_MESSAGES
   ErrorReporter: ErrorReporter
   Field: Field
   Form: Form

@@ -4,7 +4,7 @@ _ = require 'underscore'
 
 {getPlugins} = require 'lib/mongoose-plugins'
 textLib = require 'lib/text'
-{createValidator, defaultErrorMessages} = require 'lib/validator'
+{createValidator} = require 'lib/validator'
 
 
 companySchema = new Schema {

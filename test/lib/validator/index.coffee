@@ -3,15 +3,15 @@ assert = require 'power-assert'
 _ = require 'underscore'
 
 testHelper = require 'helpers/test'
-{createValidator, defaultErrorMessages, ErrorReporter, Field, Form, validator} = require 'lib/validator'
+{createValidator, DEFAULT_ERROR_MESSAGES, ErrorReporter, Field, Form, validator} = require 'lib/validator'
 
 
 describe 'validator Lib', ->
 
   it 'Module definition', ->
     assert typeof createValidator is 'function'
-    assert typeof defaultErrorMessages is 'object'
-    assert _.size(defaultErrorMessages) > 0
+    assert typeof DEFAULT_ERROR_MESSAGES is 'object'
+    assert _.size(DEFAULT_ERROR_MESSAGES) > 0
     assert typeof ErrorReporter is 'function'
     assert typeof Field is 'function'
     assert typeof Form is 'function'
@@ -23,7 +23,7 @@ describe 'validator Lib', ->
     it 'createValidator', ->
       result = createValidator { validator:'isInt' }
       assert.strictEqual(typeof result.validator, 'function')
-      assert.strictEqual result.msg, defaultErrorMessages.isInt
+      assert.strictEqual result.msg, DEFAULT_ERROR_MESSAGES.isInt
       assert result.validator('1') is true
       assert result.validator('1.1') is false
       assert result.validator('') is false
