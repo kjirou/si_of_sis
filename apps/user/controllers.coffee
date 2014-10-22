@@ -19,7 +19,7 @@ controllers.create = (req, res, next) ->
 
   switch req.method
     when 'GET'
-      res.subApp.renderPostPage()
+      res.subApp.renderUpdatePage 'create'
     when 'POST'
       logics.postUser null, inputs, (e, any) ->
         if e
@@ -28,7 +28,7 @@ controllers.create = (req, res, next) ->
           req.xflash 'success', 'Update was completed.'
           res.redirect '/'
         else
-          res.subApp.renderPostPage
+          res.subApp.renderUpdatePage 'create',
             inputs: inputs
             errors: any.errors
     else
@@ -39,7 +39,7 @@ controllers['update/:id'] = chain requireObjectId(User), (req, res, next) ->
 
   switch req.method
     when 'GET'
-      res.subApp.renderPostPage
+      res.subApp.renderUpdatePage 'update',
         inputs: _.pick req.doc.toObject(), 'email'
     when 'POST'
       logics.postUser req.doc, inputs, (e, any) ->
@@ -49,7 +49,7 @@ controllers['update/:id'] = chain requireObjectId(User), (req, res, next) ->
           req.xflash 'success', 'Update was completed.'
           res.redirect req.path
         else
-          res.subApp.renderPostPage
+          res.subApp.renderUpdatePage 'update',
             inputs: inputs
             errors: any.errors
     else

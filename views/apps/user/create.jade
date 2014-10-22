@@ -5,7 +5,7 @@ extends /apps/layouts/welcome
 block contentBlock
   h2.ui.medium.header
     i.sign.in.icon
-    |Login
+    |Create Account
   form.ui.form.segment(action=req.path, method='POST')
     input(type='hidden', name='_csrf', value=req.csrfToken())
     .field
@@ -25,18 +25,4 @@ block contentBlock
           i.asterisk.icon
       +fieldErrors(errors, 'password')
     div
-      input.ui.blue.submit.button(type='submit', value='Login')
-
-  h2.ui.medium.header
-    i.sign.in.icon
-    |アカウント未登録の方はこちらから
-  .ui.list
-    a.item(href='/user/create')
-      i.mail.icon
-      |メールアドレスとパスワードで登録
-    a.item(href='/user/create')
-      i.twitter.icon
-      |Twitter アカウントで登録
-    a.item(href='/user/create')
-      i.github.icon
-      |GitHub アカウントで登録
+      input.ui.blue.submit.button(type='submit', value='Submit')
