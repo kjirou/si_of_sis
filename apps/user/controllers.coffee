@@ -4,6 +4,7 @@ _ = require 'lodash'
 logics = require './logics'
 {User} = require './models'
 {Http404Error} = require 'lib/errors'
+{requireLogin} = require 'lib/middlewares/authentication'
 {requireObjectId} = require 'lib/middlewares/core'
 
 
@@ -34,7 +35,7 @@ controllers.create = (req, res, next) ->
     else
       next new Http404Error
 
-controllers['update/:id'] = chain requireObjectId(User), (req, res, next) ->
+controllers['update/:id'] = chain requireLogin(), requireObjectId(User), (req, res, next) ->
   inputs = _.extend {}, defaultInputs, req.body
 
   switch req.method
