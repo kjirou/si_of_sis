@@ -1,6 +1,0 @@
-mixin fieldErrors(errors, fieldName)
-  - var fieldErrors = errors[fieldName]
-  if fieldErrors
-    .ui.red.message
-      each fieldError in fieldErrors
-        p #{fieldError.msg}

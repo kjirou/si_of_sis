@@ -25,13 +25,13 @@ middlewares =
 
       res.subApp.render = _.bind(coreLib.bindPathRoot(subAppViewRoot, res.render), res)
 
-      res.subApp.renderUpdatePage = (templatePath, locals={}) ->
+      res.subApp.renderForm = (templatePath, locals={}) ->
         res.subApp.render templatePath, _.extend {
+          # 値の保持用の フィールド名:値 のセット
           inputs: {}
-          errors: {}
+          # ErrorReporter インスタンス
+          error: null
         }, locals
-
-      res.subApp.renderPostPage = _.partial res.subApp.renderUpdatePage, 'post'
 
       next()
 
