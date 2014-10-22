@@ -17,7 +17,7 @@ helper.ensureModelIndexes = (callback) ->
 
 helper.resetDatabase = (callback) ->
   mongooseUtils.purgeDatabase (e) ->
-    throw e if e
+    return callback e if e
     helper.ensureModelIndexes callback
 
 
