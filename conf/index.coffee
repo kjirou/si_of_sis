@@ -45,10 +45,11 @@ conf =
   mongodb: mongodbConf
   root: path.resolve process.env.NODE_PATH
   server:
+    # true=ログを全く出力しない、false=全リクエストを出力、
+    #   null=デフォルト（静的ファイルは拡張子で除外など）に従う
+    logFiltering: null
     # morgan 準拠でログ書式を設定する、デフォルトは env 依存で変わる
     logFormatType: null
-    # 全てのリクエストをログ出力する、デフォルトは静的ファイルを拡張子で除外するなどしている
-    isVerboseLogging: false
     port: '3000'
   session:
     secret: 'default_session_secret_key'

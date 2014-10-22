@@ -76,12 +76,14 @@ middlewares =
 
   logServer: ->
     formatType = conf.server.logFormatType ?
-      switch conf.env
-        when 'production' then 'combined'
-        else 'dev'
+      if conf.env is 'production' then 'combined' else 'dev'
     morgan formatType,
       skip: (req, res) ->
-        return false if conf.server.isVerboseLogging
+        switch conf.server.logFiltering
+          when true
+            return true
+          when false
+            return false
         urlData = urlModule.parse req.url
         /\.(css|gif|jpeg|jpg|js|png|woff)$/.test urlData.pathname
 
