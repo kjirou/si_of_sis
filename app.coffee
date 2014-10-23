@@ -28,6 +28,8 @@ app.set 'view engine', 'jade'
 # Locals
 #
 app.locals =
+  _: _
+  _s: _s
   basedir: app.get 'views'
   pretty: true
 
@@ -64,8 +66,6 @@ app.use passport.session()
 app.use (req, res, next) ->
   _.extend res.locals,
     req: req
-    _: _
-    _s: _s
   next()
 app.use app.router
 app.use(express.static(pathModule.join(conf.root, 'public')))
