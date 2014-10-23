@@ -2631,9 +2631,16 @@
       }
     },
     "monky": {
-      "version": "0.4.2",
-      "from": "https://registry.npmjs.org/monky/-/monky-0.4.2.tgz",
-      "resolved": "https://registry.npmjs.org/monky/-/monky-0.4.2.tgz"
+      "version": "0.6.0",
+      "from": "monky@",
+      "resolved": "https://registry.npmjs.org/monky/-/monky-0.6.0.tgz",
+      "dependencies": {
+        "mpromise": {
+          "version": "0.5.5",
+          "from": "mpromise@0.5.5",
+          "resolved": "https://registry.npmjs.org/mpromise/-/mpromise-0.5.5.tgz"
+        }
+      }
     },
     "morgan": {
       "version": "1.4.0",
