@@ -1,13 +1,13 @@
+_ = require 'lodash'
 mongoose = require 'mongoose'
 {Schema} = mongoose
-_ = require 'underscore'
 
 {getPlugins} = require 'lib/mongoose-plugins'
 textLib = require 'lib/text'
 {createValidator} = require 'lib/validator'
 
 
-companySchema = new Schema {
+schema = new Schema {
 
   user:
     type: Schema.Types.ObjectId
@@ -31,8 +31,7 @@ companySchema = new Schema {
     ]
 }
 
-companySchema.plugin getPlugins()
+schema.plugin getPlugins()
 
 
-module.exports =
-  Company: mongoose.model 'Company', companySchema
+module.exports = mongoose.model 'Company', schema

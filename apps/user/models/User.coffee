@@ -1,7 +1,7 @@
+_ = require 'lodash'
 mongoose = require 'mongoose'
 {Schema} = mongoose
 randomString = require 'random-string'
-_ = require 'underscore'
 
 {getPlugins} = require 'lib/mongoose-plugins'
 {generateHashedPassword} = require 'lib/crypto'
@@ -11,7 +11,7 @@ consts =
   SALT_LENGTH: 20
 
 
-userSchema = new Schema {
+schema = new Schema {
   email:
     type: String
     index:
@@ -30,23 +30,22 @@ userSchema = new Schema {
       randomString length:consts.SALT_LENGTH
 }
 
-userSchema.plugin getPlugins()
+schema.plugin getPlugins()
 
-_.extend userSchema.statics, consts
+_.extend schema.statics, consts
 
 
-userSchema.statics.queryActiveUsers = -> @where()
+schema.statics.queryActiveUsers = -> @where()
 
-userSchema.statics.queryActiveUserByEmail = (email) ->
+schema.statics.queryActiveUserByEmail = (email) ->
   @queryActiveUsers().where({email: email}).findOne()
 
 
-userSchema.methods.setPassword = (rawPassword) ->
+schema.methods.setPassword = (rawPassword) ->
   @password = generateHashedPassword rawPassword, @salt
 
-userSchema.methods.verifyPassword = (rawPassword) ->
+schema.methods.verifyPassword = (rawPassword) ->
   @password is generateHashedPassword rawPassword, @salt
 
 
-module.exports =
-  User: mongoose.model 'User', userSchema
+module.exports = mongoose.model 'User', schema
