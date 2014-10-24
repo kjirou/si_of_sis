@@ -1,10 +1,10 @@
 http = require 'http'
+_ = require 'lodash'
 assert = require 'power-assert'
 request = require 'supertest'
-_ = require 'underscore'
 
 app = require 'app'
-{User} = require 'apps/user/models'
+{User} = require('apps').models
 conf = require 'conf'
 
 
@@ -33,8 +33,8 @@ describe 'app Module', ->
     before ->
       self = @
       @defaultParams =
-          email: 'foo@example.com'
-          password: 'test1234'
+        email: 'foo@example.com'
+        password: 'test1234'
       @prepareAndFindUser = (callback) ->
         user = _.extend new User, email:self.defaultParams.email
         user.setPassword self.defaultParams.password
@@ -53,6 +53,9 @@ describe 'app Module', ->
             callback null, session
 
       @sessionStore = conf.session.mongodbStore.prepareConnection()
+      @findSessionRows = (callback) ->
+        self.sessionStore._get_collection (coll) ->
+          coll.find().toArray callback
 
     beforeEach (done) ->
       @sessionStore.clear (e) ->
@@ -61,24 +64,26 @@ describe 'app Module', ->
 
     it 'ユーザーがPOSTでログインできる', (done) ->
       self = @
-      @prepareAndFindUser (e, user) ->
-        return done e if e
-        request(app)
-          .post '/login'
-          .send self.defaultParams
-          .expect 200
-          .end ->
-            self.sessionStore.length (e, count) ->
-              self.sessionStore._get_collection (coll) ->
-                coll.find().toArray (e, sessionRows) ->
-                  # 2 行でエラーになることが稀にあるので、デバッグプリントを出す
-                  # Ref) #98
-                  if count > 1
-                    console.error sessionRows
-                  assert count is 1
-                  self.getSessionData (e, session) ->
-                    assert user._id.toString() is session.passport?.user
-                    done()
+      @findSessionRows (e, beforeSessionRows) ->
+        # 下記と同じく #98 対策で、リクエスト前に無いはずのセッション情報があれば出力
+        if beforeSessionRows.length > 0
+          console.error beforeSessionRows
+        self.prepareAndFindUser (e, user) ->
+          return done e if e
+          request(app)
+            .post '/login'
+            .send self.defaultParams
+            .expect 200
+            .end ->
+              self.findSessionRows (e, sessionRows) ->
+                # 2 行でエラーになることが稀にあるので、デバッグプリントを出す
+                # Ref) #98
+                if sessionRows.length > 1
+                  console.error sessionRows
+                assert sessionRows.length is 1
+                self.getSessionData (e, session) ->
+                  assert user._id.toString() is session.passport?.user
+                  done()
 
     it 'GETリクエストだとログイン出来ない', (done) ->
       self = @
