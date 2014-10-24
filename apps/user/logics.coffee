@@ -37,8 +37,11 @@ logics.passportConfigurations =
       User.findOneById userIdFromSession, (e, user) ->
         return if e
           callback e
+        # セッション上はログイン済みだが、User情報が削除されていた場合に
+        # ログイン状態を解除する
+        # Ref) https://github.com/jaredhanson/passport/issues/6#issuecomment-4857287
         else unless user
-          callback new Http500Error 'Cannot find user by session data'
+          callback null, false
         Company.findOne {user:user._id}, (e, company) ->
           return if e
             callback e
