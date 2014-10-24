@@ -36,7 +36,7 @@ describe 'Business Model', ->
     beforeEach (done) ->
       monky.build 'Business', (e, @business) =>
         defineDocAssertions @business
-        done()
+        Business.remove done
 
     it 'name', (done) ->
       async.series [
