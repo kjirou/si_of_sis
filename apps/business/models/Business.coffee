@@ -10,8 +10,7 @@ schema = new Schema {
   # 案件名
   name:
     type: String
-    default: ->
-      _.sample(['C++', 'Java', 'JavaScript', 'Node.js', 'Perl', 'PHP', 'Python', 'Ruby']) + '開発案件'
+    default: 'Some Project'
     required: true
 
   # 納品物の基本価値

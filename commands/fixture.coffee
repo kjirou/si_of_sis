@@ -2,7 +2,8 @@ async = require 'async'
 minimist = require 'minimist'
 mongoose = require 'mongoose'
 
-{User} = require 'apps/user/models'
+{Business} = require('apps').models
+{monky} = require 'helpers/monky'
 
 
 execute = (callback) ->
@@ -18,23 +19,12 @@ execute = (callback) ->
     development: parsed.development
 
   async.waterfall [
+    # Businesses
     (nextStep, err) ->
       return nextStep() unless inputs.development
-      dataList = [{
-        email: 'dev@example.com'
-        rawPassword: 'testtest'
-      }]
-      async.eachSeries dataList, (data, nextLoop) ->
-        user = new User
-        user.email = data.email
-        user.setPassword data.rawPassword
-        user.save (e) ->
-          throw e if e
-          console.log "Created a user: email=`#{data.email}`"
-          nextLoop()
-      , (e) ->
-        return nextStep e if e
-        nextStep()
+      async.times 100, (n, nextLoop) ->
+        monky.create 'FakeBusiness', nextLoop
+      , nextStep
   ], (e) ->
     callback e
 
