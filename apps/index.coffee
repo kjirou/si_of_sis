@@ -7,6 +7,7 @@ wantit = require 'wantit'
 # Sub Applications
 #
 subAppNames = [
+  'business'
   'company'
   'core'
   'home'

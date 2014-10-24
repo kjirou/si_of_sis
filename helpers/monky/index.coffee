@@ -29,6 +29,13 @@ monky.factory 'Company', {
 }
 
 
+#
+# Business
+#
+valueSets.business = {}
+monky.factory 'Business', {}
+
+
 module.exports =
   monky: monky
   valueSets: valueSets
