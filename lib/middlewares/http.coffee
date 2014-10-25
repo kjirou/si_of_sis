@@ -1,4 +1,3 @@
-express = require 'express'
 _ = require 'lodash'
 
 {Http404Error} = require 'lib/errors'
