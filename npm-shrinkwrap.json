@@ -2945,9 +2945,9 @@
       "resolved": "https://registry.npmjs.org/underscore.string/-/underscore.string-2.3.3.tgz"
     },
     "validator": {
-      "version": "3.19.0",
-      "from": "https://registry.npmjs.org/validator/-/validator-3.19.0.tgz",
-      "resolved": "https://registry.npmjs.org/validator/-/validator-3.19.0.tgz"
+      "version": "3.22.0",
+      "from": "validator@",
+      "resolved": "https://registry.npmjs.org/validator/-/validator-3.22.0.tgz"
     },
     "wantit": {
       "version": "0.0.1",

@@ -37,7 +37,7 @@
     "random-word-generator": "0.9.9",
     "underscore": "1.7.0",
     "underscore.string": "2.3.3",
-    "validator": "3.19.0",
+    "validator": "^3.22.0",
     "wantit": "0.0.1"
   },
   "devDependencies": {
