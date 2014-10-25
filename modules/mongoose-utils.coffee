@@ -2,16 +2,13 @@ async = require 'async'
 mongoose = require 'mongoose'
 {ObjectId} = mongoose.Types
 _ = require 'underscore'
+validator = require 'validator'
 
 
 utils =
 
-  # ObjectId 書式の文字列であるかを判定する
-  isObjectIdString: (any) ->
-    _.isString(any) and /^[0-9a-f]{24}$/.test(any)
-
   isObjectId: (any) ->
-    (any instanceof ObjectId) or utils.isObjectIdString(any)
+    (any instanceof ObjectId) or validator.isMongoId(any)
 
   # ObjectId か不正な値な場合は null へ変換する
   toObjectIdCondition: (any) ->

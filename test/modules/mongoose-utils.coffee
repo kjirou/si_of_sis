@@ -12,16 +12,6 @@ mongooseUtils = require 'modules/mongoose-utils'
 
 describe 'mongoose Utils', ->
 
-  it 'isObjectIdString', ->
-    {isObjectIdString} = mongooseUtils
-    assert mongooseUtils.isObjectIdString '0123456789abcdef01234567'
-    assert isObjectIdString '0123456789abcdef01234567'
-    assert mongooseUtils.isObjectIdString('0123456789abcdef012345670') is false
-    assert mongooseUtils.isObjectIdString('0123456789abcdeg01234567') is false
-    assert mongooseUtils.isObjectIdString(null) is false
-    assert mongooseUtils.isObjectIdString(undefined) is false
-    assert mongooseUtils.isObjectIdString(ObjectId('0123456789abcdef01234567')) is false
-
   it 'isObjectId', ->
     {isObjectId} = mongooseUtils
     assert mongooseUtils.isObjectId '0123456789abcdef01234567'
