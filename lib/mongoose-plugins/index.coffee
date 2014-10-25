@@ -1,6 +1,6 @@
+_ = require 'lodash'
 mongoose = require 'mongoose'
 {ObjectId} = mongoose.Types
-_ = require 'underscore'
 
 mongooseUtils = require 'modules/mongoose-utils'
 
@@ -40,8 +40,7 @@ plugins.updatedAt = (schema, options) ->
     callback()
 
 
-getPlugins = ->
-  pluginNames = ['baseQueries', 'createdAt', 'updatedAt']
+getPlugins = (pluginNames...) ->
   return (schema, options) ->
     for pluginName in pluginNames
       plugins[pluginName](schema, options)

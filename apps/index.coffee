@@ -1,5 +1,5 @@
 async = require 'async'
-_ = require 'underscore'
+_ = require 'lodash'
 wantit = require 'wantit'
 
 
@@ -35,7 +35,8 @@ for unused, subApp of subApps
 #
 # Routing
 #
-do ({company, core, home, user}=subApps) ->
+do ({business, company, core, home, user}=subApps) ->
+  core.routes.addRoute 'business', business.routes
   core.routes.addRoute 'company', company.routes
   core.routes.addRoute 'home', home.routes
   core.routes.addRoute 'user', user.routes
