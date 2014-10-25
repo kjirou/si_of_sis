@@ -1,8 +1,8 @@
-assert = require 'power-assert'
+_ = require 'lodash'
 mongoose = require 'mongoose'
 {Schema} = mongoose
 {ObjectId} = mongoose.Types
-_ = require 'underscore'
+assert = require 'power-assert'
 
 databaseHelper = require 'helpers/database'
 testHelper = require 'helpers/test'
@@ -112,7 +112,7 @@ describe 'mongoose-plugins Lib', ->
 
   it 'getPlugins', (done) ->
     schema = new Schema
-    schema.plugin getPlugins()
+    schema.plugin getPlugins('baseQueries')
     testHelper.createTestModel schema, (e, Test) ->
       assert Test.queryOneById typeof 'function'
       done()

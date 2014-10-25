@@ -6,6 +6,9 @@ mongoose = require 'mongoose'
 {createValidator} = require 'lib/validator'
 
 
+#
+# 案件リソース
+#
 schema = new Schema {
   # 案件名
   name:
@@ -63,7 +66,7 @@ schema = new Schema {
     ]
 }
 
-schema.plugin getPlugins()
+schema.plugin getPlugins('baseQueries')
 
 
 schema.virtual('progress_rate').get ->

@@ -1,0 +1,21 @@
+extends /apps/layouts/game
+
+
+block contentBlock
+  h1.ui.medium.header
+    i.building.icon
+    |Businesses
+  table.ui.table.segment
+    thead
+      tr
+        th 案件名
+        th 提案価格
+        th 応募期限
+        th 納品期限
+    tbody
+      each business in businesses
+        tr
+          td #{business.name}
+          td #{_s.numberFormat(business.asking_price)}
+          td 10/01/05
+          td 10/04/05
