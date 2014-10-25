@@ -1538,6 +1538,11 @@
       "from": "https://registry.npmjs.org/colo/-/colo-0.2.0.tgz",
       "resolved": "https://registry.npmjs.org/colo/-/colo-0.2.0.tgz"
     },
+    "connect-chain": {
+      "version": "0.0.1",
+      "from": "connect-chain@",
+      "resolved": "https://registry.npmjs.org/connect-chain/-/connect-chain-0.0.1.tgz"
+    },
     "connect-flash": {
       "version": "0.1.1",
       "from": "https://registry.npmjs.org/connect-flash/-/connect-flash-0.1.1.tgz",
@@ -2297,9 +2302,8 @@
       }
     },
     "express-nested-router": {
-      "version": "1.1.0",
-      "from": "https://registry.npmjs.org/express-nested-router/-/express-nested-router-1.1.0.tgz",
-      "resolved": "https://registry.npmjs.org/express-nested-router/-/express-nested-router-1.1.0.tgz"
+      "version": "2.0.0",
+      "from": "express-nested-router@"
     },
     "jade": {
       "version": "1.7.0",

@@ -1,4 +1,4 @@
-{chain} = require 'express-nested-router'
+chain = require 'connect-chain'
 _ = require 'lodash'
 
 logics = require './logics'
