@@ -19,6 +19,17 @@ describe 'validator Extensions', ->
     assert validator.isEqualLessThan 1.23456789, '1.23456789'
     assert validator.isEqualLessThan(1.23456789, '1.23456788') is false
 
+  it 'isGameDate', ->
+    assert validator.isGameDate '00000001011'
+    assert validator.isGameDate '99999999094'
+    assert validator.isGameDate '99999999124'
+    assert validator.isGameDate('00000001010') is false
+    assert validator.isGameDate('00000001015') is false
+    assert validator.isGameDate('00000001010') is false
+    assert validator.isGameDate('00000001001') is false
+    assert validator.isGameDate('00000001211') is false
+    assert validator.isGameDate('00000000011') is false
+
   it 'isGreaterThan', ->
     assert validator.isGreaterThan '3', 2.9
     assert validator.isGreaterThan('3', 3) is false
