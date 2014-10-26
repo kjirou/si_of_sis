@@ -16,6 +16,7 @@ _s = require 'underscore.string'
   WEEKS = [1..4]
   MIN_WEEK = _.first WEEKS
   MAX_WEEK = _.last WEEKS
+  # validator.isGameDate と要同期
   GAME_DATE_REGEX = /^(\d{8})(\d{2})(\d)$/
 
   # 月・週はそれぞれ最小値から最大値の範囲を超えても指定できる

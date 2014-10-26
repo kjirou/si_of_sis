@@ -9,6 +9,11 @@ validator.extend 'isEqualLessThan', (str, threshold) ->
   num = parseFloat str
   not isNaN(num) and num <= threshold
 
+# GameDate クラスと要同期、こちらは月・週が範囲外だとエラー
+IS_GAME_DATE_REGEX = /^\d{7}[1-9](0[1-9]|1[0-2])[1-4]$/
+validator.extend 'isGameDate', (str) ->
+  IS_GAME_DATE_REGEX.test str
+
 validator.extend 'isGreaterThan', (str, threshold) ->
   num = parseFloat str
   not isNaN(num) and num > threshold
