@@ -4,6 +4,7 @@ mongoose = require 'mongoose'
 {ObjectId} = mongoose.Types
 assert = require 'power-assert'
 
+{GameDate} = require 'lib/game-date'
 databaseHelper = require 'helpers/database'
 testHelper = require 'helpers/test'
 {plugins, getPlugins} = require 'lib/mongoose-plugins'
@@ -109,6 +110,28 @@ describe 'mongoose-plugins Lib', ->
               assert doc_.updated_at.getTime() > doc_.created_at.getTime()
               done()
         , 50
+
+  it 'gameDates', (done) ->
+    schema = new Schema {
+      raw_foo: String
+      raw_bar: String
+      raw_baz: String
+    }
+    schema.plugin plugins.gameDates, fieldNames:['foo', 'bar']
+    testHelper.createTestModel schema, (e, Test) ->
+      return done e if e
+      doc = new Test {
+        raw_foo: '00000001012'
+        raw_bar: '0000000101a'
+        raw_baz: '00000001012'
+      }
+      assert doc.foo instanceof GameDate
+      assert.deepEqual doc.foo.toArray(), [1, 1, 2]
+      assert.throws ->
+        doc.bar
+      , /0000000101a/
+      assert doc.baz is undefined
+      done()
 
   it 'getPlugins', (done) ->
     schema = new Schema
