@@ -116,8 +116,9 @@ describe 'mongoose-plugins Lib', ->
       raw_foo: String
       raw_bar: String
       raw_baz: String
+      raw_none: String
     }
-    schema.plugin plugins.gameDates, fieldNames:['foo', 'bar']
+    schema.plugin plugins.gameDates, fieldNames:['foo', 'bar', 'none']
     testHelper.createTestModel schema, (e, Test) ->
       return done e if e
       doc = new Test {
@@ -131,6 +132,7 @@ describe 'mongoose-plugins Lib', ->
         doc.bar
       , /0000000101a/
       assert doc.baz is undefined
+      assert doc.none is null
       done()
 
   it 'getPlugins', (done) ->

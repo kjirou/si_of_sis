@@ -47,7 +47,11 @@ mongooseUtils = require 'modules/mongoose-utils'
   }, options
   options.fieldNames.forEach (fieldName) ->
     schema.virtual(fieldName).get ->
-      new GameDate @['raw_' + fieldName]
+      dateStr = @['raw_' + fieldName]
+      if dateStr?
+        new GameDate dateStr
+      else
+        null
 
 
 # プラグインを一括定義する、オプションは渡せない
