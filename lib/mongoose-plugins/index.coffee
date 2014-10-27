@@ -1,13 +1,12 @@
 _ = require 'lodash'
 mongoose = require 'mongoose'
-{ObjectId} = mongoose.Types
 
 mongooseUtils = require 'modules/mongoose-utils'
 
 
-plugins = {}
+@plugins = {}
 
-plugins.baseQueries = (schema, options) ->
+@plugins.baseQueries = (schema, options) ->
 
   _.extend schema.statics,
 
@@ -17,7 +16,7 @@ plugins.baseQueries = (schema, options) ->
     findOneById: (id, callback) ->
       @queryOneById(id).exec callback
 
-plugins.createdAt = (schema, options) ->
+@plugins.createdAt = (schema, options) ->
   schema.add {
     created_at:
       type: Date
@@ -27,7 +26,7 @@ plugins.createdAt = (schema, options) ->
       @created_at = new Date
     callback()
 
-plugins.updatedAt = (schema, options) ->
+@plugins.updatedAt = (schema, options) ->
   schema.add {
     updated_at:
       type: Date
@@ -39,13 +38,20 @@ plugins.updatedAt = (schema, options) ->
       @updated_at = new Date
     callback()
 
+# ゲーム時間へ変換して取得できる virtual を一括定義する
+# オプションで渡す fieldNames の各値に 'raw_' を付けたフィール名が対象となる
+@plugins.gameDates = (schema, options={}) ->
+  {GameDate} = require 'lib/game-date'
+  options = _.extend {
+    fieldNames: []
+  }, options
+  options.fieldNames.forEach (fieldName) ->
+    schema.virtual(fieldName).get ->
+      new GameDate @['raw_' + fieldName]
 
-getPlugins = (pluginNames...) ->
+
+# プラグインを一括定義する、オプションは渡せない
+@getPlugins = (pluginNames...) ->
   return (schema, options) ->
     for pluginName in pluginNames
-      plugins[pluginName](schema, options)
-
-
-module.exports =
-  getPlugins: getPlugins
-  plugins: plugins
+      exports.plugins[pluginName](schema, options)
