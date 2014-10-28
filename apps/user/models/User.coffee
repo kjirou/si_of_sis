@@ -30,7 +30,7 @@ schema = new Schema {
       randomString length:consts.SALT_LENGTH
 }
 
-schema.plugin getPlugins('baseQueries', 'createdAt', 'updatedAt')
+schema.plugin getPlugins 'core', 'createdAt', 'updatedAt'
 
 _.extend schema.statics, consts
 

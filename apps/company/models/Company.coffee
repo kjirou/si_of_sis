@@ -31,7 +31,7 @@ schema = new Schema {
     ]
 }
 
-schema.plugin getPlugins('baseQueries', 'createdAt', 'updatedAt')
+schema.plugin getPlugins 'core', 'createdAt', 'updatedAt'
 
 
 module.exports = mongoose.model 'Company', schema

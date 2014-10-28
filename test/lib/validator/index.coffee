@@ -35,6 +35,12 @@ describe 'validator Lib', ->
       assert result.validator('1') is true
       assert result.validator('1.1') is false
       assert result.validator('') is true
+      # passIfNull 設定
+      result = createValidator { validator:'isInt', passIfNull:true }
+      assert result.validator('1') is true
+      assert result.validator('') is false
+      assert result.validator(null) is true
+      assert result.validator(undefined) is true
       # arguments 設定
       result = createValidator { validator:'isLength', arguments:[4, 8] }
       assert result.validator('1234') is true

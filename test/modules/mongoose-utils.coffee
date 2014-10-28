@@ -7,25 +7,36 @@ assert = require 'power-assert'
 {resetDatabase} = require 'helpers/database'
 testHelper = require 'helpers/test'
 {monky, valueSets} = require 'helpers/monky'
-mongooseUtils = require 'modules/mongoose-utils'
+{isObjectId, toObjectIdCondition, purgeDatabase,
+  assertPopulated, executeRemovingToEachModels} = require 'modules/mongoose-utils'
 
 
-describe 'mongoose Utils', ->
+describe 'mongoose-utils Module', ->
+
+  beforeEach (done) -> testHelper.removeCompanyCompletely done
 
   it 'isObjectId', ->
-    {isObjectId} = mongooseUtils
-    assert mongooseUtils.isObjectId '0123456789abcdef01234567'
     assert isObjectId '0123456789abcdef01234567'
-    assert mongooseUtils.isObjectId('0123456789abcdef012345670') is false
-    assert mongooseUtils.isObjectId(null) is false
-    assert mongooseUtils.isObjectId(undefined) is false
-    assert mongooseUtils.isObjectId(ObjectId('0123456789abcdef01234567'))
+    assert isObjectId '0123456789abcdef01234567'
+    assert isObjectId('0123456789abcdef012345670') is false
+    assert isObjectId(null) is false
+    assert isObjectId(undefined) is false
+    assert isObjectId(ObjectId('0123456789abcdef01234567'))
 
   it 'toObjectIdCondition', ->
-    {toObjectIdCondition} = mongooseUtils
-    assert mongooseUtils.toObjectIdCondition('0123456789abcdef01234567') instanceof ObjectId
     assert toObjectIdCondition('0123456789abcdef01234567') instanceof ObjectId
-    assert mongooseUtils.toObjectIdCondition('0123456789abcdef012345670') is null
+    assert toObjectIdCondition('0123456789abcdef01234567') instanceof ObjectId
+    assert toObjectIdCondition('0123456789abcdef012345670') is null
+
+  it 'assertPopulated', (done) ->
+    monky.create 'Company', (e, company) ->
+      Company.findById company._id, (e, company) ->
+        assert.throws ->
+          assertPopulated company, 'user'
+        , /user/
+        company.populate 'user', (e, company) ->
+          assertPopulated company, 'user'
+          done()
 
   it 'purgeDatabase', (done) ->
     # モデルを空にして 0 件か
@@ -39,7 +50,7 @@ describe 'mongoose Utils', ->
             Test.find().count (e, count) ->
               assert count is 1
               # purgeDatabase して 0 件か
-              mongooseUtils.purgeDatabase (e) ->
+              purgeDatabase (e) ->
                 Test.find().count (e, count) ->
                   assert count is 0
                   done()
@@ -51,7 +62,7 @@ describe 'mongoose Utils', ->
           assert.strictEqual count, 1
           User.count (e, count) ->
             assert.strictEqual count, 1
-            mongooseUtils.executeRemovingToEachModels [Company, User], (e) ->
+            executeRemovingToEachModels [Company, User], (e) ->
               Company.count (e, count) ->
                 assert.strictEqual count, 0
                 User.count (e, count) ->

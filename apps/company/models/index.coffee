@@ -1,6 +1,1 @@
-Company = require './Company'
-
-
-module.exports = {
-  Company
-}
+@Company = require './Company'

@@ -11,6 +11,7 @@ subAppNames = [
   'company'
   'core'
   'home'
+  'project'
   'user'
 ]
 

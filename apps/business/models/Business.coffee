@@ -66,7 +66,7 @@ schema = new Schema {
     ]
 }
 
-schema.plugin getPlugins('baseQueries')
+schema.plugin getPlugins 'core'
 
 
 schema.virtual('progress_rate').get ->

@@ -42,6 +42,16 @@ monky.factory {name:'FakeBusiness', model:'Business'}, {
 }
 
 
+#
+# Project
+#
+valueSets.project =
+  raw_ordered_week: '00000001011'
+monky.factory 'Project', _.extend {
+  business: monky.ref 'Business'
+}, valueSets.project
+
+
 module.exports =
   monky: monky
   valueSets: valueSets

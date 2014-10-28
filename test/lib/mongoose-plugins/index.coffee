@@ -15,13 +15,21 @@ describe 'mongoose-plugins Lib', ->
   before (done) ->
     databaseHelper.resetDatabase done
 
-  it 'baseQueries Plugin', (done) ->
-    schema = new Schema
-    schema.plugin plugins.baseQueries
+  it 'core Plugin', (done) ->
+    schema = new Schema {
+      otherModel: Schema.Types.ObjectId
+    }
+    schema.plugin plugins.core
     testHelper.createTestModel schema, (e, Test) ->
       return done e if e
+      doc = new Test
       # プラグインで付与したメソッドがある
-      assert Test.queryOneById typeof 'function'
+      assert typeof doc.assertPopulated is 'function'
+      assert typeof Test.queryOneById is 'function'
+      # assertPopulated
+      assert.throws ->
+        doc.assertPopulated 'otherModel'
+      , /otherModel/
       # _id を固定にして 1 行保存する
       objectId = ObjectId ('0' for i in [0..23]).join('')
       testObj = _.extend new Test, { _id:objectId }
@@ -116,8 +124,9 @@ describe 'mongoose-plugins Lib', ->
       raw_foo: String
       raw_bar: String
       raw_baz: String
+      raw_none: String
     }
-    schema.plugin plugins.gameDates, fieldNames:['foo', 'bar']
+    schema.plugin plugins.gameDates, fieldNames:['foo', 'bar', 'none']
     testHelper.createTestModel schema, (e, Test) ->
       return done e if e
       doc = new Test {
@@ -131,11 +140,12 @@ describe 'mongoose-plugins Lib', ->
         doc.bar
       , /0000000101a/
       assert doc.baz is undefined
+      assert doc.none is null
       done()
 
   it 'getPlugins', (done) ->
     schema = new Schema
-    schema.plugin getPlugins('baseQueries')
+    schema.plugin getPlugins('core')
     testHelper.createTestModel schema, (e, Test) ->
       assert Test.queryOneById typeof 'function'
       done()

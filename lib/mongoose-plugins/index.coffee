@@ -1,17 +1,22 @@
 _ = require 'lodash'
 mongoose = require 'mongoose'
 
-mongooseUtils = require 'modules/mongoose-utils'
+{assertPopulated, toObjectIdCondition} = require 'modules/mongoose-utils'
 
 
 @plugins = {}
 
-@plugins.baseQueries = (schema, options) ->
+@plugins.core = (schema, options) ->
+
+  _.extend schema.methods,
+
+    assertPopulated: ->
+      (_.partial assertPopulated, @)(arguments...)
 
   _.extend schema.statics,
 
     queryOneById: (id) ->
-      @findOne({_id:mongooseUtils.toObjectIdCondition id})
+      @findOne({_id: toObjectIdCondition id})
 
     findOneById: (id, callback) ->
       @queryOneById(id).exec callback
@@ -47,7 +52,11 @@ mongooseUtils = require 'modules/mongoose-utils'
   }, options
   options.fieldNames.forEach (fieldName) ->
     schema.virtual(fieldName).get ->
-      new GameDate @['raw_' + fieldName]
+      dateStr = @['raw_' + fieldName]
+      if dateStr?
+        new GameDate dateStr
+      else
+        null
 
 
 # プラグインを一括定義する、オプションは渡せない
