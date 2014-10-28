@@ -2670,8 +2670,9 @@
               "resolved": "https://registry.npmjs.org/kerberos/-/kerberos-0.0.4.tgz"
             },
             "readable-stream": {
-              "version": "1.0.33-1",
+              "version": "1.0.33",
               "from": "readable-stream@latest",
+              "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
               "dependencies": {
                 "core-util-is": {
                   "version": "1.0.1",
@@ -2735,6 +2736,10 @@
           }
         }
       }
+    },
+    "mongoose-id-extractor-plugin": {
+      "version": "0.0.2",
+      "from": "mongoose-id-extractor-plugin@"
     },
     "monky": {
       "version": "0.6.0",
