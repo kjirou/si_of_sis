@@ -1,4 +1,3 @@
-require 'espower-coffee/guess'
 mongoose = require 'mongoose'
 {ObjectId} = mongoose.Types
 assert = require 'power-assert'
@@ -43,7 +42,6 @@ helper.removeCompanyCompletely = (callback) ->
 # エラーオブジェクトが、指定フィールドの mongoose CastError であることを確認する
 # CastError = type に反する値を入れた場合のエラー
 helper.assertErrorIsMongooseCastError = (e, fieldName) ->
-  # power-assert が効いていないので注意
   assert e instanceof Error, 'Not a error'
   assert.strictEqual e.name, 'CastError'
   assert e.message.indexOf(fieldName) isnt -1, "Not a `#{fieldName}`'s error"
