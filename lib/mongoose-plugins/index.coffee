@@ -1,17 +1,22 @@
 _ = require 'lodash'
 mongoose = require 'mongoose'
 
-mongooseUtils = require 'modules/mongoose-utils'
+{assertPopulated, toObjectIdCondition} = require 'modules/mongoose-utils'
 
 
 @plugins = {}
 
-@plugins.baseQueries = (schema, options) ->
+@plugins.core = (schema, options) ->
+
+  _.extend schema.methods,
+
+    assertPopulated: ->
+      (_.partial assertPopulated, @)(arguments...)
 
   _.extend schema.statics,
 
     queryOneById: (id) ->
-      @findOne({_id:mongooseUtils.toObjectIdCondition id})
+      @findOne({_id: toObjectIdCondition id})
 
     findOneById: (id, callback) ->
       @queryOneById(id).exec callback
