@@ -62,7 +62,9 @@ idExtractor = require 'mongoose-id-extractor-plugin'
         null
 
 
-# プラグインを プラグイン名:オプション のセットで一括定義する
-@definePlugins = (schema, pluginSettings) ->
-  _.forEach pluginSettings, (pluginOptions, pluginName) ->
+# プラグインを一括定義する
+# 1)順番の設定 2)同じプラグインの複数回実行 が要件なので設定は配列である必要がある
+@definePlugins = (schema, pluginSettings...) ->
+  pluginSettings.forEach (setting) ->
+    [pluginName, pluginOptions] = if Array.isArray setting then setting else [setting, undefined]
     exports.plugins[pluginName](schema, pluginOptions ? {})

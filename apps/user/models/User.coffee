@@ -30,10 +30,7 @@ schema = new Schema {
       randomString length:consts.SALT_LENGTH
 }
 
-definePlugins schema,
-  core: null
-  createdAt: null
-  updatedAt: null
+definePlugins schema, 'core', 'createdAt', 'updatedAt'
 
 _.extend schema.statics, consts
 

@@ -151,9 +151,7 @@ describe 'mongoose-plugins Lib', ->
     schema = new Schema {
       raw_foo: String
     }
-    definePlugins schema,
-      core: null
-      gameDates: map: raw_foo: 'foo'
+    definePlugins schema, 'core', ['gameDates', map: raw_foo: 'foo']
     testHelper.createTestModel schema, (e, Test) ->
       assert Test.queryOneById typeof 'function'
       doc = new Test

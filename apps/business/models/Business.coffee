@@ -46,9 +46,7 @@ schema = new Schema {
     ]
 }
 
-definePlugins schema,
-  core: null
-  createdAt: null
+definePlugins schema, 'core', 'createdAt'
 
 
 module.exports = mongoose.model 'Business', schema

@@ -56,14 +56,15 @@ schema = new Schema {
     ]
 }
 
-definePlugins schema,
-  core: null
-  createdAt: null
-  updatedAt: null
-  gameDates:
-    map: raw_ordered_week: 'ordered_week', raw_delivered_week: 'delivered_week'
-  idExtractor:
-    refs: ['business']
+definePlugins schema, 'core', 'createdAt', 'updatedAt', [
+  'gameDates', {
+    map:
+      raw_ordered_week: 'ordered_week'
+      raw_delivered_week: 'delivered_week'
+  }
+], [
+  'idExtractor', { refs: ['business'] }
+]
 
 
 schema.virtual('progress_rate').get ->
