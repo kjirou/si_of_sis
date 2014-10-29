@@ -58,7 +58,8 @@ schema = new Schema {
 }
 
 schema.plugin getPlugins 'core', 'createdAt', 'updatedAt'
-schema.plugin plugins.gameDates, fieldNames: ['ordered_week', 'delivered_week']
+schema.plugin plugins.gameDates,
+  map: raw_ordered_week: 'ordered_week', raw_delivered_week: 'delivered_week'
 schema.plugin idExtractor, refs: ['business']
 
 

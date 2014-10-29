@@ -43,16 +43,16 @@ mongoose = require 'mongoose'
       @updated_at = new Date
     callback()
 
-# ゲーム時間へ変換して取得できる virtual を一括定義する
-# オプションで渡す fieldNames の各値に 'raw_' を付けたフィール名が対象となる
+# ゲーム時間データに対するアクセサを一括定義する
 @plugins.gameDates = (schema, options={}) ->
   {GameDate} = require 'lib/game-date'
   options = _.extend {
-    fieldNames: []
+    # 'from_field_path': 'to_field_path' のセット
+    map: {}
   }, options
-  options.fieldNames.forEach (fieldName) ->
-    schema.virtual(fieldName).get ->
-      dateStr = @['raw_' + fieldName]
+  _.each options.map, (to, from) ->
+    schema.virtual(to).get ->
+      dateStr = @[from]
       if dateStr?
         new GameDate dateStr
       else

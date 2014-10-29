@@ -126,7 +126,11 @@ describe 'mongoose-plugins Lib', ->
       raw_baz: String
       raw_none: String
     }
-    schema.plugin plugins.gameDates, fieldNames:['foo', 'bar', 'none']
+    schema.plugin plugins.gameDates,
+      map:
+        raw_foo: 'foo'
+        raw_bar: 'bar'
+        raw_none: 'none'
     testHelper.createTestModel schema, (e, Test) ->
       return done e if e
       doc = new Test {
