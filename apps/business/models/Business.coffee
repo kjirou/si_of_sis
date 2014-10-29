@@ -1,4 +1,3 @@
-_ = require 'lodash'
 mongoose = require 'mongoose'
 {Schema} = mongoose
 
@@ -16,7 +15,17 @@ schema = new Schema {
     default: 'Some Project'
     required: true
 
-  # 必要開発コスト
+  # 営業コスト、受注時に消費
+  business_cost:
+    type: Number
+    default: 1
+    required: true
+    min: 0
+    validate: [
+      createValidator validator: 'isInt'
+    ]
+
+  # 開発コスト、進捗がこの値に到達したら開発完了
   development_cost:
     type: Number
     default: 1

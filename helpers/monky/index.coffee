@@ -37,6 +37,7 @@ monky.factory 'Business', {}
 monky.factory {name:'FakeBusiness', model:'Business'}, {
   name: ->
     _.sample(['C++', 'Java', 'JavaScript', 'Node.js', 'Perl', 'PHP', 'Python', 'Ruby']) + '開発案件'
+  business_cost: -> _.random 1, 99
   development_cost: -> _.random 1, 9999
   asking_price: -> _.random 1, 9999
 }

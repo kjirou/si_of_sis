@@ -1,7 +1,7 @@
 assert = require 'power-assert'
 async = require 'async'
 {Model} = require 'mongoose'
-_ = require 'underscore'
+_ = require 'lodash'
 
 {Business} = require('apps').models
 {resetDatabase} = require 'helpers/database'
@@ -11,8 +11,7 @@ _ = require 'underscore'
 
 describe 'Business Model', ->
 
-  before (done) ->
-    resetDatabase done
+  before (done) -> resetDatabase done
 
   it 'Model definition', ->
     assert Business.prototype instanceof Model
@@ -41,6 +40,14 @@ describe 'Business Model', ->
     it 'name', (done) ->
       async.series [
         (next) => @business.assertValidFieldValidation 'name', '', next
+      ], done
+
+    it 'business_cost', (done) ->
+      async.series [
+        (next) => @business.assertValidFieldType 'business_cost', 'not_numeric', next
+        (next) => @business.assertValidFieldValidation 'business_cost', undefined, next
+        (next) => @business.assertValidFieldValidation 'business_cost', -1, next
+        (next) => @business.assertValidFieldValidation 'business_cost', 1.1, next
       ], done
 
     it 'development_cost', (done) ->
