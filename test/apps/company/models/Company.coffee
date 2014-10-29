@@ -1,17 +1,16 @@
-assert = require 'power-assert'
+async = require 'async'
 {Model} = require 'mongoose'
+assert = require 'power-assert'
 
 {Company, User} = require('apps').models
 {resetDatabase} = require 'helpers/database'
 {monky, valueSets} = require 'helpers/monky'
+{defineDocAssertions, removeCompanyCompletely} = require 'helpers/test'
 
 
 describe 'Company Model', ->
 
-  before (done) ->
-    @removeData = (callback) ->
-      Company.remove -> User.remove callback
-    resetDatabase done
+  before (done) -> resetDatabase done
 
   it 'Model definition', ->
     assert(Company.prototype instanceof Model)
@@ -19,7 +18,7 @@ describe 'Company Model', ->
 
   describe 'Save Processing', ->
 
-    beforeEach (done) -> @removeData done
+    beforeEach (done) -> removeCompanyCompletely done
 
     it 'Create a document', (done) ->
       monky.build 'Company', (e, company) ->
@@ -35,39 +34,49 @@ describe 'Company Model', ->
 
   describe 'Fields', ->
 
-    beforeEach (done) -> @removeData done
+    beforeEach (done) ->
+      monky.build 'Company', (e, @doc) =>
+        defineDocAssertions @doc
+        removeCompanyCompletely done
 
     it 'user', (done) ->
-      monky.build 'Company', (e, company) ->
-        # 必須か
-        company.user = undefined
-        company.save (e) ->
-          assert e and e.name is 'ValidationError'
-          # 一意か
+      async.series [
+        (next) => @doc.assertValidFieldType 'user', '', next
+        (next) => @doc.assertValidFieldValidation 'user', null, next
+        # 一意か
+        (next) ->
           monky.create 'Company', (e, company) ->
+            return done e if e
             monky.create 'Company', { user: company.user._id }, (e, company) ->
               assert e and e.name is 'MongoError'
-              done()
+              next()
+      ], done
 
     it 'name', (done) ->
-      monky.build 'Company', (e, company) ->
-        company.name = undefined
-        company.save (e) ->
-          assert e and e.name is 'ValidationError'
-          done()
+      async.series [
+        (next) => @doc.assertValidFieldValidation 'name', '', next
+      ], done
 
     it 'cash', (done) ->
-      monky.build 'Company', (e, company) ->
-        # 必須か
-        company.cash = undefined
-        company.save (e) ->
-          assert e and e.name is 'ValidationError'
-          # 整数か
-          company.cash = 0.1
-          company.save (e) ->
-            assert e and e.name is 'ValidationError'
-            # 正の数か
-            company.cash = -1
-            company.save (e) ->
-              assert e and e.name is 'ValidationError'
-              done()
+      async.series [
+        (next) => @doc.assertValidFieldType 'cash', 'not_numeric', next
+        (next) => @doc.assertValidFieldValidation 'cash', undefined, next
+        (next) => @doc.assertValidFieldValidation 'cash', -1, next
+        (next) => @doc.assertValidFieldValidation 'cash', 1.1, next
+      ], done
+
+    it 'max_business_power', (done) ->
+      async.series [
+        (next) => @doc.assertValidFieldType 'max_business_power', 'not_numeric', next
+        (next) => @doc.assertValidFieldValidation 'max_business_power', undefined, next
+        (next) => @doc.assertValidFieldValidation 'max_business_power', 0, next
+        (next) => @doc.assertValidFieldValidation 'max_business_power', 1.1, next
+      ], done
+
+    it 'business_power', (done) ->
+      async.series [
+        (next) => @doc.assertValidFieldType 'business_power', 'not_numeric', next
+        (next) => @doc.assertValidFieldValidation 'business_power', undefined, next
+        (next) => @doc.assertValidFieldValidation 'business_power', -1, next
+        (next) => @doc.assertValidFieldValidation 'business_power', 1.1, next
+      ], done

@@ -26,8 +26,29 @@ schema = new Schema {
     type: Number
     default: 0
     required: true
+    min: 0
     validate: [
-      createValidator validator: 'isPositiveInt'
+      createValidator validator: 'isInt'
+    ]
+
+  # 最大営業力
+  max_business_power:
+    type: Number
+    default: 1
+    required: true
+    min: 1
+    validate: [
+      createValidator validator: 'isInt'
+    ]
+
+  # 現在営業力
+  business_power:
+    type: Number
+    default: 1
+    required: true
+    min: 0
+    validate: [
+      createValidator validator: 'isInt'
     ]
 }
 
