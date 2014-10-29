@@ -43,31 +43,12 @@ describe 'Business Model', ->
         (next) => @business.assertValidFieldValidation 'name', '', next
       ], done
 
-    it 'base_value', (done) ->
-      async.series [
-        (next) => @business.assertValidFieldType 'base_value', 'not_numeric', next
-        (next) => @business.assertValidFieldValidation 'base_value', undefined, next
-      ], done
-
-    it 'added_value', (done) ->
-      async.series [
-        (next) => @business.assertValidFieldType 'added_value', 'not_numeric', next
-        (next) => @business.assertValidFieldValidation 'added_value', undefined, next
-      ], done
-
     it 'development_cost', (done) ->
       async.series [
         (next) => @business.assertValidFieldType 'development_cost', 'not_numeric', next
         (next) => @business.assertValidFieldValidation 'development_cost', undefined, next
         (next) => @business.assertValidFieldValidation 'development_cost', 0, next
         (next) => @business.assertValidFieldValidation 'development_cost', 1.1, next
-      ], done
-
-    it 'progress', (done) ->
-      async.series [
-        (next) => @business.assertValidFieldType 'progress', 'not_numeric', next
-        (next) => @business.assertValidFieldValidation 'progress', undefined, next
-        (next) => @business.assertValidFieldValidation 'progress', -0.1, next
       ], done
 
     it 'asking_price', (done) ->
@@ -77,10 +58,3 @@ describe 'Business Model', ->
         (next) => @business.assertValidFieldValidation 'asking_price', 0, next
         (next) => @business.assertValidFieldValidation 'asking_price', 1.1, next
       ], done
-
-    it 'progress_rate', ->
-      @business.development_cost = 100
-      @business.progress = 75
-      assert.strictEqual @business.progress_rate, 0.75
-      @business.progress = 110
-      assert.strictEqual @business.progress_rate, 1.0
