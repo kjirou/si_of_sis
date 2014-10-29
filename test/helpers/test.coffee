@@ -5,7 +5,7 @@ mongoose = require 'mongoose'
 
 databaseHelper = require 'helpers/database'
 testHelper = require 'helpers/test'
-{validator} = require 'lib/validator'
+{validator} = require 'modules/validator'
 
 
 describe 'test Helper', ->

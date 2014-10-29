@@ -3,7 +3,7 @@ assert = require 'power-assert'
 _ = require 'underscore'
 
 testHelper = require 'helpers/test'
-{createValidator, DEFAULT_ERROR_MESSAGES, ErrorReporter, Field, Form, validator} = require 'lib/validator'
+{createValidator, DEFAULT_ERROR_MESSAGES, ErrorReporter, Field, Form, validator} = require 'modules/validator'
 
 
 describe 'validator Lib', ->

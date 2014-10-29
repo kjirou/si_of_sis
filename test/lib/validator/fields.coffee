@@ -1,6 +1,6 @@
 assert = require 'power-assert'
 
-{DEFAULT_ERROR_MESSAGES, Field} = require 'lib/validator'
+{DEFAULT_ERROR_MESSAGES, Field} = require 'modules/validator'
 
 
 describe 'Field Class', ->

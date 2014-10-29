@@ -1,5 +1,5 @@
 {Company} = require 'apps/company/models'
-{Field, Form} = require 'lib/validator'
+{Field, Form} = require 'modules/validator'
 
 
 class CompanyForm extends Form

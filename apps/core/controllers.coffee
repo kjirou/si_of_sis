@@ -2,7 +2,7 @@ passport = require 'passport'
 _ = require 'underscore'
 
 {Http404Error} = require 'lib/errors'
-{ErrorReporter, Form} = require 'lib/validator'
+{ErrorReporter, Form} = require 'modules/validator'
 
 
 controllers = {}

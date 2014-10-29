@@ -1,7 +1,7 @@
 assert = require 'power-assert'
 _ = require 'underscore'
 
-{ErrorReporter, Field, Form} = require 'lib/validator'
+{ErrorReporter, Field, Form} = require 'modules/validator'
 
 
 describe 'Form Class', ->

@@ -1,6 +1,6 @@
 assert = require 'power-assert'
 
-{ErrorReporter} = require 'lib/validator'
+{ErrorReporter} = require 'modules/validator'
 
 
 describe 'ErrorReporter Class', ->

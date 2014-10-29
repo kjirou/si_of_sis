@@ -4,7 +4,7 @@ mongoose = require 'mongoose'
 
 {definePlugins} = require 'lib/mongoose-plugins'
 textLib = require 'lib/text'
-{createValidator} = require 'lib/validator'
+{createValidator} = require 'modules/validator'
 
 
 schema = new Schema {

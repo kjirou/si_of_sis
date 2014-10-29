@@ -3,7 +3,7 @@ mongoose = require 'mongoose'
 {Schema} = mongoose
 
 {definePlugins} = require 'lib/mongoose-plugins'
-{createValidator} = require 'lib/validator'
+{createValidator} = require 'modules/validator'
 
 
 #

@@ -1,6 +1,6 @@
 assert = require 'power-assert'
 
-{validator} = require 'lib/validator'
+{validator} = require 'modules/validator'
 
 
 describe 'validator Extensions', ->

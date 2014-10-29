@@ -3,7 +3,7 @@ LocalStrategy = require('passport-local').Strategy
 {Company} = require 'apps/company/models'
 {User} = require 'apps/user/models'
 {Http500Error} = require 'lib/errors'
-{Field, Form} = require 'lib/validator'
+{Field, Form} = require 'modules/validator'
 
 
 logics = {}
