@@ -7,7 +7,7 @@ assert = require 'power-assert'
 {GameDate} = require 'lib/game-date'
 databaseHelper = require 'helpers/database'
 testHelper = require 'helpers/test'
-{plugins, getPlugins} = require 'lib/mongoose-plugins'
+{definePlugins, plugins} = require 'lib/mongoose-plugins'
 
 
 describe 'mongoose-plugins Lib', ->
@@ -147,9 +147,15 @@ describe 'mongoose-plugins Lib', ->
       assert doc.none is null
       done()
 
-  it 'getPlugins', (done) ->
-    schema = new Schema
-    schema.plugin getPlugins('core')
+  it 'definePlugins', (done) ->
+    schema = new Schema {
+      raw_foo: String
+    }
+    definePlugins schema,
+      core: null
+      gameDates: map: raw_foo: 'foo'
     testHelper.createTestModel schema, (e, Test) ->
       assert Test.queryOneById typeof 'function'
+      doc = new Test
+      assert 'foo' of doc
       done()

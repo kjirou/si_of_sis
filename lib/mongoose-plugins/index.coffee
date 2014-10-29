@@ -1,10 +1,13 @@
 _ = require 'lodash'
 mongoose = require 'mongoose'
+idExtractor = require 'mongoose-id-extractor-plugin'
 
 {assertPopulated, toObjectIdCondition} = require 'modules/mongoose-utils'
 
 
-@plugins = {}
+@plugins = {
+  idExtractor
+}
 
 @plugins.core = (schema, options) ->
 
@@ -59,8 +62,7 @@ mongoose = require 'mongoose'
         null
 
 
-# プラグインを一括定義する、オプションは渡せない
-@getPlugins = (pluginNames...) ->
-  return (schema, options) ->
-    for pluginName in pluginNames
-      exports.plugins[pluginName](schema, options)
+# プラグインを プラグイン名:オプション のセットで一括定義する
+@definePlugins = (schema, pluginSettings) ->
+  _.forEach pluginSettings, (pluginOptions, pluginName) ->
+    exports.plugins[pluginName](schema, pluginOptions ? {})

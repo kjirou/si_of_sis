@@ -3,7 +3,7 @@ mongoose = require 'mongoose'
 {Schema} = mongoose
 randomString = require 'random-string'
 
-{getPlugins} = require 'lib/mongoose-plugins'
+{definePlugins} = require 'lib/mongoose-plugins'
 {generateHashedPassword} = require 'lib/crypto'
 
 
@@ -30,7 +30,10 @@ schema = new Schema {
       randomString length:consts.SALT_LENGTH
 }
 
-schema.plugin getPlugins 'core', 'createdAt', 'updatedAt'
+definePlugins schema,
+  core: null
+  createdAt: null
+  updatedAt: null
 
 _.extend schema.statics, consts
 

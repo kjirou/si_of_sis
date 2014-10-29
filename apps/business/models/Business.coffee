@@ -2,7 +2,7 @@ _ = require 'lodash'
 mongoose = require 'mongoose'
 {Schema} = mongoose
 
-{getPlugins} = require 'lib/mongoose-plugins'
+{definePlugins} = require 'lib/mongoose-plugins'
 {createValidator} = require 'lib/validator'
 
 
@@ -66,7 +66,7 @@ schema = new Schema {
     ]
 }
 
-schema.plugin getPlugins 'core'
+definePlugins schema, core: null
 
 
 schema.virtual('progress_rate').get ->
