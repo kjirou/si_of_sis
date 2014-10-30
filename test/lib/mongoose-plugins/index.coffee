@@ -6,7 +6,7 @@ assert = require 'power-assert'
 
 {GameDate} = require 'lib/game-date'
 databaseHelper = require 'helpers/database'
-testHelper = require 'helpers/test'
+{createTestModel} = require 'helpers/test'
 {definePlugins, plugins} = require 'lib/mongoose-plugins'
 
 
@@ -20,7 +20,7 @@ describe 'mongoose-plugins Lib', ->
       otherModel: Schema.Types.ObjectId
     }
     schema.plugin plugins.core
-    testHelper.createTestModel schema, (e, Test) ->
+    createTestModel schema, (e, Test) ->
       return done e if e
       doc = new Test
       # プラグインで付与したメソッドがある
@@ -48,7 +48,7 @@ describe 'mongoose-plugins Lib', ->
   it 'createdAt Plugin', (done) ->
     schema = new Schema
     schema.plugin plugins.createdAt
-    testHelper.createTestModel schema, (e, Test) ->
+    createTestModel schema, (e, Test) ->
       return done e if e
       doc = new Test
       doc.save (e) ->
@@ -74,7 +74,7 @@ describe 'mongoose-plugins Lib', ->
   it 'updatedAt Plugin', (done) ->
     schema = new Schema
     schema.plugin plugins.updatedAt
-    testHelper.createTestModel schema, (e, Test) ->
+    createTestModel schema, (e, Test) ->
       return done e if e
       doc = new Test
       doc.save (e) ->
@@ -100,7 +100,7 @@ describe 'mongoose-plugins Lib', ->
     schema = new Schema
     schema.plugin plugins.createdAt
     schema.plugin plugins.updatedAt
-    testHelper.createTestModel schema, (e, Test) ->
+    createTestModel schema, (e, Test) ->
       return done e if e
       doc = new Test
       doc.save (e) ->
@@ -131,7 +131,7 @@ describe 'mongoose-plugins Lib', ->
         raw_foo: 'foo'
         raw_bar: 'bar'
         raw_none: 'none'
-    testHelper.createTestModel schema, (e, Test) ->
+    createTestModel schema, (e, Test) ->
       return done e if e
       doc = new Test {
         raw_foo: '00000001012'
@@ -152,8 +152,121 @@ describe 'mongoose-plugins Lib', ->
       raw_foo: String
     }
     definePlugins schema, 'core', ['gameDates', map: raw_foo: 'foo']
-    testHelper.createTestModel schema, (e, Test) ->
+    createTestModel schema, (e, Test) ->
       assert Test.queryOneById typeof 'function'
       doc = new Test
       assert 'foo' of doc
       done()
+
+
+  describe 'consumable', ->
+
+    it 'Methods exist', (done) ->
+      schema = new Schema {
+        foo: Number
+        bar:
+          x: Number
+            y: Number
+          hoge_fuga: Number
+        baz_qux: Number
+        a_b: Number
+      }
+      plugins.consumable schema, current: 'foo', max: 10
+      plugins.consumable schema, current: 'bar.x.y', max: 10
+      plugins.consumable schema, current: 'bar.hoge_fuga', max: 10
+      plugins.consumable schema, current: 'baz_qux', max: 10
+      plugins.consumable schema, current: 'a_b', max: 10
+
+      createTestModel schema, (e, Test) ->
+        doc = new Test
+        assert typeof doc.consumeFoo is 'function'
+        assert typeof doc.consumeFooTillMin is 'function'
+        assert typeof doc.canConsumeFoo is 'function'
+        assert typeof doc.supplyFoo is 'function'
+        assert typeof doc.supplyFooByRate is 'function'
+        assert typeof doc.supplyFooFully is 'function'
+        assert typeof doc.consumeBarXY is 'function'
+        assert typeof doc.consumeBarHogeFuga is 'function'
+        assert typeof doc.consumeBazQux is 'function'
+        assert typeof doc.consumeAB is 'function'
+        done()
+
+    it '生成された各メソッドが動く', (done) ->
+      schema = new Schema {
+        foo:
+          type: Number
+          default: 0
+      }
+      plugins.consumable schema, current: 'foo', max: 10
+
+      createTestModel schema, (e, Test) ->
+        doc = new Test
+        # 8 を供給する
+        doc.supplyFoo 8
+        assert.strictEqual doc.foo, 8
+        # 最大値以上を供給するが最大値に収まっている
+        doc.supplyFoo 3
+        assert.strictEqual doc.foo, 10
+        # 消費可能判定が適切
+        assert doc.canConsumeFoo 10
+        assert not doc.canConsumeFoo 10.1
+        # 消費できる
+        doc.consumeFoo 8
+        assert.strictEqual doc.foo, 2
+        # 最小値を下回る場合は消費出来ずエラーになる
+        assert.throws ->
+          doc.consumeFoo 3
+        , /3.+2/
+        # TillMin 付きは最小値まで消費すればエラーにならない
+        doc.consumeFooTillMin 1
+        assert.strictEqual doc.foo, 1
+        doc.consumeFooTillMin 2
+        assert.strictEqual doc.foo, 0
+        # 割合で供給できる
+        doc.supplyFooByRate 0.2
+        assert.strictEqual doc.foo, 2
+        # 割合供給はデフォルト切り上げ
+        doc.supplyFooByRate 0.01
+        assert.strictEqual doc.foo, 3
+        # 端数オプション
+        doc.supplyFooByRate 0.01, fraction:'ceil'
+        assert.strictEqual doc.foo, 4
+        doc.supplyFooByRate 0.099, fraction:'floor'
+        assert.strictEqual doc.foo, 4
+        # 満タンまで供給
+        doc.supplyFooFully()
+        assert.strictEqual doc.foo, 10
+        done()
+
+    it 'minが0以上', (done) ->
+      schema = new Schema {
+        foo:
+          type: Number
+          default: 5
+      }
+      plugins.consumable schema, current: 'foo', min: 1, max: 10
+      createTestModel schema, (e, Test) ->
+        doc = new Test
+        doc.consumeFoo 3
+        assert.strictEqual doc.foo, 2
+        assert doc.canConsumeFoo 1
+        assert not doc.canConsumeFoo 2
+        doc.consumeFooTillMin 99
+        assert.strictEqual doc.foo, 1
+        done()
+
+    it 'maxが別フィールドを参照', (done) ->
+      schema = new Schema {
+        foo:
+          type: Number
+          default: 5
+        max_foo:
+          type: Number
+          default: 20
+      }
+      plugins.consumable schema, current: 'foo', max: 'max_foo'
+      createTestModel schema, (e, Test) ->
+        doc = new Test
+        doc.supplyFoo 99
+        assert.strictEqual doc.foo, 20
+        done()
