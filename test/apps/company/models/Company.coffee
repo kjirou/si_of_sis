@@ -80,3 +80,22 @@ describe 'Company Model', ->
         (next) => @doc.assertValidFieldValidation 'business_power', -1, next
         (next) => @doc.assertValidFieldValidation 'business_power', 1.1, next
       ], done
+
+
+  describe 'Methods', ->
+
+    beforeEach (done) ->
+      monky.build 'Company', (e, @doc) => done()
+
+    it 'cash is applied consumable-plugin', ->
+      @doc.cash = 100
+      @doc.supplyCash Company.MAX_CASH
+      assert @doc.cash is Company.MAX_CASH
+
+    it 'business_power is applied consumable-plugin', ->
+      @doc.max_business_power = 100
+      @doc.business_power = 0
+      @doc.supplyBusinessPower 10
+      assert @doc.business_power is 10
+      @doc.supplyBusinessPower 999
+      assert @doc.business_power is 100

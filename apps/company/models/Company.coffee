@@ -7,6 +7,10 @@ textLib = require 'lib/text'
 {createValidator} = require 'modules/validator'
 
 
+consts =
+  MAX_CASH: 9999999999
+
+
 schema = new Schema {
 
   user:
@@ -27,6 +31,7 @@ schema = new Schema {
     default: 0
     required: true
     min: 0
+    max: consts.MAX_CASH
     validate: [
       createValidator validator: 'isInt'
     ]
@@ -52,7 +57,13 @@ schema = new Schema {
     ]
 }
 
-definePlugins schema, 'core', 'createdAt', 'updatedAt'
+_.extend schema.statics, consts
+
+definePlugins schema, 'core', 'createdAt', 'updatedAt', [
+  'consumable', { current: 'cash', max: consts.MAX_CASH }
+], [
+  'consumable', { current: 'business_power', max: 'max_business_power' }
+]
 
 
 module.exports = mongoose.model 'Company', schema
