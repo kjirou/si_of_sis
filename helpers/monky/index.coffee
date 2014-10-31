@@ -4,6 +4,7 @@ Monky = require 'monky'
 
 require 'apps'  # 全 Model 生成が必要なので呼んでいる
 crypto = require 'lib/crypto'
+{GameDate} = require 'lib/game-date'
 
 
 monky = new Monky mongoose
@@ -32,15 +33,17 @@ monky.factory 'Company', {
 #
 # Business
 #
-valueSets.business = {}
-monky.factory 'Business', {}
-monky.factory {name:'FakeBusiness', model:'Business'}, {
+valueSets.business =
+  raw_closing_week: '00000001011'
+monky.factory 'Business', valueSets.business
+monky.factory {name:'FakeBusiness', model:'Business'}, _.extend({}, valueSets.business, {
   name: ->
     _.sample(['C++', 'Java', 'JavaScript', 'Node.js', 'Perl', 'PHP', 'Python', 'Ruby']) + '開発案件'
   business_cost: -> _.random 1, 99
   development_cost: -> _.random 1, 9999
   asking_price: -> _.random 1, 9999
-}
+  raw_closing_week: -> (new GameDate).add(_.random(96), 'weeks').toString()
+})
 
 
 #

@@ -44,9 +44,36 @@ schema = new Schema {
     validate: [
       createValidator validator: 'isInt'
     ]
+
+  # 応募終了週
+  raw_closing_week:
+    type: String
+    required: true
+    validate: [
+      createValidator validator: 'isGameDate'
+    ]
+
+  # 開発期間
+  development_weeks:
+    type: Number
+    default: 1
+    required: true
+    min: 1
+    validate: [
+      createValidator validator: 'isInt'
+    ]
 }
 
-definePlugins schema, 'core', 'createdAt'
+definePlugins schema, 'core', 'createdAt', [
+  'gameDates', {
+    map:
+      raw_closing_week: 'closing_week'
+  }
+]
+
+# 納期
+schema.virtual('delivery_week').get ->
+  @closing_week.add @development_weeks, 'weeks'
 
 
 module.exports = mongoose.model 'Business', schema
