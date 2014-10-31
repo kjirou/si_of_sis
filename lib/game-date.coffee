@@ -71,3 +71,4 @@ _s = require 'underscore.string'
 
   toWeeks: -> @_weeks
   toArray: -> [@year, @month, @week]
+  toString: -> "#{_s.pad @year, 8, '0'}-#{_s.pad @month, 2, '0'}-#{_s.pad @week}"

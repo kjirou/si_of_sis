@@ -35,12 +35,13 @@ describe 'game-date Lib', ->
       assert GameDate.weeksToYear(95) is 1
       assert GameDate.weeksToYear(96) is 2
 
-    it 'constructor / year / month / week / toArray', ->
+    it 'constructor / year / month / week / toArray / toString', ->
       d = new GameDate
       assert d.year is 0
       assert d.month is 0
       assert d.week is 0
       assert.deepEqual d.toArray(), [0, 0, 0]
+      assert d.toString() is '00000000-00-0'
 
       d = new GameDate 12 * 4 * 1 + 4 * 11 + 3
       assert.deepEqual d.toArray(), [1, 11, 3]
@@ -50,6 +51,7 @@ describe 'game-date Lib', ->
 
       d = new GameDate [1, 11, 3]
       assert.deepEqual d.toArray(), [1, 11, 3]
+      assert d.toString() is '00000001-11-3'
 
       assert.throws ->
         new GameDate -1
