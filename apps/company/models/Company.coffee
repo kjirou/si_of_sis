@@ -36,8 +36,8 @@ schema = new Schema {
       createValidator validator: 'isInt'
     ]
 
-  # 最大営業力
-  max_business_power:
+  # 最大スタミナ
+  max_stamina:
     type: Number
     default: 1
     required: true
@@ -46,8 +46,8 @@ schema = new Schema {
       createValidator validator: 'isInt'
     ]
 
-  # 現在営業力
-  business_power:
+  # 現在スタミナ
+  stamina:
     type: Number
     default: 1
     required: true
@@ -62,7 +62,7 @@ _.extend schema.statics, consts
 definePlugins schema, 'core', 'createdAt', 'updatedAt', [
   'consumable', { current: 'cash', max: consts.MAX_CASH }
 ], [
-  'consumable', { current: 'business_power', max: 'max_business_power' }
+  'consumable', { current: 'stamina', max: 'max_stamina' }
 ]
 
 

@@ -43,8 +43,11 @@ block bodyBlock
         i.calendar.icon
         span 12 月 3 週
       .item
+        i.heart.icon
+        span #{req.user.company.stamina} / #{req.user.company.max_stamina}
+      .item
         i.yen.icon
-        span 12,345 千円
+        span #{_s.numberFormat(req.user.company.cash)} 千円
       .item
         i.block.layout.icon
         span 3 チーム

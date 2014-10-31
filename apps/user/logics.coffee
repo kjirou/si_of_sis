@@ -1,3 +1,4 @@
+_ = require 'lodash'
 LocalStrategy = require('passport-local').Strategy
 
 {Company} = require 'apps/company/models'
@@ -105,6 +106,9 @@ logics.postUser = (user, values, callback) ->
       if isNew
         company = new Company
         company.user = user._id
+        company.cash = 10000 + _.random 40000
+        company.max_stamina = 100 + _.random 100
+        company.supplyStaminaFully()
         company.save (e) ->
           return callback e if e
           callback null, user

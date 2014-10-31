@@ -3,11 +3,6 @@ extends /apps/layouts/game
 
 
 block contentBlock
-  style.
-    .table tr th,
-    .table tr td {
-      font-size: 0.8em;
-    }
   h1.ui.medium.header
     i.building.icon
     |Businesses
@@ -15,9 +10,9 @@ block contentBlock
     thead
       tr
         th 案件名
-        th 受注コスト
-        th 価格
-        th 開発コスト
+        th: i.large.heart.icon
+        th: i.large.yen.icon
+        th: i.large.wrench.icon
         th 応募期限
         th 期間
         th

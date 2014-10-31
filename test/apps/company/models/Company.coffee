@@ -65,20 +65,20 @@ describe 'Company Model', ->
         (next) => @doc.assertValidFieldValidation 'cash', 1.1, next
       ], done
 
-    it 'max_business_power', (done) ->
+    it 'max_stamina', (done) ->
       async.series [
-        (next) => @doc.assertValidFieldType 'max_business_power', 'not_numeric', next
-        (next) => @doc.assertValidFieldValidation 'max_business_power', undefined, next
-        (next) => @doc.assertValidFieldValidation 'max_business_power', 0, next
-        (next) => @doc.assertValidFieldValidation 'max_business_power', 1.1, next
+        (next) => @doc.assertValidFieldType 'max_stamina', 'not_numeric', next
+        (next) => @doc.assertValidFieldValidation 'max_stamina', undefined, next
+        (next) => @doc.assertValidFieldValidation 'max_stamina', 0, next
+        (next) => @doc.assertValidFieldValidation 'max_stamina', 1.1, next
       ], done
 
-    it 'business_power', (done) ->
+    it 'stamina', (done) ->
       async.series [
-        (next) => @doc.assertValidFieldType 'business_power', 'not_numeric', next
-        (next) => @doc.assertValidFieldValidation 'business_power', undefined, next
-        (next) => @doc.assertValidFieldValidation 'business_power', -1, next
-        (next) => @doc.assertValidFieldValidation 'business_power', 1.1, next
+        (next) => @doc.assertValidFieldType 'stamina', 'not_numeric', next
+        (next) => @doc.assertValidFieldValidation 'stamina', undefined, next
+        (next) => @doc.assertValidFieldValidation 'stamina', -1, next
+        (next) => @doc.assertValidFieldValidation 'stamina', 1.1, next
       ], done
 
 
@@ -92,10 +92,10 @@ describe 'Company Model', ->
       @doc.supplyCash Company.MAX_CASH
       assert @doc.cash is Company.MAX_CASH
 
-    it 'business_power is applied consumable-plugin', ->
-      @doc.max_business_power = 100
-      @doc.business_power = 0
-      @doc.supplyBusinessPower 10
-      assert @doc.business_power is 10
-      @doc.supplyBusinessPower 999
-      assert @doc.business_power is 100
+    it 'stamina is applied consumable-plugin', ->
+      @doc.max_stamina = 100
+      @doc.stamina = 0
+      @doc.supplyStamina 10
+      assert @doc.stamina is 10
+      @doc.supplyStamina 999
+      assert @doc.stamina is 100
