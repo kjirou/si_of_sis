@@ -7,110 +7,89 @@ describe 'game-date Lib', ->
 
   describe 'GameDate Class', ->
 
-    it 'validateGameDateString', ->
-      assert GameDate.validateGameDateString '00000000000'
-      assert GameDate.validateGameDateString '99999999999'
-      assert GameDate.validateGameDateString('0000000000') is false
-      assert GameDate.validateGameDateString('000000000000') is false
-      assert GameDate.validateGameDateString('0000000000a') is false
+    it 'FIRST_WEEK', ->
+      assert GameDate.FIRST_WEEK is 0
 
-    it 'parseGameDateString', ->
-      assert.deepEqual GameDate.parseGameDateString('00000000000'), [0, 0, 0]
-      assert.deepEqual GameDate.parseGameDateString('99999999999'), [99999999, 99, 9]
-      assert.throws ->
-        GameDate.parseGameDateString '0000000000a'
-      , /0000000000a/
+    it 'LAST_WEEK', ->
+      assert GameDate.LAST_WEEK is GameDate.MAX_YEAR * 12 * 4 + 11 * 4 + 3
 
-    it 'computeOverflow to week', ->
-      assert.deepEqual GameDate.computeOverflow('week', 1), [0, 1]
-      assert.deepEqual GameDate.computeOverflow('week', 4), [0, 4]
-      assert.deepEqual GameDate.computeOverflow('week', 5), [1, 1]
-      assert.deepEqual GameDate.computeOverflow('week', 12), [2, 4]
-      assert.deepEqual GameDate.computeOverflow('week', 0), [-1, 4]
-      assert.deepEqual GameDate.computeOverflow('week', -3), [-1, 1]
-      assert.deepEqual GameDate.computeOverflow('week', -4), [-2, 4]
-      assert.deepEqual GameDate.computeOverflow('week', -11), [-3, 1]
+    it 'validateWeeksRange', ->
+      assert GameDate.validateWeeksRange GameDate.FIRST_WEEK
+      assert GameDate.validateWeeksRange GameDate.LAST_WEEK
+      assert GameDate.validateWeeksRange(GameDate.FIRST_WEEK - 1) is false
+      assert GameDate.validateWeeksRange(GameDate.LAST_WEEK + 1) is false
 
-    it 'computeOverflow to month', ->
-      assert.deepEqual GameDate.computeOverflow('month', 1), [0, 1]
-      assert.deepEqual GameDate.computeOverflow('month', 12), [0, 12]
-      assert.deepEqual GameDate.computeOverflow('month', 13), [1, 1]
-      assert.deepEqual GameDate.computeOverflow('month', 24), [1, 12]
-      assert.deepEqual GameDate.computeOverflow('month', 0), [-1, 12]
-      assert.deepEqual GameDate.computeOverflow('month', -11), [-1, 1]
-      assert.deepEqual GameDate.computeOverflow('month', -12), [-2, 12]
+    it 'weeksToMonth', ->
+      assert GameDate.weeksToMonth(0) is 0
+      assert GameDate.weeksToMonth(3) is 0
+      assert GameDate.weeksToMonth(4) is 1
+      assert GameDate.weeksToMonth(7) is 1
+      assert GameDate.weeksToMonth(8) is 2
+      assert GameDate.weeksToMonth(47) is 11
+      assert GameDate.weeksToMonth(48) is 0
 
-    it 'adjustDate', ->
-      assert.deepEqual GameDate.adjustDate(1, 1, 1), [1, 1, 1]
-      assert.deepEqual GameDate.adjustDate(99999999, 11, 4), [99999999, 11, 4]
-      assert.deepEqual GameDate.adjustDate(1, 1, 5), [1, 2, 1]
-      assert.deepEqual GameDate.adjustDate(1, 12, 5), [2, 1, 1]
-      assert.deepEqual GameDate.adjustDate(1, 2, 0), [1, 1, 4]
-      assert.deepEqual GameDate.adjustDate(2, 1, 0), [1, 12, 4]
-      assert.throws ->
-        GameDate.adjustDate(1, 1, 0)
-      , /GameDate\(1, 1, 0\)/
-      assert.throws ->
-        GameDate.adjustDate(99999999, 12, 5)
-      , /GameDate\(99999999, 12, 5\)/
+    it 'weeksToYear', ->
+      assert GameDate.weeksToYear(0) is 0
+      assert GameDate.weeksToYear(47) is 0
+      assert GameDate.weeksToYear(48) is 1
+      assert GameDate.weeksToYear(95) is 1
+      assert GameDate.weeksToYear(96) is 2
 
-    it 'constructor', ->
-      gameDate = new GameDate
-      assert gameDate.year is 1
-      assert gameDate.month is 1
-      assert gameDate.week is 1
+    it 'constructor / year / month / week / toArray', ->
+      d = new GameDate
+      assert d.year is 0
+      assert d.month is 0
+      assert d.week is 0
+      assert.deepEqual d.toArray(), [0, 0, 0]
 
-      gameDate = new GameDate 1, 12, 5
-      assert gameDate.year is 2
-      assert gameDate.month is 1
-      assert gameDate.week is 1
+      d = new GameDate 12 * 4 * 1 + 4 * 11 + 3
+      assert.deepEqual d.toArray(), [1, 11, 3]
+      assert d.year is 1
+      assert d.month is 11
+      assert d.week is 3
 
-      gameDate = new GameDate '00000001011'
-      assert gameDate.year is 1
-      assert gameDate.month is 1
-      assert gameDate.week is 1
-
-      gameDate = new GameDate '00000001125'
-      assert gameDate.year is 2
-      assert gameDate.month is 1
-      assert gameDate.week is 1
-
-    it 'toString', ->
-      assert.deepEqual new GameDate(1, 2, 3).toString(), '00000001023'
-
-    it 'toArray', ->
-      assert.deepEqual new GameDate(1, 2, 3).toArray(), [1, 2, 3]
-
-    it 'add', ->
-      gameDate = new GameDate
-      assert gameDate.year is 1
-      assert gameDate.month is 1
-      assert gameDate.week is 1
-
-      gameDate.add 1, 'year'
-      assert gameDate.year is 2
-      gameDate.add 2, 'years'
-      assert gameDate.year is 4
-      gameDate.add 1, 'month'
-      assert gameDate.month is 2
-      gameDate.add 11, 'months'
-      assert gameDate.year is 5
-      assert gameDate.month is 1
-      gameDate.add 1, 'week'
-      assert gameDate.week is 2
-      gameDate.add 3, 'weeks'
-      assert gameDate.month is 2
+      d = new GameDate [1, 11, 3]
+      assert.deepEqual d.toArray(), [1, 11, 3]
 
       assert.throws ->
-        gameDate.add 1, 'day'
-      , /day/
+        new GameDate -1
+      , /-1/
 
-    it 'subtract', ->
-      gameDate = new GameDate 99999999, 12, 4
-      gameDate.subtract 1, 'year'
-      gameDate.subtract 1, 'month'
-      gameDate.subtract 1, 'week'
-      assert.deepEqual gameDate.toArray(), [99999998, 11, 3]
+      assert.throws ->
+        new GameDate '1'
+      , /1/
 
-    it 'Method chain', ->
-      assert (new GameDate).add(1, 'month').subtract(1, 'week').toString() is '00000001014'
+    it 'add / subtract', ->
+      d = new GameDate
+      d.add 1, 'week'
+      assert.deepEqual d.toArray(), [0, 0, 1]
+      d.add 2, 'weeks'
+      assert.deepEqual d.toArray(), [0, 0, 3]
+      d.add 1  # 単位指定無しは weeks 指定になる
+      assert.deepEqual d.toArray(), [0, 1, 0]
+
+      d = new GameDate
+      d.add 1, 'month'
+      d.add 2, 'months'
+      assert.deepEqual d.toArray(), [0, 3, 0]
+
+      d = new GameDate
+      d.add 1, 'year'
+      d.add 2, 'years'
+      assert.deepEqual d.toArray(), [3, 0, 0]
+
+      d = new GameDate
+      d.add 1, 'year'
+      d.add -1, 'week'
+      assert.deepEqual d.toArray(), [0, 11, 3]
+      d.subtract 1, 'month'
+      assert.deepEqual d.toArray(), [0, 10, 3]
+
+      d = new GameDate
+      assert.throws ->
+        d.subtract 1
+      , /-1/
+
+      # Mathod chain
+      d = new GameDate [1, 0, 0]
+      assert.deepEqual d.add(1, 'month').subtract(8, 'weeks').toArray(), [0, 11, 0]

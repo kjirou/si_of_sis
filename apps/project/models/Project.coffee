@@ -2,6 +2,7 @@ _ = require 'lodash'
 mongoose = require 'mongoose'
 {Schema} = mongoose
 
+{GameDate} = require 'lib/game-date'
 {definePlugins} = require 'lib/mongoose-plugins'
 {createValidator} = require 'modules/validator'
 
@@ -18,18 +19,23 @@ schema = new Schema {
 
   # 受注ゲーム週
   raw_ordered_week:
-    type: String
+    type: Number
+    default: GameDate.FIRST_WEEK
     required: true
+    min: GameDate.FIRST_WEEK
+    max: GameDate.LAST_WEEK
     validate: [
-      createValidator validator: 'isGameDate'
+      createValidator validator: 'isInt'
     ]
 
   # 納品ゲーム週
   raw_delivered_week:
-    type: String
+    type: Number
     default: null
+    min: GameDate.FIRST_WEEK
+    max: GameDate.LAST_WEEK
     validate: [
-      createValidator validator: 'isGameDate', passIfNull: true
+      createValidator validator: 'isInt', passIfNull: true
     ]
 
   # 進捗、消化済みの必要開発コストということ

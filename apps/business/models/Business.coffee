@@ -1,6 +1,7 @@
 mongoose = require 'mongoose'
 {Schema} = mongoose
 
+{GameDate} = require 'lib/game-date'
 {definePlugins} = require 'lib/mongoose-plugins'
 {createValidator} = require 'modules/validator'
 
@@ -47,10 +48,13 @@ schema = new Schema {
 
   # 応募終了週
   raw_closing_week:
-    type: String
+    type: Number
+    default: GameDate.FIRST_WEEK
     required: true
+    min: GameDate.FIRST_WEEK
+    max: GameDate.LAST_WEEK
     validate: [
-      createValidator validator: 'isGameDate'
+      createValidator validator: 'isInt'
     ]
 
   # 開発期間
@@ -73,7 +77,7 @@ definePlugins schema, 'core', 'createdAt', [
 
 # 納期
 schema.virtual('delivery_week').get ->
-  @closing_week.add @development_weeks, 'weeks'
+  @closing_week.add @development_weeks
 
 
 module.exports = mongoose.model 'Business', schema

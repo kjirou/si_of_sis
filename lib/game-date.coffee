@@ -8,88 +8,66 @@ _s = require 'underscore.string'
 
 @GameDate = class GameDate
 
-  MIN_YEAR = 1
-  MAX_YEAR = 99999999
-  MONTHS = [1..12]
-  MIN_MONTH = _.first MONTHS
-  MAX_MONTH = _.last MONTHS
-  WEEKS = [1..4]
-  MIN_WEEK = _.first WEEKS
-  MAX_WEEK = _.last WEEKS
-  # validator.isGameDate と要同期
-  GAME_DATE_REGEX = /^(\d{8})(\d{2})(\d)$/
+  @MIN_YEAR: 0
+  @MAX_YEAR: 99999999
+  @MONTHS: [0..11]
+  @MIN_MONTH: _.first @MONTHS
+  @MAX_MONTH: _.last @MONTHS
+  @MONTH_LENGTH: @MONTHS.length
+  @WEEKS: [0..3]
+  @MIN_WEEK: _.first @WEEKS
+  @MAX_WEEK: _.last @WEEKS
+  @WEEK_LENGTH: @WEEKS.length
+
+  @monthsToWeeks: (months) -> months * @WEEK_LENGTH
+  @yearsToWeeks: (years) -> @monthsToWeeks years * @MONTH_LENGTH
+  @ymwToWeeks: (year, month, week) -> @yearsToWeeks(year) + @monthsToWeeks(month) + week
+
+  @FIRST_WEEK: @ymwToWeeks 0, 0, 0
+  @LAST_WEEK: @ymwToWeeks @MAX_YEAR, @MAX_MONTH, @MAX_WEEK
+
+  @validateWeeksRange: (weeks) -> @FIRST_WEEK <= weeks <= @LAST_WEEK
+
+  @weeksToWeek: (weeks) -> weeks % @WEEK_LENGTH
+  @weeksToMonths: (weeks) -> parseInt weeks / @WEEK_LENGTH, 10
+  @weeksToMonth: (weeks) -> @weeksToMonths(weeks) % @MONTH_LENGTH
+  @weeksToYears: (weeks) -> parseInt @weeksToMonths(weeks) / @MONTH_LENGTH, 10
+  @weeksToYear: (weeks) -> @weeksToYears weeks
 
   # 月・週はそれぞれ最小値から最大値の範囲を超えても指定できる
-  constructor: (args...) ->
-    # 文字列から
-    if args.length is 1 and _.isString args[0]
-      [@_year, @_month, @_week] = @constructor.parseGameDateString args[0]
-    # y, [m], [w]
+  constructor: (any=0) ->
+    # weeks 指定
+    @_weeks = if _.isNumber(any) and not isNaN(any)
+      any
+    # [y, m, w] 指定
+    else if _.isArray any
+      @constructor.ymwToWeeks(
+        any[0] ? @constructor.MIN_YEAR
+        any[1] ? @constructor.MIN_MONTH
+        any[2] ? @constructor.MIN_WEEK
+      )
     else
-      [@_year, @_month, @_week] = args
-      @_year ?= MIN_YEAR
-      @_month ?= MIN_MONTH
-      @_week ?= MIN_WEEK
+      throw new Error "Cannot initialize GameDate from `#{any}`"
 
-    Object.defineProperty @, 'year', get: -> @_year
-    Object.defineProperty @, 'month', get: -> @_month
-    Object.defineProperty @, 'week', get: -> @_week
+    @_assertValidWeeks()
 
-    @_adjustDate()
+    Object.defineProperty @, 'year', get: -> @constructor.weeksToYear @_weeks
+    Object.defineProperty @, 'month', get: -> @constructor.weeksToMonth @_weeks
+    Object.defineProperty @, 'week', get: -> @constructor.weeksToWeek @_weeks
 
-  @validateGameDateString: (str) ->
-    GAME_DATE_REGEX.test str
-
-  @parseGameDateString: (str) =>
-    unless @validateGameDateString str
-      throw new Error "Cannot parse `#{str}` to GameDate"
-    matched = GAME_DATE_REGEX.exec str
-    [
-      parseInt matched[1], 10
-      parseInt matched[2], 10
-      parseInt matched[3], 10
-    ]
-
-  toString: =>
-    "#{_s.pad @year, 8, '0'}#{_s.pad @month, 2, '0'}#{@week}"
-
-  toArray: => [@year, @month, @week]
-
-  # 月と週の桁あふれを計算する、もっと良い書き方が出来そうだけど諦めた
-  # e.g.
-  #   ('week', 6) -> [1, 2]
-  #   ('week', 13) -> [3, 1]
-  #   ('week', -1) -> [-1, 3]
-  @computeOverflow: (mode, num) ->
-    cardinalNum = switch mode
-      when 'month' then MAX_MONTH
-      when 'week' then MAX_WEEK
-    num -= 1  # 月と週共に1開始だから
-    secondDigit = parseInt num / cardinalNum, 10
-    firstDigit = num % cardinalNum
-    if firstDigit < 0
-      secondDigit -= 1
-      firstDigit += cardinalNum
-    [secondDigit, firstDigit + 1]  # 先の 1 を戻す
-
-  # 日付の各値の桁あふれを再計算し、正しい形へ調整する
-  @adjustDate: (year, month, week) =>
-    [monthDelta, adjustedWeek] = @computeOverflow 'week', week
-    [yearDelta, adjustedMonth] = @computeOverflow 'month', month + monthDelta
-    adjustedYear = year + yearDelta
-    unless MIN_YEAR <= adjustedYear <= MAX_YEAR
-      throw new Error "Out of range GameDate(#{year}, #{month}, #{week})"
-    [adjustedYear, adjustedMonth, adjustedWeek]
-
-  _adjustDate: =>
-    [@_year, @_month, @_week] = @constructor.adjustDate @year, @month, @week
+  _assertValidWeeks: =>
+    unless @constructor.validateWeeksRange @_weeks
+      throw new Error "#{@_weeks} is out of range weeks"
 
   add: (delta, unit) =>
     switch unit
-      when 'years', 'year' then @_year += delta
-      when 'months', 'month' then @_month += delta
-      when 'weeks', 'week' then @_week += delta
-      else throw new Error "Invalid unit=`#{unit}`"  # 'day' 指定してしまうことがあるため
-    @_adjustDate()
+      when 'years', 'year' then @_weeks += @constructor.yearsToWeeks delta
+      when 'months', 'month' then @_weeks += @constructor.monthsToWeeks delta
+      when 'weeks', 'week', undefined then @_weeks += delta
+      else throw new Error "`#{unit}` is invalid GameDate unit"  # 'day' 指定してしまうことがあるため
+    @_assertValidWeeks()
     @
   subtract: (delta, unit) => @add -delta, unit
+
+  toWeeks: -> @_weeks
+  toArray: -> [@year, @month, @week]

@@ -47,7 +47,7 @@ _s = require 'underscore.string'
       @updated_at = new Date
     callback()
 
-# ゲーム時間データに対するアクセサを一括定義する
+# ゲーム時刻フィールドに対するアクセサを一括定義する
 @plugins.gameDates = (schema, options={}) ->
   {GameDate} = require 'lib/game-date'
   options = _.extend {
@@ -56,9 +56,9 @@ _s = require 'underscore.string'
   }, options
   _.each options.map, (to, from) ->
     schema.virtual(to).get ->
-      dateStr = @[from]
-      if dateStr?
-        new GameDate dateStr
+      weeks = @[from]
+      if weeks?
+        new GameDate weeks
       else
         null
 

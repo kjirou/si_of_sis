@@ -7,6 +7,7 @@ _ = require 'lodash'
 {resetDatabase} = require 'helpers/database'
 {defineDocAssertions} = require 'helpers/test'
 {monky, valueSets} = require 'helpers/monky'
+{GameDate} = require 'lib/game-date'
 
 
 describe 'Business Model', ->
@@ -34,6 +35,7 @@ describe 'Business Model', ->
 
     beforeEach (done) ->
       monky.build 'Business', (e, @doc) =>
+        return done e if e
         defineDocAssertions @doc
         Business.remove done
 
@@ -68,8 +70,10 @@ describe 'Business Model', ->
 
     it 'raw_closing_week', (done) ->
       async.series [
-        (next) => @doc.assertValidFieldValidation 'raw_closing_week', '0000000101a', next
-        (next) => @doc.assertValidFieldValidation 'raw_closing_week', '', next
+        (next) => @doc.assertValidFieldType 'raw_closing_week', 'not_numeric', next
+        (next) => @doc.assertValidFieldValidation 'raw_closing_week', undefined, next
+        (next) => @doc.assertValidFieldValidation 'raw_closing_week', -1, next
+        (next) => @doc.assertValidFieldValidation 'raw_closing_week', 0.1, next
       ], done
 
     it 'development_weeks', (done) ->
@@ -80,4 +84,13 @@ describe 'Business Model', ->
         (next) => @doc.assertValidFieldValidation 'development_weeks', 1.1, next
       ], done
 
-    #it 'delivery_week', ->
+    it 'closing_week', ->
+      @doc.raw_closing_week = 1
+      assert @doc.closing_week instanceof GameDate
+      assert.deepEqual @doc.closing_week.toArray(), [0, 0, 1]
+
+    it 'delivery_week', ->
+      @doc.raw_closing_week = 1
+      @doc.development_weeks = 48 + 4
+      assert @doc.delivery_week instanceof GameDate
+      assert.deepEqual @doc.delivery_week.toArray(), [1, 1, 1]

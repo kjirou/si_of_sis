@@ -9,6 +9,7 @@ assert = require 'power-assert'
 {resetDatabase} = require 'helpers/database'
 {monky, valueSets} = require 'helpers/monky'
 {defineDocAssertions, removeProjectCompletely} = require 'helpers/test'
+{GameDate} = require 'lib/game-date'
 
 
 describe 'Project Model', ->
@@ -36,47 +37,50 @@ describe 'Project Model', ->
   describe 'Fields', ->
 
     beforeEach (done) ->
-      monky.build 'Project', (e, @project) =>
-        defineDocAssertions @project
+      monky.build 'Project', (e, @doc) =>
+        return done e if e
+        defineDocAssertions @doc
         removeProjectCompletely done
 
     it 'business', (done) ->
       async.series [
-        (next) => @project.assertValidFieldType 'business', '', next
-        (next) => @project.assertValidFieldValidation 'business', null, next
+        (next) => @doc.assertValidFieldType 'business', '', next
+        (next) => @doc.assertValidFieldValidation 'business', null, next
       ], done
 
     it 'raw_ordered_week', (done) ->
       async.series [
-        (next) => @project.assertValidFieldValidation 'raw_ordered_week', '0000000101a', next
-        (next) => @project.assertValidFieldValidation 'raw_ordered_week', '', next
+        (next) => @doc.assertValidFieldType 'raw_ordered_week', 'not_numeric', next
+        (next) => @doc.assertValidFieldValidation 'raw_ordered_week', -1, next
+        (next) => @doc.assertValidFieldValidation 'raw_ordered_week', 1.1, next
       ], done
 
     it 'raw_delivered_week', (done) ->
       async.series [
-        (next) => @project.assertValidFieldValidation 'raw_delivered_week', '0000000101a', next
-        (next) => @project.assertValidFieldValidation 'raw_delivered_week', '', next
+        (next) => @doc.assertValidFieldType 'raw_delivered_week', 'not_numeric', next
+        (next) => @doc.assertValidFieldValidation 'raw_delivered_week', -1, next
+        (next) => @doc.assertValidFieldValidation 'raw_delivered_week', 1.1, next
       ], done
 
     it 'progress', (done) ->
       async.series [
-        (next) => @project.assertValidFieldType 'progress', 'not_numeric', next
-        (next) => @project.assertValidFieldValidation 'progress', null, next
-        (next) => @project.assertValidFieldValidation 'progress', -0.1, next
+        (next) => @doc.assertValidFieldType 'progress', 'not_numeric', next
+        (next) => @doc.assertValidFieldValidation 'progress', null, next
+        (next) => @doc.assertValidFieldValidation 'progress', -0.1, next
       ], done
 
     it 'added_value', (done) ->
       async.series [
-        (next) => @project.assertValidFieldType 'added_value', 'not_numeric', next
-        (next) => @project.assertValidFieldValidation 'added_value', null, next
+        (next) => @doc.assertValidFieldType 'added_value', 'not_numeric', next
+        (next) => @doc.assertValidFieldValidation 'added_value', null, next
       ], done
 
     it 'price', (done) ->
       async.series [
-        (next) => @project.assertValidFieldType 'price', 'not_numeric', next
-        (next) => @project.assertValidFieldValidation 'price', null, next
-        (next) => @project.assertValidFieldValidation 'price', 0, next
-        (next) => @project.assertValidFieldValidation 'price', 1.1, next
+        (next) => @doc.assertValidFieldType 'price', 'not_numeric', next
+        (next) => @doc.assertValidFieldValidation 'price', null, next
+        (next) => @doc.assertValidFieldValidation 'price', 0, next
+        (next) => @doc.assertValidFieldValidation 'price', 1.1, next
       ], done
 
     it 'business_id', (done) ->
@@ -90,12 +94,14 @@ describe 'Project Model', ->
           done()
 
     it 'ordered_week', ->
-      @project.raw_ordered_week = '99999999124'
-      assert.deepEqual @project.ordered_week.toArray(), [99999999, 12, 4]
+      @doc.raw_ordered_week = 1
+      assert @doc.ordered_week instanceof GameDate
+      assert.deepEqual @doc.ordered_week.toArray(), [0, 0, 1]
 
     it 'delivered_week', ->
-      @project.raw_delivered_week = '99999999124'
-      assert.deepEqual @project.delivered_week.toArray(), [99999999, 12, 4]
+      @doc.raw_delivered_week = 1
+      assert @doc.delivered_week instanceof GameDate
+      assert.deepEqual @doc.delivered_week.toArray(), [0, 0, 1]
 
     it 'progress_rate', (done) ->
       monky.create 'Business', (e, business) ->

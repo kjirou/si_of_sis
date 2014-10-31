@@ -121,30 +121,28 @@ describe 'mongoose-plugins Lib', ->
 
   it 'gameDates', (done) ->
     schema = new Schema {
-      raw_foo: String
-      raw_bar: String
-      raw_baz: String
-      raw_none: String
+      raw_foo: Number
+      raw_bar: Number
+      raw_baz: Number
+      raw_none: Number
     }
     schema.plugin plugins.gameDates,
       map:
         raw_foo: 'foo'
         raw_bar: 'bar'
-        raw_none: 'none'
+        raw_notexists: 'notexists'
     createTestModel schema, (e, Test) ->
       return done e if e
       doc = new Test {
-        raw_foo: '00000001012'
-        raw_bar: '0000000101a'
-        raw_baz: '00000001012'
+        raw_foo: 6
+        raw_bar: null
+        raw_baz: 1
       }
       assert doc.foo instanceof GameDate
-      assert.deepEqual doc.foo.toArray(), [1, 1, 2]
-      assert.throws ->
-        doc.bar
-      , /0000000101a/
-      assert doc.baz is undefined
-      assert doc.none is null
+      assert.deepEqual doc.foo.toArray(), [0, 1, 2]
+      assert doc.bar is null
+      assert doc.baz is undefined  # プラグインが反映されていない
+      assert doc.notexists is null  # フォールド自体が未定義
       done()
 
   it 'definePlugins', (done) ->

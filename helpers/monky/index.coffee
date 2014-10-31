@@ -33,8 +33,7 @@ monky.factory 'Company', {
 #
 # Business
 #
-valueSets.business =
-  raw_closing_week: '00000001011'
+valueSets.business = {}
 monky.factory 'Business', valueSets.business
 monky.factory {name:'FakeBusiness', model:'Business'}, _.extend({}, valueSets.business, {
   name: ->
@@ -42,18 +41,18 @@ monky.factory {name:'FakeBusiness', model:'Business'}, _.extend({}, valueSets.bu
   business_cost: -> _.random 1, 99
   development_cost: -> _.random 1, 9999
   asking_price: -> _.random 1, 9999
-  raw_closing_week: -> (new GameDate).add(_.random(96), 'weeks').toString()
+  raw_closing_week: -> _.random 1, 48
+  development_weeks: -> _.random 1, 144
 })
 
 
 #
 # Project
 #
-valueSets.project =
-  raw_ordered_week: '00000001011'
-monky.factory 'Project', _.extend {
+valueSets.project = {}
+monky.factory 'Project', _.extend({}, valueSets.project, {
   business: monky.ref 'Business'
-}, valueSets.project
+})
 
 
 module.exports =
