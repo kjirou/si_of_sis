@@ -1,21 +1,34 @@
+include /apps/mixins/core
 extends /apps/layouts/game
 
 
 block contentBlock
+  style.
+    .table tr th,
+    .table tr td {
+      font-size: 0.8em;
+    }
   h1.ui.medium.header
     i.building.icon
     |Businesses
-  table.ui.table.segment
+  table.ui.basic.table
     thead
       tr
         th 案件名
-        th 提案価格
+        th 受注コスト
+        th 価格
+        th 開発コスト
         th 応募期限
-        th 納品期限
+        th 期間
+        th
     tbody
       each business in businesses
         tr
           td #{business.name}
+          td #{business.business_cost}
           td #{_s.numberFormat(business.asking_price)}
-          td 10/01/05
-          td 10/04/05
+          td #{_s.numberFormat(business.development_cost)}
+          td: +gameDate(business.closing_week)
+          td #{business.development_weeks}週
+          td
+            .mini.ui.button 受注
