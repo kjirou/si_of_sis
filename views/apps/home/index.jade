@@ -1,7 +1,117 @@
 extends /apps/layouts/game
 
 
+block pageStyleSheetsBlock
+  link(rel='stylesheet', href='/bower_components/c3/c3.css')
+
+
+
+block pageScriptsBlock
+  script(src='/bower_components/d3/d3.js')
+  script(src='/bower_components/c3/c3.js')
+
+
 block contentBlock
   h1.ui.medium.header
     i.home.icon
     |Home
+  each i in [1, 2]
+    .ui.segment
+      .ui.divided.horizontal.list
+        .item
+          i.calendar.icon
+          |1 年 12 月 4 週まで
+          span (後 48 週)
+        .item JavaScript大規模開発案件
+        .item
+          i.yen.icon
+          span 10,000 千円
+          span(style='color:green;') (+ 8 %)
+      .ui.divider
+      .ui.two.column.divided.grid
+        .column
+          div(class='js-burn-down-chart-#{i}', style='height:160px;')
+          div(class='js-weekly-velocity-chart-#{i}', style='height:160px;')
+        .column
+          p メンバー情報と操作ボタン
+    script.
+      $(function(){
+        var weeks = [];
+        var velocityList = [];
+        var remainingProgressRates = [];
+        var idealRemainingProgressRates = [];
+        var developmentCost = 200;
+        var progress = 0;
+        var expectedProgress = 0;
+        var expectedVelocity = 10;
+        for (var i = 0; i < 12; i++) {
+          weeks.push(i + 1);
+          var velocity = Math.random() * 20;
+          progress += velocity;
+
+          expectedProgress += expectedVelocity;
+
+          velocityList.push(velocity);
+          remainingProgressRates.push((developmentCost - progress) / developmentCost * 100);
+          idealRemainingProgressRates.push((1 - expectedProgress / developmentCost) * 100);
+        }
+
+        var burnDownChart = c3.generate({
+          bindto: '.js-burn-down-chart-!{i}',
+          data: {
+            x: 'x',
+            columns: [
+              ['x'].concat(weeks),
+              ['actual_remaining_progress_rate'].concat(remainingProgressRates),
+              ['ideal_remaining_progress_rate'].concat(idealRemainingProgressRates)
+            ],
+            names: {
+              actual_remaining_progress_rate: '実績線',
+              ideal_remaining_progress_rate: '理想線'
+            },
+            types: {
+              ideal_remaining_progress_rate: 'area'
+            },
+            colors: {
+              actual_remaining_progress_rate: 'green',
+              ideal_remaining_progress_rate: 'lime'
+            }
+          },
+          point: {
+            show: false
+          },
+          axis: {
+            y: {
+              min: 0,
+              max: 100
+            }
+          }
+        });
+
+        var weeklyVelocityChart = c3.generate({
+          bindto: '.js-weekly-velocity-chart-!{i}',
+          data: {
+            x: 'x',
+            columns: [
+              ['x'].concat(weeks),
+              ['velocity'].concat(velocityList)
+            ],
+            names: {
+              velocity: '実績ベロシティ'
+            },
+            types: {
+              'velocity': 'bar'
+            },
+            colors: {
+              'velocity': 'lime',
+            }
+          },
+          grid: {
+            y: {
+              lines: [
+                {value: expectedVelocity, text: '理想ベロシティ'}
+              ]
+            }
+          }
+        });
+      });
