@@ -1,6 +1,7 @@
 async = require 'async'
 {Model, Schema} = require 'mongoose'
 assert = require 'power-assert'
+sinon = require 'sinon'
 
 databaseHelper = require 'helpers/database'
 testHelper = require 'helpers/test'
@@ -14,14 +15,11 @@ describe 'core Middleware', ->
     databaseHelper.resetDatabase done
 
   it 'applySubAppData', ->
-    mw = coreMiddleware.applySubAppData 'foo'
-    assert typeof mw is 'function'
-    [req, res, next] = [{}, {}, -> ]
-    mw req, res, next
+    [req, res, next] = [{}, {}, ->]
+    coreMiddleware.applySubAppData('foo')(req, res, next)
     assert typeof req.subApp is 'object'
     assert req.subApp.name is 'foo'
     assert typeof res.subApp.render is 'function'
-
 
   it 'applyObjectId', (done) ->
     testHelper.createTestModel new Schema, (e, Test) ->
@@ -67,3 +65,20 @@ describe 'core Middleware', ->
         middleware {params:{id:id}}, {}, (e) ->
           assert e instanceof Http404Error
           done()
+
+  it 'jsonApi', ->
+    [req, res, next] = [{}, {}, sinon.spy()]
+    res.json = sinon.spy()
+    coreMiddleware.jsonApi()(req, res, next)
+    assert typeof res.jsonApi is 'function'
+
+    res.jsonApi x: 1, y: 'a'
+    assert.deepEqual res.json.lastCall.args[0],
+      data: x: 1, y: 'a'
+      state: coreMiddleware.JSON_API_STATES.success
+      message: ''
+
+    res.jsonApi {},
+      state: 'not_defined_state'
+    assert next.lastCall.args[0] instanceof Error
+    assert /not_defined_state/.test next.lastCall.args[0].toString()

@@ -10,7 +10,7 @@ apps = require 'apps'
 {passportConfigurations} = require 'apps/user/logics'
 {User} = require 'apps/user/models'
 conf = require 'conf'
-{applySubAppData, csrf, disableCsrf, logServer} = require 'lib/middlewares/core'
+{applySubAppData, csrf, disableCsrf, jsonApi, logServer} = require 'lib/middlewares/core'
 xflashMiddleware = require 'lib/middlewares/extended-connect-flash'
 
 
@@ -67,6 +67,7 @@ app.use (req, res, next) ->
   _.extend res.locals,
     req: req
   next()
+app.use jsonApi()
 app.use app.router
 app.use(express.static(pathModule.join(conf.root, 'public')))
 

@@ -31,8 +31,6 @@ mongooseUtils = require 'modules/mongoose-utils'
         error: null
       }, locals
 
-    res.subApp.json = (templatePath, locals={}) ->
-
     next()
 
 # パス内の :id から指定モデルのドキュメントを抽出し req.doc へ格納する
@@ -88,3 +86,26 @@ mongooseUtils = require 'modules/mongoose-utils'
           return false
       urlData = urlModule.parse req.url
       /\.(css|gif|jpeg|jpg|js|png|woff)$/.test urlData.pathname
+
+# API として JSON を返す
+# どの state を使うかは厳密に決めず、ただ使えるものを限定するだけに留める
+@JSON_API_STATES =
+  success: 'success'
+  invalid: 'invalid'
+  error: 'error'
+@jsonApi = ->
+  (req, res, next) ->
+    res.jsonApi = (data, options={}) ->
+      options = _.extend {
+        state: exports.JSON_API_STATES.success
+        message: ''
+      }, options
+
+      unless options.state in _.values exports.JSON_API_STATES
+        return next new Error "Invalid jsonApi state=`#{options.state}`"
+
+      res.json
+        data: data
+        state: options.state
+        message: options.message
+    next()
