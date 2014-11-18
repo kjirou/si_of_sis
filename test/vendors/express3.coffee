@@ -13,7 +13,7 @@ describe 'express-3.x Vendor', ->
     app.get '/json', (req, res, next) ->
       res.json x:null, y:undefined
     app.get '/jsonp', (req, res, next) ->
-      res.json x:null, y:undefined
+      res.jsonp x:null, y:undefined
 
     async.series [
       (next) ->
